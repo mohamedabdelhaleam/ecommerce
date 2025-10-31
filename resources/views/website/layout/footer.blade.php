@@ -74,6 +74,6 @@
         </div>
     </div>
     <div class="text-center text-sm text-gray-400 mt-12">
-        © 2024 LittleJoy. All rights reserved.
+        © 2024 Halim. All rights reserved.
     </div>
 </footer>
