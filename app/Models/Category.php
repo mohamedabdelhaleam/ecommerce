@@ -8,5 +8,8 @@ class Category extends Model
 {
     protected $guarded = [];
 
-    
+    public function getImageAttribute($value)
+    {
+        return $value ? asset('storage/' . $value) : 'https://placehold.co/400';
+    }
 }
