@@ -12,4 +12,16 @@ class Category extends Model
     {
         return $value ? asset('storage/' . $value) : 'https://placehold.co/400';
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class)
+            ->where('is_active', true)
+            ->orderBy('created_at', 'desc');
+    }
+
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
 }
