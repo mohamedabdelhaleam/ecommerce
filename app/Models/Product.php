@@ -42,4 +42,14 @@ class Product extends Model
     {
         return $this->hasMany(ProductVariant::class)->where('is_active', true);
     }
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class)->orderBy('created_at', 'desc');
+    }
+
+    public function approvedComments()
+    {
+        return $this->hasMany(Comment::class)->where('is_approved', true)->orderBy('created_at', 'desc');
+    }
 }
