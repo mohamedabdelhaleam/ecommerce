@@ -7,4 +7,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', HomeController::class)->name('home');
 Route::get('/about', AboutController::class)->name('about');
+
 Route::get('/products', ProductsController::class)->name('products');
+Route::get('/products/{id}', [ProductsController::class, 'show'])->name('products.show');

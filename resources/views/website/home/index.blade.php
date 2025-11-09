@@ -82,44 +82,33 @@
                 </div>
             </section>
             <section data-animate="slide-up">
-            <h2
-                class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
-                Shop by Category</h2>
-            <div
-                class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden pb-4">
-                <div class="flex items-stretch p-4 gap-6">
-                    <x-website.cards.category
+                <h2
+                    class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5">
+                    Shop by Category</h2>
+                <div
+                    class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden pb-4">
+                    <div class="flex items-stretch p-4 gap-6">
+                        {{-- <x-website.cards.category
                         image="https://lh3.googleusercontent.com/aida-public/AB6AXuCwVldfnjWNxct74qYi497PXgYVPKo9b19BmzmB2hq4ygET3UXvoibQoCM5JSBvVq3dmjLHIv7lJfopYmrZNxDYbqUd-l9UI_560Af1XDSKmFYZ14VISbvPyrmxCUi-bPUV4ZsAW30tkXieAll26MhDuKAGxKLLMKvE3klSDT9_7BvukVlLmix8ZMPYbEwnjVm2SkQofsqZ7gP8W7Xcunp0OnJ9sNvJAz0IQmgHHW1HXOc8gwOmBv4XkBJ8UMxvtFYH3WavehCHzQU"
-                        title="Clothes" />
-                    <x-website.cards.category
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuCAn7a9pn59Cwtygsu-r41uCqBcL_1dCHNq7VIcmaQR0-U7dOLRQKmDKmaLNJnnpD2h6kd9uhUcDpHLVHFkeA1i4WAzKvM778jIRdboQvTcKsaXTlOWymJRx6pOXCbQGBAg5FpvyGpNMRnAFy85EF57T4JAkHQmqLukkj4zQfmIfSjwhpyh7T_jaf7gFAou7-dX5rfL8p1K41m5EKf6W5E7fVvLQbzgJahINE9wrHcLYLyLczY83-HkfArD2bGs35N_ruGel8E-c4Y"
-                        title="Toys" />
-                    <x-website.cards.category
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuARwsFWpqwPQMYfxAVog974WJd9qMu4QtxXiNwoc6yt7c18xL-0s-rvTMBozEAI8URv5F2BqoC7TRNWLKH4Rqbma-rfkmdnqCIHozFgGbwcI6hmSW_NE79f9chEkueHkJAB00xljj2E11tUFdPsB8TP06G0heL35ZP61WFLaqT9SIhhrckS2eFAfOldq1QdSSPMJt4jo0mfUpev9x8bl78cu3YqtsVt3o1Bz8XxvWYKXk6xuDZAOb8z7ak8BVCyUdJzTMcab2vgNqs"
-                        title="Books" />
-                    <x-website.cards.category
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuBbpbOCtV0PHRxh-xwe3C38eYj0BWY6-O7wilswwN7Zu6EHx5zSfGRMx1sa9ISx2CPQYTMLArCpeTBp6nO29Z5Q7DVUHP73dYkhMA3J4X_y8KareMWyt_Wmz_hFLNBPGApUmuF1oZRvNAPGss5y4zLOS_Is3Gc8shmPIqk2JfWEUVlQy9balGvmmfjztQ9w-tlDlRUGXgvK7wNrxReteGYoMpLEPtov5doReyVGcl_T6QSjLhmLpdixm_Hnpk41tJIRzvJbmE5KASw"
-                        title="Accessories" />
+                        title="Clothes" /> --}}
+                        @foreach ($categories as $category)
+                            <x-website.cards.category image="{{ $category->image }}" title="{{ $category->name_en }}" />
+                        @endforeach
+                    </div>
                 </div>
-            </div>
             </section>
             <section class="mt-12" data-animate="stagger">
                 <h2
                     class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5">
                     Featured Products</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    <x-website.cards.product
+                    {{-- <x-website.cards.product
                         image="https://lh3.googleusercontent.com/aida-public/AB6AXuC3XNpSQQDRk_p0dm0URGo7-6SR8BSD10AX0mRWVTY0mjcUmvkB0ina_fXUPzBSIfwWf2K7uThYOzZYhYlD3Sy7GVcxzBwIVMq1xZn9KYnx4_Z2HmRWEK_WeP40e8rCnDbVXSiWY0cR4lj8e0FrM3doraAWNR4eSnGr7CYy619v3s4JcJtfGTS8-GSplV8TvVKiX6-896zUm-Z1dHtXcELXRgi-AoEtdTVzBomi8lgXsykMpJ2KVLcpYvT75mXvAnNqEmsPiBlPjPU"
-                        title="Plush Teddy Bear" price="19.99" rating="5" data-stagger-item />
-                    <x-website.cards.product
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuAV6Poqc_id55rGAQsvU-RYtp6mjC8GgnvEhX22oZR279Chj-_FJXxijU473iOXkU_ZfAFy4MYzpXzPNML6nt4CYkggWMa4mI3RRaqOSSsLtvm8pnznVdummr8o0dtOJ00Fb6dzffilU7slHxWuQCGYDtofjhQLQ0FS3hI_XjHna3eIVvbUNqOt41Mt5gsfNvXYkqX6DUig2sK_0PgIeK3_pbsVRMH_21JarPsnJo3XyPY5g0IBTygzXgZILVwbRwQkQOJz30Ok4no"
-                        title="Plush Teddy Bear" price="19.99" rating="4" data-stagger-item />
-                    <x-website.cards.product
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuAdHsUH0YfqiPpMcA5PfDQ8_1slGtFpeEP6jzvmgaR26SUAd5jujXnTMauhsaV_eKiGywpT7DtS-X7u1CpLCJKeM3gopDAFtwaUZDu1TP_190jlxz2tom4LrJm14h6B68CW9frOt3HSUTT033jwHONgSYD3rlL0JWNnb_3ELH89dYktOllFECGs8aXaILrvYLfeMPpprViGHdJf9uYsIUBXrTScqirF6l3CAXoYRa1sKYPP44LcU5VqGk-LgIHjS4-c9sx8RYPruao"
-                        title="Plush Teddy Bear" price="19.99" rating="3" data-stagger-item />
-                    <x-website.cards.product
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuC3XNpSQQDRk_p0dm0URGo7-6SR8BSD10AX0mRWVTY0mjcUmvkB0ina_fXUPzBSIfwWf2K7uThYOzZYhYlD3Sy7GVcxzBwIVMq1xZn9KYnx4_Z2HmRWEK_WeP40e8rCnDbVXSiWY0cR4lj8e0FrM3doraAWNR4eSnGr7CYy619v3s4JcJtfGTS8-GSplV8TvVKiX6-896zUm-Z1dHtXcELXRgi-AoEtdTVzBomi8lgXsykMpJ2KVLcpYvT75mXvAnNqEmsPiBlPjPU"
-                        title="Plush Teddy Bear" price="19.99" rating="2" data-stagger-item />
+                        title="Plush Teddy Bear" price="19.99" rating="5" data-stagger-item /> --}}
+                    @foreach ($products as $product)
+                        <x-website.cards.product image="{{ $product->image }}" title="{{ $product->name_en }}"
+                            price="19.99" rating="{{ rand(1, 5) }}" data-stagger-item />
+                    @endforeach
                 </div>
             </section>
         </div>

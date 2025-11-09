@@ -11,4 +11,9 @@ class ProductsController extends Controller
     {
         return view('website.products.index');
     }
+
+    public function show($id)
+    {
+        return view('website.products.details');
+    }
 }

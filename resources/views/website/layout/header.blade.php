@@ -12,15 +12,12 @@
             <h2 class="text-xl font-bold leading-tight tracking-[-0.015em]">LittleJoy</h2>
         </div>
         <nav class="hidden lg:flex items-center gap-9">
-            <a class="text-brand-charcoal dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
-                href="#">Clothes</a>
-            <a class="text-brand-charcoal dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
-                href="#">Toys</a>
-            <a class="text-brand-charcoal dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
-                href="#">Books</a>
-            <a class="text-brand-charcoal dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
-                href="#">Accessories</a>
-            <a class="text-red-500 text-sm font-medium leading-normal" href="#">Sale</a>
+            @foreach (\App\Models\Category::where('is_active', true)->get() as $category)
+                <a class="text-brand-charcoal dark:text-gray-300 text-sm font-medium leading-normal hover:text-primary dark:hover:text-primary"
+                    href="{{ route('products') }}?category={{ $category->slug }}">
+                    {{ $category->name_en }}
+                </a>
+            @endforeach
         </nav>
     </div>
     <div class="flex flex-1 justify-center px-8">
