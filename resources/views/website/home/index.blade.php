@@ -140,22 +140,21 @@
                 class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5 text-center">
                 Loved by Parents &amp; Kids Alike</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
-                <x-website.cards.review
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpmuw2DxOYiq00_FLHeYtG3ru6F-eXQ4_fhHp_DFoHdnMY8QxkfYNJqznw_WByHUI9ulb5p4hW29r8KSbSv1v7zNF756G6gnsexWV6f2oVG4_ZpGumO91qkqbw0fLdDXzhLuZnphZySuk5Ca-q5_umJSTM1PYwR6M9Tw4kmTk2wghVg89_AQDB6Uyzmt2-3EPfmF2Yla8TyQNp0Czm2OOTaCM8KGlLgdsp23A9gbPc-dLnIlJlACrxT2gX1Zx9RDUQdCYAF_wwEI"
-                    name="Sarah M." rating="5"
-                    review="The quality of the clothes is fantastic! So soft and durable for my active toddler. The shipping was incredibly fast too."
-                    data-stagger-item />
-                <x-website.cards.review
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpmuw2DxOYiq00_FLHeYtG3ru6F-eXQ4_fhHp_DFoHdnMY8QxkfYNJqznw_WByHUI9ulb5p4hW29r8KSbSv1v7zNF756G6gnsexWV6f2oVG4_ZpGumO91qkqbw0fLdDXzhLuZnphZySuk5Ca-q5_umJSTM1PYwR6M9Tw4kmTk2wghVg89_AQDB6Uyzmt2-3EPfmF2Yla8TyQNp0Czm2OOTaCM8KGlLgdsp23A9gbPc-dLnIlJlACrxT2gX1Zx9RDUQdCYAF_wwEI"
-                    name="James L." rating="4"
-                    review="My son absolutely adores his new wooden train set. It's his go-to toy every morning. Thank you LittleJoy for bringing such joy!"
-                    data-stagger-item />
-                <x-website.cards.review
-                    image="https://lh3.googleusercontent.com/aida-public/AB6AXuBZpmuw2DxOYiq00_FLHeYtG3ru6F-eXQ4_fhHp_DFoHdnMY8QxkfYNJqznw_WByHUI9ulb5p4hW29r8KSbSv1v7zNF756G6gnsexWV6f2oVG4_ZpGumO91qkqbw0fLdDXzhLuZnphZySuk5Ca-q5_umJSTM1PYwR6M9Tw4kmTk2wghVg89_AQDB6Uyzmt2-3EPfmF2Yla8TyQNp0Czm2OOTaCM8KGlLgdsp23A9gbPc-dLnIlJlACrxT2gX1Zx9RDUQdCYAF_wwEI"
-                    name="Emily R." rating="3"
-                    review="I'm so impressed with the curated book selection. Found some beautiful stories that we now read every night before bed."
-                    data-stagger-item />
-
+                @forelse ($reviews as $review)
+                    @php
+                        // Generate avatar URL based on name
+                        $avatarUrl =
+                            'https://ui-avatars.com/api/?name=' .
+                            urlencode($review->name) .
+                            '&background=random&color=fff&size=128';
+                    @endphp
+                    <x-website.cards.review image="{{ $avatarUrl }}" name="{{ $review->name }}"
+                        rating="{{ $review->rating }}" review="{{ $review->comment }}" data-stagger-item />
+                @empty
+                    <div class="col-span-full text-center text-brand-charcoal/60 dark:text-gray-400 py-8">
+                        <p>No reviews yet. Be the first to review!</p>
+                    </div>
+                @endforelse
             </div>
         </section>
         {{-- End Loved by Parents & Kids Alike Section --}}
