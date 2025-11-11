@@ -41,15 +41,22 @@
                                         <li id="ChangePassword">
                                             <a style="cursor: pointer">
                                                 <img src="{{ asset('dashboard/img/svg/settings.svg') }}" alt="settings"
-                                                    class="svg">تغير كلمة المرور</a>
+                                                    class="svg">Change Password</a>
                                         </li>
                                     </ul>
 
                                     {{-- change password modal --}}
 
                                     <div class="nav-author__options">
-                                        <a href="{{ route('dashboard.logout') }}" class="nav-author__signout">
-                                            <i class="uil uil-sign-out-alt"></i>Logout</a>
+                                        <form method="POST" action="{{ route('dashboard.logout') }}"
+                                            class="d-inline w-100">
+                                            @csrf
+                                            <button type="submit"
+                                                class="nav-author__signout border-0 bg-transparent w-100 text-left p-1"
+                                                style="cursor: pointer;">
+                                                <i class="uil uil-sign-out-alt"></i>Logout
+                                            </button>
+                                        </form>
                                     </div>
                                 </div>
                             </div>

@@ -1,13 +1,13 @@
 /* ======= Custom Tooltip ====== */
 const customTooltips = function (context) {
     // Tooltip Element
-    let tooltipEl = document.getElementById('chartjs-tooltip');
+    let tooltipEl = document.getElementById("chartjs-tooltip");
 
     if (!tooltipEl) {
-        tooltipEl = document.createElement('div');
-        tooltipEl.id = 'chartjs-tooltip';
+        tooltipEl = document.createElement("div");
+        tooltipEl.id = "chartjs-tooltip";
         tooltipEl.className = "chartjs-tooltip";
-        tooltipEl.innerHTML = '<table></table>';
+        tooltipEl.innerHTML = "<table></table>";
         document.body.appendChild(tooltipEl);
     }
 
@@ -19,11 +19,11 @@ const customTooltips = function (context) {
     }
 
     // Set caret Position
-    tooltipEl.classList.remove('above', 'below', 'no-transform');
+    tooltipEl.classList.remove("above", "below", "no-transform");
     if (tooltipModel.yAlign) {
         tooltipEl.classList.add(tooltipModel.yAlign);
     } else {
-        tooltipEl.classList.add('no-transform');
+        tooltipEl.classList.add("no-transform");
     }
 
     function getBody(bodyItem) {
@@ -35,45 +35,59 @@ const customTooltips = function (context) {
         const titleLines = tooltipModel.title || [];
         const bodyLines = tooltipModel.body.map(getBody);
 
-        let innerHtml = '<thead>';
+        let innerHtml = "<thead>";
 
         titleLines.forEach(function (title) {
             innerHtml += `<div class='tooltip-title'>${title}</div>`;
         });
-        innerHtml += '</thead><tbody>';
+        innerHtml += "</thead><tbody>";
 
         bodyLines.forEach(function (body, i) {
             const colors = tooltipModel.labelColors[i];
-            let style = 'background:' + colors.backgroundColor;
-            style += '; border-color:' + colors.borderColor;
-            style += '; border-width: 2px';
+            let style = "background:" + colors.backgroundColor;
+            style += "; border-color:" + colors.borderColor;
+            style += "; border-width: 2px";
             style += "; border-radius: 30px";
             const span = `<span class="chartjs-tooltip-key" style="${style}"></span>`;
             innerHtml += `<tr><td>${span}${body}</td></tr>`;
         });
-        innerHtml += '</tbody>';
+        innerHtml += "</tbody>";
 
-        let tableRoot = tooltipEl.querySelector('table');
+        let tableRoot = tooltipEl.querySelector("table");
         tableRoot.innerHTML = innerHtml;
     }
 
-    const toolTip = document.querySelector('.chartjs-tooltip');
+    const toolTip = document.querySelector(".chartjs-tooltip");
     const position = context.chart.canvas.getBoundingClientRect();
     const toolTipHeight = toolTip.clientHeight;
     const rtl = document.querySelector('html[dir="rtl"]');
 
-
     // Display, position, and set styles for font
     tooltipEl.style.opacity = 1;
-    tooltipEl.style.position = 'absolute';
-    tooltipEl.style.left = `${position.left + window.pageXOffset + tooltipModel.caretX - (rtl !== null ? toolTip.clientWidth : 0)}px`;
-    tooltipEl.style.top = `${position.top + window.pageYOffset + tooltipModel.caretY-(tooltipModel.caretY > 10 ? (toolTipHeight > 100 ? toolTipHeight + 5 : toolTipHeight + 15) : 70)}px`;
-    tooltipEl.style.padding = tooltipModel.padding + 'px ' + tooltipModel.padding + 'px';
-    tooltipEl.style.pointerEvents = 'none';
-}
+    tooltipEl.style.position = "absolute";
+    tooltipEl.style.left = `${
+        position.left +
+        window.pageXOffset +
+        tooltipModel.caretX -
+        (rtl !== null ? toolTip.clientWidth : 0)
+    }px`;
+    tooltipEl.style.top = `${
+        position.top +
+        window.pageYOffset +
+        tooltipModel.caretY -
+        (tooltipModel.caretY > 10
+            ? toolTipHeight > 100
+                ? toolTipHeight + 5
+                : toolTipHeight + 15
+            : 70)
+    }px`;
+    tooltipEl.style.padding =
+        tooltipModel.padding + "px " + tooltipModel.padding + "px";
+    tooltipEl.style.pointerEvents = "none";
+};
 
 const chartLinearGradient = (canvas, height, color) => {
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext("2d");
     const gradient = ctx.createLinearGradient(0, 0, 0, height);
     gradient.addColorStop(0, `${color.start}`);
     gradient.addColorStop(1, `${color.end}`);
@@ -85,14 +99,14 @@ const chartLinearGradient = (canvas, height, color) => {
 function chartjsAreaChart(selector, height, labelName1, labelName2) {
     let delayed;
     const legendMargin = {
-        id: 'legendMargin',
+        id: "legendMargin",
         beforeInit(chart, legend, options) {
             const fitValue = chart.legend.fit;
             chart.legend.fit = function fit() {
                 fitValue.bind(chart.legend)();
-                return this.height += 24;
-            }
-        }
+                return (this.height += 24);
+            };
+        },
     };
     var ctx = document.getElementById(selector);
     if (ctx) {
@@ -115,36 +129,37 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                     "Nov",
                     "Dec",
                 ],
-                datasets: [{
+                datasets: [
+                    {
                         data: [10, 55, 42, 30, 42, 80, 35, 10, 53, 62, 45, 78],
                         borderColor: "#7811FF",
                         label: labelName1,
-                        borderWidth: 2.50,
+                        borderWidth: 2.5,
                         fill: false,
                         backgroundColor: "#7811FF",
                         hoverBackgroundColor: "#7811FF",
                         tension: 0.4,
-                        pointHoverBorderColor: 'white',
+                        pointHoverBorderColor: "white",
                         pointRadius: 0,
                         pointHoverRadius: 6,
                         pointHitRadius: 30,
-                        pointStyle: 'circle',
+                        pointStyle: "circle",
                         pointHoverBorderWidth: 2,
                     },
                     {
                         data: [30, 45, 35, 10, 5, 60, 8, 42, 30, 70, 54, 25],
                         borderColor: "#00AAFF",
                         label: labelName2,
-                        borderWidth: 2.50,
+                        borderWidth: 2.5,
                         fill: false,
                         backgroundColor: "#00AAFF",
                         hoverBackgroundColor: "#00AAFF",
                         tension: 0.4,
-                        pointHoverBorderColor: 'white',
+                        pointHoverBorderColor: "white",
                         pointRadius: 0,
                         pointHoverRadius: 6,
                         pointHitRadius: 30,
-                        pointStyle: 'circle',
+                        pointStyle: "circle",
                         pointHoverBorderWidth: 2,
                     },
                 ],
@@ -153,7 +168,7 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -162,8 +177,8 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                         align: "center",
                         labels: {
                             usePointStyle: true,
-                            color: '#747474',
-                            textAlign: 'center',
+                            color: "#747474",
+                            textAlign: "center",
                             boxWidth: 20,
                             boxHeight: 4,
                             maxHeight: 100,
@@ -182,16 +197,18 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}K</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -201,8 +218,14 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -241,7 +264,7 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -269,32 +292,46 @@ function chartjsAreaChart(selector, height, labelName1, labelName2) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
             },
-            plugins: [legendMargin]
+            plugins: [legendMargin],
         });
     }
 }
 chartjsAreaChart("salesReports", "105", "Total Order", "Total Sale");
 
 /* ======= Bar chart ======= */
-function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1, labelName2) {
+function chartjsBarChart(
+    selector,
+    dataCIn,
+    DataCOut,
+    labels,
+    height,
+    labelName1,
+    labelName2
+) {
     let delayed;
     var ctx = document.getElementById(selector);
     if (ctx) {
         ctx.getContext("2d");
-        ctx.height = window.innerWidth <= 1399 ? (window.innerWidth < 575 ? 250 : 100) : height;
+        ctx.height =
+            window.innerWidth <= 1399
+                ? window.innerWidth < 575
+                    ? 250
+                    : 100
+                : height;
         var chart = new Chart(ctx, {
             type: "bar",
             data: {
                 labels: labels,
-                datasets: [{
+                datasets: [
+                    {
                         data: dataCIn,
-                        backgroundColor: 'rgba(130, 49, 211, .50)',
-                        hoverBackgroundColor: '#7811FF',
+                        backgroundColor: "rgba(130, 49, 211, .50)",
+                        hoverBackgroundColor: "#7811FF",
                         label: labelName1,
                         barPercentage: 0.45,
                         borderRadius: 2,
@@ -304,8 +341,8 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                     },
                     {
                         data: DataCOut,
-                        backgroundColor: 'rgba(0, 170, 255, .50)',
-                        hoverBackgroundColor: '#00AAFF',
+                        backgroundColor: "rgba(0, 170, 255, .50)",
+                        hoverBackgroundColor: "#00AAFF",
                         label: labelName2,
                         barPercentage: 0.45,
                         borderRadius: 2,
@@ -320,7 +357,7 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -339,16 +376,18 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -358,8 +397,14 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -396,7 +441,7 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -424,7 +469,7 @@ function chartjsBarChart(selector, dataCIn, DataCOut, labels, height, labelName1
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
@@ -437,47 +482,30 @@ chartjsBarChart(
     "salesGrowthToday",
     (data = [35, 55, 25, 60, 42, 80, 35]),
     (data = [10, 30, 8, 30, 22, 38, 45]),
-    labels = [
-        "Sat",
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-    ],
+    (labels = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]),
     198,
     "Target",
     "Total Sales"
 );
 
-
-$('#salesgrowth2-tab').on("shown.bs.tab", function () {
+$("#salesgrowth2-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "salesGrowthWeek",
         (data = [12, 34, 76, 23, 48, 34, 78]),
         (data = [34, 25, 34, 8, 45, 65, 18]),
-        labels = [
-            "1-2",
-            "2-3",
-            "3-4",
-            "4-5",
-            "5-6",
-            "6-7",
-            "7-8",
-        ],
+        (labels = ["1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8"]),
         198,
         "Target",
         "Total Sales"
     );
-    $('#salesgrowth2-tab').off();
+    $("#salesgrowth2-tab").off();
 });
-$('#salesgrowth3-tab').on("shown.bs.tab", function () {
+$("#salesgrowth3-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "salesGrowthMonth",
         (data = [35, 55, 25, 72, 45, 58, 35, 45, 65, 38, 45, 48]),
         (data = [15, 35, 10, 16, 25, 44, 10, 5, 24, 18, 7, 36]),
-        labels = [
+        (labels = [
             "Jan",
             "Feb",
             "Mar",
@@ -490,65 +518,46 @@ $('#salesgrowth3-tab').on("shown.bs.tab", function () {
             "Oct",
             "Nov",
             "Dec",
-        ],
+        ]),
         198,
         "Target",
         "Total Sales"
     );
-    $('#salesgrowth3-tab').off();
+    $("#salesgrowth3-tab").off();
 });
 
-
-
 /* Demo 5 */
-$('#salesgrowth-tab').on("shown.bs.tab", function () {
+$("#salesgrowth-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "salesGrowthNewToday",
         (data = [35, 55, 25, 60, 42, 80, 35]),
         (data = [10, 30, 8, 30, 22, 38, 45]),
-        labels = [
-            "Sat",
-            "Sun",
-            "Mon",
-            "Tue",
-            "Wed",
-            "Thu",
-            "Fri",
-        ],
+        (labels = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]),
         105,
         "Target",
         "Total Sales"
     );
-    $('#salesgrowth-tab').off();
+    $("#salesgrowth-tab").off();
 });
 
-
-$('#salesgrowth2-tab').on("shown.bs.tab", function () {
+$("#salesgrowth2-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "salesGrowthNewWeek",
         (data = [12, 34, 76, 23, 48, 34, 78]),
         (data = [34, 25, 34, 8, 45, 65, 18]),
-        labels = [
-            "1-2",
-            "2-3",
-            "3-4",
-            "4-5",
-            "5-6",
-            "6-7",
-            "7-8",
-        ],
+        (labels = ["1-2", "2-3", "3-4", "4-5", "5-6", "6-7", "7-8"]),
         105,
         "Target",
         "Total Sales"
     );
-    $('#salesgrowth2-tab').off();
+    $("#salesgrowth2-tab").off();
 });
 
 chartjsBarChart(
     "salesGrowthNewMonth",
     (data = [35, 55, 25, 72, 45, 58, 35, 45, 65, 38, 45, 48]),
     (data = [15, 35, 10, 16, 25, 44, 10, 5, 24, 18, 7, 36]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -561,27 +570,18 @@ chartjsBarChart(
         "Oct",
         "Nov",
         "Dec",
-    ],
+    ]),
     105,
     "Target",
     "Total Sales"
 );
-
 
 /* demo 3*/
 chartjsBarChart(
     "profitGrowthToday",
     (data = [35, 55, 25, 60, 42, 80, 35]),
     (data = [10, 30, 8, 30, 22, 38, 45]),
-    labels = [
-        "Sat",
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-    ],
+    (labels = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]),
     145,
     "Order",
     "Sale"
@@ -591,45 +591,57 @@ function chartjsLineChart(selector, height, dataCur, labels, labelName, fill) {
     let delayed;
     let primaryColorRGB;
     let primaryColor;
-    primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary');
-    primaryColorRGB = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-primary-rgba'
+    primaryColor = getComputedStyle(document.documentElement).getPropertyValue(
+        "--color-primary"
     );
+    primaryColorRGB = getComputedStyle(
+        document.documentElement
+    ).getPropertyValue("--color-primary-rgba");
     var ctx = document.getElementById(selector);
     if (ctx) {
         ctx.getContext("2d");
-        ctx.height = window.innerWidth <= 1399 ? (window.innerWidth < 575 ? 200 : 150) : height;
+        ctx.height =
+            window.innerWidth <= 1399
+                ? window.innerWidth < 575
+                    ? 200
+                    : 150
+                : height;
         var charts = new Chart(ctx, {
             type: "line",
             data: {
                 labels: labels,
-                datasets: [{
-                    data: dataCur,
-                    borderColor: primaryColor,
-                    backgroundColor: () =>
-                        chartLinearGradient(document.getElementById(selector), 300, {
-                            start: `rgba(${primaryColorRGB},0.5)`,
-                            end: 'rgba(255,255,255,0.05)'
-                        }),
-                    fill: fill,
-                    label: labelName,
-                    pointBackgroundColor: primaryColor,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    hoverRadius: '6',
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointHitRadius: 30,
-                    pointStyle: 'circle',
-                    pointHoverBorderWidth: 2,
-
-                }, ],
+                datasets: [
+                    {
+                        data: dataCur,
+                        borderColor: primaryColor,
+                        backgroundColor: () =>
+                            chartLinearGradient(
+                                document.getElementById(selector),
+                                300,
+                                {
+                                    start: `rgba(${primaryColorRGB},0.5)`,
+                                    end: "rgba(255,255,255,0.05)",
+                                }
+                            ),
+                        fill: fill,
+                        label: labelName,
+                        pointBackgroundColor: primaryColor,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        hoverRadius: "6",
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHitRadius: 30,
+                        pointStyle: "circle",
+                        pointHoverBorderWidth: 2,
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -648,16 +660,18 @@ function chartjsLineChart(selector, height, dataCur, labels, labelName, fill) {
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -667,8 +681,14 @@ function chartjsLineChart(selector, height, dataCur, labels, labelName, fill) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -705,7 +725,7 @@ function chartjsLineChart(selector, height, dataCur, labels, labelName, fill) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -733,7 +753,7 @@ function chartjsLineChart(selector, height, dataCur, labels, labelName, fill) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
@@ -747,7 +767,7 @@ chartjsLineChart(
     "saleRevenueToday",
     "113",
     (data = [0, 28, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -759,37 +779,48 @@ chartjsLineChart(
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
-    ],
+        "Dec",
+    ]),
     "Current period",
     true
 );
 
-$('#tl_revenue-week-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-week-tab").on("shown.bs.tab", function () {
     chartjsLineChart(
         "saleRevenueWeek",
         "113",
         (data = [40, 30, 35, 20, 25, 40, 35]),
-        labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        (labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
         "Current period",
         true
-
     );
-    $('#tl_revenue-week-tab').off();
+    $("#tl_revenue-week-tab").off();
 });
 
-$('#tl_revenue-month-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-month-tab").on("shown.bs.tab", function () {
     chartjsLineChart(
         "saleRevenueMonth",
         "113",
         (data = [20, 36, 25, 50, 40, 55, 40, 75, 35, 40, 35, 58]),
-        labels = ['2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'],
+        (labels = [
+            "2h",
+            "4h",
+            "6h",
+            "8h",
+            "10h",
+            "12h",
+            "14h",
+            "16h",
+            "18h",
+            "20h",
+            "22h",
+            "24h",
+        ]),
         "Current period",
         true
     );
-    $('#tl_revenue-month-tab').off();
+    $("#tl_revenue-month-tab").off();
 });
-
 
 /* demo 3 */
 // Total Revenue Chart
@@ -797,7 +828,7 @@ chartjsLineChart(
     "earningRevenueToday",
     "113",
     (data = [0, 28, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -809,35 +840,47 @@ chartjsLineChart(
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
-    ],
+        "Dec",
+    ]),
     "Monthly Earning",
     true
 );
 
-$('#tl_revenue-week-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-week-tab").on("shown.bs.tab", function () {
     chartjsLineChart(
         "earningRevenueWeek",
         "113",
         (data = [40, 30, 35, 20, 25, 40, 35]),
-        labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"],
+        (labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
         "Monthly Earning",
         true
-
     );
-    $('#tl_revenue-week-tab').off();
+    $("#tl_revenue-week-tab").off();
 });
 
-$('#tl_revenue-month-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-month-tab").on("shown.bs.tab", function () {
     chartjsLineChart(
         "earningRevenueMonth",
         "113",
         (data = [20, 36, 25, 50, 40, 55, 40, 75, 35, 40, 35, 58]),
-        labels = ['2h', '4h', '6h', '8h', '10h', '12h', '14h', '16h', '18h', '20h', '22h', '24h'],
+        (labels = [
+            "2h",
+            "4h",
+            "6h",
+            "8h",
+            "10h",
+            "12h",
+            "14h",
+            "16h",
+            "18h",
+            "20h",
+            "22h",
+            "24h",
+        ]),
         "Monthly Earning",
         true
     );
-    $('#tl_revenue-month-tab').off();
+    $("#tl_revenue-month-tab").off();
 });
 
 /* Demo 6 */
@@ -846,7 +889,7 @@ chartjsLineChart(
     "totalSaleMonth",
     "196",
     (data = [0, 26, 15, 50, 40, 55, 40, 55, 35, 80]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -857,7 +900,7 @@ chartjsLineChart(
         "Aug",
         "Sep",
         "Oct",
-    ],
+    ]),
     "Current period",
     false
 );
@@ -865,7 +908,7 @@ chartjsLineChart(
 chartjsLineChart(
     "totalSaleDay",
     "196",
-    labels = [38, 55, 42, 36, 60, 65, 50],
+    (labels = [38, 55, 42, 36, 60, 65, 50]),
     (data = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]),
     "Current period",
     false
@@ -875,21 +918,10 @@ chartjsLineChart(
     "totalSaleYear",
     "196",
     (data = [40, 48, 40, 46, 38, 65, 58, 59]),
-    labels = [
-        "2014",
-        "2015",
-        "2016",
-        "2017",
-        "2018",
-        "2019",
-        "2020",
-        "2021"
-    ],
+    (labels = ["2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021"]),
     "Current period",
     false
 );
-
-
 
 /* chart Page*/
 function exampleBarChart(selector, height, indexing) {
@@ -901,46 +933,40 @@ function exampleBarChart(selector, height, indexing) {
         var chart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                    {
+                        label: "My First Dataset",
+                        data: [65, 59, 80, 81, 56, 55, 40],
+                        backgroundColor: [
+                            "rgba(255, 99, 132, 0.2)",
+                            "rgba(255, 159, 64, 0.2)",
+                            "rgba(255, 205, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(201, 203, 207, 0.2)",
+                        ],
+                        borderColor: [
+                            "rgb(255, 99, 132)",
+                            "rgb(255, 159, 64)",
+                            "rgb(255, 205, 86)",
+                            "rgb(75, 192, 192)",
+                            "rgb(54, 162, 235)",
+                            "rgb(153, 102, 255)",
+                            "rgb(201, 203, 207)",
+                        ],
+                        borderWidth: 1,
+                    },
                 ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [65, 59, 80, 81, 56, 55, 40],
-                    backgroundColor: [
-                        'rgba(255, 99, 132, 0.2)',
-                        'rgba(255, 159, 64, 0.2)',
-                        'rgba(255, 205, 86, 0.2)',
-                        'rgba(75, 192, 192, 0.2)',
-                        'rgba(54, 162, 235, 0.2)',
-                        'rgba(153, 102, 255, 0.2)',
-                        'rgba(201, 203, 207, 0.2)'
-                    ],
-                    borderColor: [
-                        'rgb(255, 99, 132)',
-                        'rgb(255, 159, 64)',
-                        'rgb(255, 205, 86)',
-                        'rgb(75, 192, 192)',
-                        'rgb(54, 162, 235)',
-                        'rgb(153, 102, 255)',
-                        'rgb(201, 203, 207)'
-                    ],
-                    borderWidth: 1
-                }],
             },
             options: {
                 indexAxis: indexing,
                 scales: {
                     y: {
                         stacked: true,
-                        beginAtZero: true
-                    }
+                        beginAtZero: true,
+                    },
                 },
                 animation: {
                     onComplete: () => {
@@ -948,8 +974,14 @@ function exampleBarChart(selector, height, indexing) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -970,61 +1002,54 @@ function exampleBarStackedChart(selector, height, indexing) {
         var chart = new Chart(ctx, {
             type: "bar",
             data: {
-                labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                ],
-                datasets: [{
-                        label: 'My First Dataset',
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                    {
+                        label: "My First Dataset",
                         data: [65, 59, 80, 81, 56, 55, 40],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(201, 203, 207, 0.2)'
+                            "rgba(255, 99, 132, 0.2)",
+                            "rgba(255, 159, 64, 0.2)",
+                            "rgba(255, 205, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(201, 203, 207, 0.2)",
                         ],
                         borderColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)',
-                            'rgb(153, 102, 255)',
-                            'rgb(201, 203, 207)'
+                            "rgb(255, 99, 132)",
+                            "rgb(255, 159, 64)",
+                            "rgb(255, 205, 86)",
+                            "rgb(75, 192, 192)",
+                            "rgb(54, 162, 235)",
+                            "rgb(153, 102, 255)",
+                            "rgb(201, 203, 207)",
                         ],
-                        borderWidth: 1
+                        borderWidth: 1,
                     },
                     {
-                        label: 'My First Dataset',
+                        label: "My First Dataset",
                         data: [65, 59, 80, 81, 56, 55, 40],
                         backgroundColor: [
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(201, 203, 207, 0.2)',
-                            'rgba(255, 99, 132, 0.2)'
+                            "rgba(255, 159, 64, 0.2)",
+                            "rgba(255, 205, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(201, 203, 207, 0.2)",
+                            "rgba(255, 99, 132, 0.2)",
                         ],
                         borderColor: [
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)',
-                            'rgb(153, 102, 255)',
-                            'rgb(201, 203, 207)',
-                            'rgb(255, 99, 132)'
+                            "rgb(255, 159, 64)",
+                            "rgb(255, 205, 86)",
+                            "rgb(75, 192, 192)",
+                            "rgb(54, 162, 235)",
+                            "rgb(153, 102, 255)",
+                            "rgb(201, 203, 207)",
+                            "rgb(255, 99, 132)",
                         ],
-                        borderWidth: 1
-                    }
+                        borderWidth: 1,
+                    },
                 ],
             },
             options: {
@@ -1033,8 +1058,8 @@ function exampleBarStackedChart(selector, height, indexing) {
                         stacked: true,
                     },
                     y: {
-                        stacked: true
-                    }
+                        stacked: true,
+                    },
                 },
                 animation: {
                     onComplete: () => {
@@ -1042,8 +1067,14 @@ function exampleBarStackedChart(selector, height, indexing) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1063,61 +1094,54 @@ function exampleLineChart(selector, height, indexing) {
         var chart = new Chart(ctx, {
             type: "line",
             data: {
-                labels: [
-                    "Jan",
-                    "Feb",
-                    "Mar",
-                    "Apr",
-                    "May",
-                    "Jun",
-                    "Jul",
-                ],
-                datasets: [{
-                        label: 'My First Dataset',
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                    {
+                        label: "My First Dataset",
                         data: [65, 59, 80, 81, 56, 55, 40],
                         backgroundColor: [
-                            'rgba(255, 99, 132, 0.2)',
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(201, 203, 207, 0.2)'
+                            "rgba(255, 99, 132, 0.2)",
+                            "rgba(255, 159, 64, 0.2)",
+                            "rgba(255, 205, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(201, 203, 207, 0.2)",
                         ],
                         borderColor: [
-                            'rgb(255, 99, 132)',
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)',
-                            'rgb(153, 102, 255)',
-                            'rgb(201, 203, 207)'
+                            "rgb(255, 99, 132)",
+                            "rgb(255, 159, 64)",
+                            "rgb(255, 205, 86)",
+                            "rgb(75, 192, 192)",
+                            "rgb(54, 162, 235)",
+                            "rgb(153, 102, 255)",
+                            "rgb(201, 203, 207)",
                         ],
-                        borderWidth: 1
+                        borderWidth: 1,
                     },
                     {
-                        label: 'My First Dataset',
+                        label: "My First Dataset",
                         data: [65, 59, 80, 81, 56, 55, 40],
                         backgroundColor: [
-                            'rgba(255, 159, 64, 0.2)',
-                            'rgba(255, 205, 86, 0.2)',
-                            'rgba(75, 192, 192, 0.2)',
-                            'rgba(54, 162, 235, 0.2)',
-                            'rgba(153, 102, 255, 0.2)',
-                            'rgba(201, 203, 207, 0.2)',
-                            'rgba(255, 99, 132, 0.2)'
+                            "rgba(255, 159, 64, 0.2)",
+                            "rgba(255, 205, 86, 0.2)",
+                            "rgba(75, 192, 192, 0.2)",
+                            "rgba(54, 162, 235, 0.2)",
+                            "rgba(153, 102, 255, 0.2)",
+                            "rgba(201, 203, 207, 0.2)",
+                            "rgba(255, 99, 132, 0.2)",
                         ],
                         borderColor: [
-                            'rgb(255, 159, 64)',
-                            'rgb(255, 205, 86)',
-                            'rgb(75, 192, 192)',
-                            'rgb(54, 162, 235)',
-                            'rgb(153, 102, 255)',
-                            'rgb(201, 203, 207)',
-                            'rgb(255, 99, 132)'
+                            "rgb(255, 159, 64)",
+                            "rgb(255, 205, 86)",
+                            "rgb(75, 192, 192)",
+                            "rgb(54, 162, 235)",
+                            "rgb(153, 102, 255)",
+                            "rgb(201, 203, 207)",
+                            "rgb(255, 99, 132)",
                         ],
-                        borderWidth: 1
-                    }
+                        borderWidth: 1,
+                    },
                 ],
             },
             options: {
@@ -1126,8 +1150,8 @@ function exampleLineChart(selector, height, indexing) {
                         stacked: true,
                     },
                     y: {
-                        stacked: true
-                    }
+                        stacked: true,
+                    },
                 },
                 animation: {
                     onComplete: () => {
@@ -1135,8 +1159,14 @@ function exampleLineChart(selector, height, indexing) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1151,10 +1181,12 @@ function exampleAreaChart(selector, height, dataCur, labels, labelName, fill) {
     let delayed;
     let primaryColorRGB;
     let primaryColor;
-    primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--color-primary');
-    primaryColorRGB = getComputedStyle(document.documentElement).getPropertyValue(
-        '--color-primary-rgba'
+    primaryColor = getComputedStyle(document.documentElement).getPropertyValue(
+        "--color-primary"
     );
+    primaryColorRGB = getComputedStyle(
+        document.documentElement
+    ).getPropertyValue("--color-primary-rgba");
     var ctx = document.getElementById(selector);
     if (ctx) {
         ctx.getContext("2d");
@@ -1163,33 +1195,38 @@ function exampleAreaChart(selector, height, dataCur, labels, labelName, fill) {
             type: "line",
             data: {
                 labels: labels,
-                datasets: [{
-                    data: dataCur,
-                    borderColor: primaryColor,
-                    borderWidth: 3,
-                    backgroundColor: () =>
-                        chartLinearGradient(document.getElementById(selector), 300, {
-                            start: `rgba(${primaryColorRGB},0.5)`,
-                            end: 'rgba(255,255,255,0.05)'
-                        }),
-                    fill: fill,
-                    label: labelName,
-                    tension: 0.4,
-                    hoverRadius: '6',
-                    pointBackgroundColor: primaryColor,
-                    pointRadius: 0,
-                    pointHoverRadius: 6,
-                    pointHitRadius: 30,
-                    pointStyle: 'circle',
-                    pointHoverBorderWidth: 2,
-
-                }, ],
+                datasets: [
+                    {
+                        data: dataCur,
+                        borderColor: primaryColor,
+                        borderWidth: 3,
+                        backgroundColor: () =>
+                            chartLinearGradient(
+                                document.getElementById(selector),
+                                300,
+                                {
+                                    start: `rgba(${primaryColorRGB},0.5)`,
+                                    end: "rgba(255,255,255,0.05)",
+                                }
+                            ),
+                        fill: fill,
+                        label: labelName,
+                        tension: 0.4,
+                        hoverRadius: "6",
+                        pointBackgroundColor: primaryColor,
+                        pointRadius: 0,
+                        pointHoverRadius: 6,
+                        pointHitRadius: 30,
+                        pointStyle: "circle",
+                        pointHoverBorderWidth: 2,
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -1213,8 +1250,14 @@ function exampleAreaChart(selector, height, dataCur, labels, labelName, fill) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1228,9 +1271,11 @@ function exampleAreaChart(selector, height, dataCur, labels, labelName, fill) {
         });
     }
 }
-exampleAreaChart("areaChartBasic", "105",
+exampleAreaChart(
+    "areaChartBasic",
+    "105",
     (data = [0, 28, 30, 45, 40, 50, 25, 70, 35, 40, 26, 58]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -1242,10 +1287,11 @@ exampleAreaChart("areaChartBasic", "105",
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
-    ],
+        "Dec",
+    ]),
     "Current period",
-    true);
+    true
+);
 
 function exampleRadarChart(selector, height) {
     let delayed;
@@ -1257,41 +1303,44 @@ function exampleRadarChart(selector, height) {
             type: "radar",
             data: {
                 labels: [
-                    'Eating',
-                    'Drinking',
-                    'Sleeping',
-                    'Designing',
-                    'Coding',
-                    'Cycling',
-                    'Running'
+                    "Eating",
+                    "Drinking",
+                    "Sleeping",
+                    "Designing",
+                    "Coding",
+                    "Cycling",
+                    "Running",
                 ],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [65, 59, 90, 81, 56, 55, 40],
-                    fill: true,
-                    backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    pointBackgroundColor: 'rgb(255, 99, 132)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(255, 99, 132)'
-                }, {
-                    label: 'My Second Dataset',
-                    data: [28, 48, 40, 19, 96, 27, 100],
-                    fill: true,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgb(54, 162, 235)',
-                    pointBackgroundColor: 'rgb(54, 162, 235)',
-                    pointBorderColor: '#fff',
-                    pointHoverBackgroundColor: '#fff',
-                    pointHoverBorderColor: 'rgb(54, 162, 235)'
-                }]
+                datasets: [
+                    {
+                        label: "My First Dataset",
+                        data: [65, 59, 90, 81, 56, 55, 40],
+                        fill: true,
+                        backgroundColor: "rgba(255, 99, 132, 0.2)",
+                        borderColor: "rgb(255, 99, 132)",
+                        pointBackgroundColor: "rgb(255, 99, 132)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgb(255, 99, 132)",
+                    },
+                    {
+                        label: "My Second Dataset",
+                        data: [28, 48, 40, 19, 96, 27, 100],
+                        fill: true,
+                        backgroundColor: "rgba(54, 162, 235, 0.2)",
+                        borderColor: "rgb(54, 162, 235)",
+                        pointBackgroundColor: "rgb(54, 162, 235)",
+                        pointBorderColor: "#fff",
+                        pointHoverBackgroundColor: "#fff",
+                        pointHoverBorderColor: "rgb(54, 162, 235)",
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: false,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -1315,8 +1364,14 @@ function exampleRadarChart(selector, height) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1332,7 +1387,6 @@ function exampleRadarChart(selector, height) {
 }
 exampleRadarChart("radarChart", "250");
 
-
 /* Social Profile */
 function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
     let delayed;
@@ -1345,19 +1399,21 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
             type: "bar",
             data: {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
-                datasets: [{
-                    label: label,
-                    data: [20, 60, 50, 45, 50, 60, 70],
-                    backgroundColor: bgColor,
-                    hoverBackgroundColor: hBgColor,
-                    barPercentage: 1,
-                }, ],
+                datasets: [
+                    {
+                        label: label,
+                        data: [20, 60, 50, 45, 50, 60, 70],
+                        backgroundColor: bgColor,
+                        hoverBackgroundColor: hBgColor,
+                        barPercentage: 1,
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -1376,16 +1432,18 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -1395,8 +1453,14 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1434,7 +1498,7 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -1463,7 +1527,7 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
@@ -1473,12 +1537,18 @@ function chartJsBarChartSocial(selector, height, bgColor, hBgColor, label) {
 }
 
 chartJsBarChartSocial("mychart8", "105", "#1B3C5320", "#1B3C53", "Order");
-chartJsBarChartSocial("mychart9", "105", "#5840FF20", "#5840FF", "Revenue");
+chartJsBarChartSocial("mychart9", "105", "#1B3C5320", "#1B3C53", "Revenue");
 chartJsBarChartSocial("mychart10", "105", "#01B81A20", "#01B81A", "Avg. Order");
 chartJsBarChartSocial("mychart11", "105", "#FA8B0C20", "#FA8B0C", "Avg. Order");
 
-
-function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", dataCur, dataPrev, labels) {
+function chartjsLineChartProfile(
+    selector,
+    bcolor = "#FA8B0C",
+    height = "95",
+    dataCur,
+    dataPrev,
+    labels
+) {
     var ctxs = document.getElementById(selector);
     let delayed;
     if (ctxs) {
@@ -1488,7 +1558,8 @@ function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", da
             type: "line",
             data: {
                 labels: labels,
-                datasets: [{
+                datasets: [
+                    {
                         data: dataCur,
                         borderColor: "#1B3C53",
                         borderWidth: 4,
@@ -1540,16 +1611,18 @@ function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", da
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -1559,8 +1632,14 @@ function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", da
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1593,7 +1672,7 @@ function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", da
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -1621,7 +1700,7 @@ function chartjsLineChartProfile(selector, bcolor = "#FA8B0C", height = "95", da
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
@@ -1635,7 +1714,7 @@ chartjsLineChartProfile(
     (height = "250"),
     (data = [65, 35, 45, 42, 65, 60, 42, 45, 35, 55, 40, 65]),
     (data = [45, 20, 35, 32, 50, 45, 32, 35, 25, 40, 30, 55]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -1647,8 +1726,8 @@ chartjsLineChartProfile(
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
-    ]
+        "Dec",
+    ])
 );
 chartjsLineChartProfile(
     "myChart6",
@@ -1656,7 +1735,7 @@ chartjsLineChartProfile(
     "95",
     (data = [65, 35, 45, 42, 65, 60, 42, 45, 35, 55, 40, 65]),
     (data = [45, 20, 35, 32, 50, 45, 32, 35, 25, 40, 30, 55]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -1668,71 +1747,63 @@ chartjsLineChartProfile(
         "Sep",
         "Oct",
         "Nov",
-        "Dec"
-    ]
+        "Dec",
+    ])
 );
 
-$('#tl_revenue-month-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-month-tab").on("shown.bs.tab", function () {
     chartjsLineChartProfile(
         "myChart6M",
         "#FA8B0C",
         "95",
         (data = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30]),
         (data = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25]),
-        labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"]
+        (labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"])
     );
-    $('#tl_revenue-month-tab').off();
+    $("#tl_revenue-month-tab").off();
 });
 
-$('#tl_revenue-week-tab').on("shown.bs.tab", function () {
+$("#tl_revenue-week-tab").on("shown.bs.tab", function () {
     chartjsLineChartProfile(
         "myChart6W",
         "#FA8B0C",
         "95",
         (data = [55, 25, 45, 42, 40, 45, 42, 45, 35, 55, 40, 30]),
         (data = [45, 30, 35, 32, 35, 50, 32, 35, 25, 40, 30, 25]),
-        labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
+        (labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
     );
-    $('#tl_revenue-week-tab').off();
+    $("#tl_revenue-week-tab").off();
 });
 
 chartjsBarChart(
     "ys_barChartOne",
     (data = [35, 55, 25, 60, 42, 80, 35]),
     (data = [10, 30, 8, 30, 22, 38, 45]),
-    labels = [
-        "Sat",
-        "Sun",
-        "Mon",
-        "Tue",
-        "Wed",
-        "Thu",
-        "Fri",
-    ],
+    (labels = ["Sat", "Sun", "Mon", "Tue", "Wed", "Thu", "Fri"]),
     198,
     "Target",
     "Total Sales"
 );
-$('#ys_month-tab').on("shown.bs.tab", function () {
+$("#ys_month-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "ys_barChartTwo",
-        dataG = (data = [20, 30, 15, 60, 70, 24]),
-        dataL = (data = [70, 60, 40, 20, 15, 65]),
-        labels = ["1-5", "6-10", "11-15", "15-20", "21-25", "25-30"],
+        (dataG = data = [20, 30, 15, 60, 70, 24]),
+        (dataL = data = [70, 60, 40, 20, 15, 65]),
+        (labels = ["1-5", "6-10", "11-15", "15-20", "21-25", "25-30"]),
         198,
         "Target",
         "Total Sales"
     );
-    $('#ys_month-tab').off();
+    $("#ys_month-tab").off();
 });
 
-$('#ys_year-tab').on("shown.bs.tab", function () {
+$("#ys_year-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "ys_barChartThree",
-        dataG = (data = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30]),
-        dataL = (data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
-        labels = ["Jan",
+        (dataG = data = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30]),
+        (dataL = data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
+        (labels = [
+            "Jan",
             "Feb",
             "Mar",
             "Apr",
@@ -1744,15 +1815,13 @@ $('#ys_year-tab').on("shown.bs.tab", function () {
             "Oct",
             "Nov",
             "Dec",
-        ],
+        ]),
         198,
         "Target",
         "Total Sales"
     );
-    $('#ys_year-tab').off();
+    $("#ys_year-tab").off();
 });
-
-
 
 function chartjsLineChartTwo(selector, height, data) {
     var ctxs = document.getElementById(selector);
@@ -1775,27 +1844,29 @@ function chartjsLineChartTwo(selector, height, data) {
                     "Sep",
                     "Oct",
                 ],
-                datasets: [{
-                    data: data,
-                    borderColor: "#C6D0DC",
-                    borderWidth: 2,
-                    fill: false,
-                    pointHoverBackgroundColor: "#20C997",
-                    pointHoverRadius: 6,
-                    pointBorderColor: "transparent",
-                    pointBackgroundColor: [
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "transparent",
-                        "#20C997",
-                    ],
-                }, ],
+                datasets: [
+                    {
+                        data: data,
+                        borderColor: "#C6D0DC",
+                        borderWidth: 2,
+                        fill: false,
+                        pointHoverBackgroundColor: "#20C997",
+                        pointHoverRadius: 6,
+                        pointBorderColor: "transparent",
+                        pointBackgroundColor: [
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "transparent",
+                            "#20C997",
+                        ],
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: true,
@@ -1816,16 +1887,18 @@ function chartjsLineChartTwo(selector, height, data) {
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -1835,8 +1908,14 @@ function chartjsLineChartTwo(selector, height, data) {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -1865,7 +1944,7 @@ function chartjsLineChartTwo(selector, height, data) {
 chartjsLineChartTwo(
     "lineChartSharpOne",
     55,
-    (data = [0, 10, 25, 28, 22, 15, 18, 22, 20, 15, 17, 25, ])
+    (data = [0, 10, 25, 28, 22, 15, 18, 22, 20, 15, 17, 25])
 );
 chartjsLineChartTwo(
     "lineChartSharpTwo",
@@ -1895,7 +1974,7 @@ chartjsBarChart(
     "barChartCashflow",
     (data = [35, 55, 25, 72, 45, 58, 35, 45, 65, 38, 45, 48]),
     (data = [15, 35, 10, 16, 25, 44, 10, 5, 24, 18, 7, 36]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -1908,52 +1987,36 @@ chartjsBarChart(
         "Oct",
         "Nov",
         "Dec",
-    ],
+    ]),
     103,
     "Target",
     "Total Sales"
 );
 
-
-$('#t_revenue-week-tab').on("shown.bs.tab", function () {
+$("#t_revenue-week-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "barChartCashflow_W",
         (data = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30]),
         (data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
-        labels = [
-            "Sun",
-            "Mon",
-            "Tue",
-            "Wed",
-            "Thu",
-            "Fri",
-            "Sat",
-        ],
+        (labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]),
         103,
         "Target",
         "Total Sales"
     );
-    $('#t_revenue-week-tab').off();
+    $("#t_revenue-week-tab").off();
 });
 
-$('#t_revenue-month-tab').on("shown.bs.tab", function () {
+$("#t_revenue-month-tab").on("shown.bs.tab", function () {
     chartjsBarChart(
         "barChartCashflow_M",
         (data = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30]),
         (data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
-        labels = [
-            "1-5",
-            "6-10",
-            "11-15",
-            "16-20",
-            "21-25",
-            "26-30",
-        ],
+        (labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"]),
         103,
         "Target",
         "Total Sales"
     );
-    $('#t_revenue-month-tab').off();
+    $("#t_revenue-month-tab").off();
 });
 
 function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
@@ -1966,15 +2029,17 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
             type: "line",
             data: {
                 labels: ["Current", "1-30", "30-60", "60-90", "90"],
-                datasets: [{
-                    label: 'My First Dataset',
-                    data: [105, 145, 95, 149, 90],
-                    fill: false,
-                    tension: 0.4,
-                    borderColor: bcolor,
-                    pointBackgroundColor: bcolor,
-                    borderWidth: 2,
-                }, ],
+                datasets: [
+                    {
+                        label: "My First Dataset",
+                        data: [105, 145, 95, 149, 90],
+                        fill: false,
+                        tension: 0.4,
+                        borderColor: bcolor,
+                        pointBackgroundColor: bcolor,
+                        borderWidth: 2,
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: true,
@@ -1996,16 +2061,18 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -2028,7 +2095,7 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                     y: {
@@ -2050,7 +2117,7 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -2059,7 +2126,7 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
                                 return `${value}K`;
                             },
                         },
-                    }
+                    },
                 },
                 animation: {
                     onComplete: () => {
@@ -2067,8 +2134,14 @@ function chartjsLineChartAccount(selector, bcolor = "#FA8B0C") {
                     },
                     delay: (context) => {
                         let delay = 0;
-                        if (context.type === 'data' && context.mode === 'default' && !delayed) {
-                            delay = context.dataIndex * 200 + context.datasetIndex * 50;
+                        if (
+                            context.type === "data" &&
+                            context.mode === "default" &&
+                            !delayed
+                        ) {
+                            delay =
+                                context.dataIndex * 200 +
+                                context.datasetIndex * 50;
                         }
                         return delay;
                     },
@@ -2096,23 +2169,25 @@ function chartjsLineChartOne(
                 type: "line",
                 data: {
                     labels: ["0", "4", "8", "12", "16", "20", "24"],
-                    datasets: [{
-                        label: label,
-                        backgroundColor: bgColor,
-                        borderColor: bColor,
-                        data: data,
-                        borderWidth: 3,
-                        fill: true,
-                        tension: 0.4,
-                        hoverRadius: '6',
-                        pointBackgroundColor: bgColor,
-                        pointRadius: 0,
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: bgColor,
-                        pointHitRadius: 30,
-                        pointStyle: 'circle',
-                        pointHoverBorderWidth: 2,
-                    }, ],
+                    datasets: [
+                        {
+                            label: label,
+                            backgroundColor: bgColor,
+                            borderColor: bColor,
+                            data: data,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            hoverRadius: "6",
+                            pointBackgroundColor: bgColor,
+                            pointRadius: 0,
+                            pointHoverRadius: 3,
+                            pointHoverBackgroundColor: bgColor,
+                            pointHitRadius: 30,
+                            pointStyle: "circle",
+                            pointHoverBorderWidth: 2,
+                        },
+                    ],
                 },
                 options: {
                     maintainAspectRatio: true,
@@ -2134,16 +2209,18 @@ function chartjsLineChartOne(
                             external: customTooltips,
                             callbacks: {
                                 label: function (context) {
-                                    let label = context.dataset.label || '';
+                                    let label = context.dataset.label || "";
 
                                     if (label) {
-                                        label += ': ';
+                                        label += ": ";
                                     }
                                     if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat().format(context.parsed.y);
+                                        label += new Intl.NumberFormat().format(
+                                            context.parsed.y
+                                        );
                                     }
                                     return `<span class="data-label">${label}k</span>`;
-                                }
+                                },
                             },
                         },
                     },
@@ -2224,19 +2301,19 @@ chartjsLineChartOne(
     (data = [200, 150, 200, 250, 100, 200, 150])
 );
 
-$('#f_week-tab').on("shown.bs.tab", function () {
+$("#f_week-tab").on("shown.bs.tab", function () {
     fOverviewWeek();
-    $('#f_week-tab').off();
+    $("#f_week-tab").off();
 });
 
-$('#f_month-tab').on("shown.bs.tab", function () {
+$("#f_month-tab").on("shown.bs.tab", function () {
     fOverviewMonth();
-    $('#f_month-tab').off();
+    $("#f_month-tab").off();
 });
 
-$('#f_year-tab').on("shown.bs.tab", function () {
+$("#f_year-tab").on("shown.bs.tab", function () {
     fOverviewYear();
-    $('#f_year-tab').off();
+    $("#f_year-tab").off();
 });
 
 function fOverviewWeek() {
@@ -2307,32 +2384,52 @@ function fOverviewYear() {
         (label = "label"),
         (bgColor = "#20C99710"),
         (bColor = "#20C997"),
-        (data = [95000, 19000, 55000, 90000, 240000, 95000, 55000, 19000, 55000, 66000, 90000, 240000])
+        (data = [
+            95000, 19000, 55000, 90000, 240000, 95000, 55000, 19000, 55000,
+            66000, 90000, 240000,
+        ])
     );
     chartjsLineChartOne(
         "#lineChartFourteen",
         (label = "Label"),
         (bgColor = "#E34A8710"),
         (bColor = "#FF69A5"),
-        (data = [98000, 20000, 55000, 90000, 240000, 95000, 55000, 19000, 55000, 66000, 90000, 240000])
+        (data = [
+            98000, 20000, 55000, 90000, 240000, 95000, 55000, 19000, 55000,
+            66000, 90000, 240000,
+        ])
     );
     chartjsLineChartOne(
         "#lineChartFifteen",
         (label = "Label"),
         (bgColor = "#0D79DF10"),
         (bColor = "#5F63F2"),
-        (data = [9500, 1900, 5500, 9000, 24000, 9500, 5500, 1900, 5500, 9000, 10000, 24000])
+        (data = [
+            9500, 1900, 5500, 9000, 24000, 9500, 5500, 1900, 5500, 9000, 10000,
+            24000,
+        ])
     );
     chartjsLineChartOne(
         "#lineChartSixteen",
         (label = "Label"),
         (bgColor = "#D4740710"),
         (bColor = "#FA8B0C"),
-        (data = [5000, 19000, 15000, 19000, 20000, 35000, 20000, 19000, 27000, 10000, 15000, 20000])
+        (data = [
+            5000, 19000, 15000, 19000, 20000, 35000, 20000, 19000, 27000, 10000,
+            15000, 20000,
+        ])
     );
 }
 
-function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label = "Bar chart Income Expense") {
+function chartjsBarChartInEx(
+    selector,
+    data1,
+    data2,
+    data3,
+    data4,
+    labels,
+    label = "Bar chart Income Expense"
+) {
     var ctx = document.getElementById(selector);
     if (ctx) {
         ctx.getContext("2d");
@@ -2341,7 +2438,8 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
             type: "bar",
             data: {
                 labels: labels,
-                datasets: [{
+                datasets: [
+                    {
                         data: data1,
                         backgroundColor: "#5F63F250",
                         hoverBackgroundColor: "#5F63F2",
@@ -2379,7 +2477,7 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
                 maintainAspectRatio: true,
                 responsive: true,
                 interaction: {
-                    mode: 'index',
+                    mode: "index",
                 },
                 plugins: {
                     legend: {
@@ -2398,16 +2496,18 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -2437,7 +2537,7 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474',
+                            color: "#747474",
                             padding: 15,
                             max: 80,
                             min: 0,
@@ -2465,7 +2565,7 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
                                 size: 14,
                                 family: "'Jost', sans-serif",
                             },
-                            color: '#747474'
+                            color: "#747474",
                         },
                     },
                 },
@@ -2474,29 +2574,28 @@ function chartjsBarChartInEx(selector, data1, data2, data3, data4, labels, label
     }
 }
 
-$('#incExp-week-tab').on("shown.bs.tab", function () {
+$("#incExp-week-tab").on("shown.bs.tab", function () {
     chartjsBarChartInEx(
         "barChartInEx_W",
         (data = [20, 45, 50, 60, 70, 40, 45]),
         (data = [10, 40, 60, 55, 45, 35, 30]),
         (data = [20, 45, 50, 60, 70, 40, 45]),
         (data = [10, 40, 60, 55, 45, 35, 30]),
-        labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-
+        (labels = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"])
     );
-    $('#incExp-week-tab').off();
+    $("#incExp-week-tab").off();
 });
 
-$('#incExp-month-tab').on("shown.bs.tab", function () {
+$("#incExp-month-tab").on("shown.bs.tab", function () {
     chartjsBarChartInEx(
         "barChartInEx_M",
         (data = [20, 50, 60, 70, 40, 30]),
         (data = [10, 60, 55, 45, 35, 40]),
         (data = [20, 50, 60, 70, 40, 50]),
         (data = [10, 60, 55, 45, 35, 20]),
-        labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"]
+        (labels = ["1-5", "6-10", "11-15", "16-20", "21-25", "26-30"])
     );
-    $('#incExp-month-tab').off();
+    $("#incExp-month-tab").off();
 });
 
 chartjsBarChartInEx(
@@ -2505,7 +2604,7 @@ chartjsBarChartInEx(
     (data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
     (data = [20, 60, 50, 45, 50, 60, 70, 40, 45, 35, 25, 30]),
     (data = [10, 40, 30, 40, 60, 55, 45, 35, 30, 20, 15, 20]),
-    labels = [
+    (labels = [
         "Jan",
         "Feb",
         "Mar",
@@ -2518,7 +2617,7 @@ chartjsBarChartInEx(
         "Oct",
         "Nov",
         "Dec",
-    ]
+    ])
 );
 
 function chartjsLineChartForcast(
@@ -2549,22 +2648,24 @@ function chartjsLineChartForcast(
                         "Sep",
                         "Oct",
                     ],
-                    datasets: [{
-                        label: label,
-                        borderColor: bColor,
-                        data: data,
-                        tension: 0.4,
-                        fill: false,
-                        hoverRadius: '6',
-                        borderWidth: 3,
-                        pointBackgroundColor: bColor,
-                        pointRadius: 0,
-                        pointHoverRadius: 3,
-                        pointHoverBackgroundColor: bColor,
-                        pointHitRadius: 30,
-                        pointStyle: 'circle',
-                        pointHoverBorderWidth: 2,
-                    }, ],
+                    datasets: [
+                        {
+                            label: label,
+                            borderColor: bColor,
+                            data: data,
+                            tension: 0.4,
+                            fill: false,
+                            hoverRadius: "6",
+                            borderWidth: 3,
+                            pointBackgroundColor: bColor,
+                            pointRadius: 0,
+                            pointHoverRadius: 3,
+                            pointHoverBackgroundColor: bColor,
+                            pointHitRadius: 30,
+                            pointStyle: "circle",
+                            pointHoverBorderWidth: 2,
+                        },
+                    ],
                 },
                 options: {
                     maintainAspectRatio: true,
@@ -2586,16 +2687,18 @@ function chartjsLineChartForcast(
                             external: customTooltips,
                             callbacks: {
                                 label: function (context) {
-                                    let label = context.dataset.label || '';
+                                    let label = context.dataset.label || "";
 
                                     if (label) {
-                                        label += ': ';
+                                        label += ": ";
                                     }
                                     if (context.parsed.y !== null) {
-                                        label += new Intl.NumberFormat().format(context.parsed.y);
+                                        label += new Intl.NumberFormat().format(
+                                            context.parsed.y
+                                        );
                                     }
                                     return `<span class="data-label">${label}k</span>`;
-                                }
+                                },
                             },
                         },
                     },
@@ -2645,7 +2748,6 @@ function chartjsLineChartForcast(
     }
 }
 
-
 chartjsLineChartForcast(
     "#lineChartforcastOne",
     (label = "Line Chart dataset"),
@@ -2664,8 +2766,6 @@ chartjsLineChartForcast(
     (data = [5, 15, 15, 10, 15, 25, 15, 25, 20, 10])
 );
 
-
-
 /* line chart small */
 function chartjsLineChartSmall(
     selector,
@@ -2682,22 +2782,24 @@ function chartjsLineChartSmall(
             type: "line",
             data: {
                 labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun"],
-                datasets: [{
-                    label: label,
-                    borderColor: bColor,
-                    data: data,
-                    borderWidth: 2,
-                    fill: false,
-                    pointBackgroundColor: bColor,
-                    hoverRadius: '6',
-                    pointRadius: 0,
-                    pointHoverRadius: 3,
-                    pointHoverBackgroundColor: bColor,
-                    pointHitRadius: 30,
-                    pointStyle: 'circle',
-                    pointHoverBorderWidth: 2,
-                    tension:0.4,
-                }, ],
+                datasets: [
+                    {
+                        label: label,
+                        borderColor: bColor,
+                        data: data,
+                        borderWidth: 2,
+                        fill: false,
+                        pointBackgroundColor: bColor,
+                        hoverRadius: "6",
+                        pointRadius: 0,
+                        pointHoverRadius: 3,
+                        pointHoverBackgroundColor: bColor,
+                        pointHitRadius: 30,
+                        pointStyle: "circle",
+                        pointHoverBorderWidth: 2,
+                        tension: 0.4,
+                    },
+                ],
             },
             options: {
                 maintainAspectRatio: false,
@@ -2719,16 +2821,18 @@ function chartjsLineChartSmall(
                         external: customTooltips,
                         callbacks: {
                             label: function (context) {
-                                let label = context.dataset.label || '';
+                                let label = context.dataset.label || "";
 
                                 if (label) {
-                                    label += ': ';
+                                    label += ": ";
                                 }
                                 if (context.parsed.y !== null) {
-                                    label += new Intl.NumberFormat().format(context.parsed.y);
+                                    label += new Intl.NumberFormat().format(
+                                        context.parsed.y
+                                    );
                                 }
                                 return `<span class="data-label">${label}k</span>`;
-                            }
+                            },
                         },
                     },
                 },
@@ -2742,11 +2846,11 @@ function chartjsLineChartSmall(
                 },
                 scales: {
                     x: {
-                        display: false
+                        display: false,
                     },
                     y: {
-                        display: false
-                    }
+                        display: false,
+                    },
                 },
             },
         });

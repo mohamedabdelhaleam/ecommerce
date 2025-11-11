@@ -44,8 +44,8 @@
                                             </div>
                                             <div class="admin-condition">
                                                 <div class="checkbox-theme-default custom-checkbox">
-                                                    <input class="checkbox" type="checkbox" id="remember_me"
-                                                        name="remember">
+                                                    <input class="checkbox" type="checkbox" id="remember_me" name="remember"
+                                                        value="1" {{ old('remember') ? 'checked' : '' }}>
                                                     <label for="remember_me">
                                                         <span class="checkbox-text">Remember Me</span>
                                                     </label>
@@ -54,7 +54,7 @@
                                             <div
                                                 class="admin__button-group button-group d-flex pt-1 justify-content-md-start justify-content-center">
                                                 <button
-                                                    class="btn btn-primary btn-default w-100 btn-squared text-capitalize lh-normal px-50 signIn-createBtn">
+                                                    class="btn btn-primary w-100 btn-squared text-capitalize lh-normal px-50 signIn-createBtn">
                                                     Login
                                                 </button>
                                             </div>
