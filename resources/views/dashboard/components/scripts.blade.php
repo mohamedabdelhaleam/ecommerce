@@ -46,3 +46,11 @@
 <script src="{{ asset('dashboard/assets/theme_assets/js/leaflet-init.js') }}"></script>
 <script src="{{ asset('dashboard/assets/theme_assets/js/main.js') }}"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<style>
+    /* Ensure SweetAlert2 displays above header */
+    .swal2-container {
+        z-index: 99999 !important;
+    }
+</style>
+<script src="{{ asset('dashboard/assets/js/ajax-delete.js') }}"></script>
+<script src="{{ asset('dashboard/assets/js/ajax-status-switcher.js') }}"></script>
