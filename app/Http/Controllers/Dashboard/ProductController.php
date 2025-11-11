@@ -25,12 +25,31 @@ class ProductController extends Controller
      * Display a listing of the products.
      *
      * @param Request $request
-     * @return View
+     * @return View|\Illuminate\Http\JsonResponse
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
-        $products = $this->productRepository->all();
-        return view('dashboard.pages.products.index', compact('products'));
+        $filters = $this->productRepository->buildFiltersFromRequest($request);
+        $products = $this->productRepository->all($filters);
+        $categories = Category::all();
+
+        // If AJAX request, return JSON with table HTML
+        if ($request->ajax() || $request->wantsJson()) {
+            $tableHtml = view('dashboard.pages.products.partials.table', compact('products'))->render();
+            $paginationHtml = '';
+
+            if ($products instanceof \Illuminate\Contracts\Pagination\LengthAwarePaginator) {
+                $paginationHtml = $this->productRepository->getPaginationHtml($products);
+            }
+
+            return response()->json([
+                'success' => true,
+                'table' => $tableHtml,
+                'pagination' => $paginationHtml,
+            ]);
+        }
+
+        return view('dashboard.pages.products.index', compact('products', 'categories'));
     }
 
     /**
@@ -112,18 +131,19 @@ class ProductController extends Controller
     public function toggleStatus(Request $request, Product $product)
     {
         try {
-            $product = $this->productRepository->findOrFail($product->id);
-
             $validated = $request->validate([
                 'is_active' => 'required|boolean',
             ]);
 
-            $this->productRepository->update($product->id, $validated);
+            $updatedProduct = $this->productRepository->toggleStatus(
+                $product->id,
+                $validated['is_active']
+            );
 
             return response()->json([
                 'success' => true,
                 'message' => 'Product status updated successfully.',
-                'is_active' => $validated['is_active'],
+                'is_active' => $updatedProduct->is_active,
             ]);
         } catch (\Exception $e) {
             return response()->json([

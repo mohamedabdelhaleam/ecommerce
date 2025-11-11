@@ -5,11 +5,17 @@
 (function () {
     "use strict";
 
-    document.addEventListener("DOMContentLoaded", function () {
-        // Handle all status switchers
+    // Function to initialize status switchers
+    function initializeStatusSwitchers() {
+        // Remove existing event listeners by cloning elements
         document
             .querySelectorAll(".status-switcher-toggle")
             .forEach(function (toggle) {
+                // Skip if already initialized
+                if (toggle.hasAttribute("data-initialized")) {
+                    return;
+                }
+                toggle.setAttribute("data-initialized", "true");
                 toggle.addEventListener("change", function (e) {
                     e.preventDefault();
                     e.stopPropagation();
@@ -138,5 +144,15 @@
                         });
                 });
             });
-    });
+    }
+
+    // Initialize on page load
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initializeStatusSwitchers);
+    } else {
+        initializeStatusSwitchers();
+    }
+
+    // Expose function for re-initialization after AJAX updates
+    window.reinitializeStatusSwitchers = initializeStatusSwitchers;
 })();

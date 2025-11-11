@@ -1,9 +1,6 @@
 @extends('dashboard.layout.app')
 @section('content')
     <div class="row">
-        <div class="col-12">
-
-        </div>
         <div class="col-lg-12 mb-30">
             <div class="card">
                 <div class="card-header color-dark fw-500 d-flex justify-content-between align-items-center">
@@ -11,6 +8,47 @@
                     <a href="{{ route('dashboard.products.create') }}" class="btn btn-primary btn-sm">
                         <i class="uil uil-plus"></i> Add New Product
                     </a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <form id="product-search-form" class="row g-3"
+                                data-search-url="{{ route('dashboard.products.index') }}">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="Search by name (Arabic or English)" value="{{ request('search') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="category_id" name="category_id">
+                                        <option value="">All Categories</option>
+                                        @foreach ($categories as $category)
+                                            <option value="{{ $category->id }}"
+                                                {{ request('category_id') == $category->id ? 'selected' : '' }}>
+                                                {{ $category->name_ar ?? $category->name_en }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <select class="form-control" id="is_active" name="is_active">
+                                        <option value="">All Status</option>
+                                        <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Active
+                                        </option>
+                                        <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Inactive
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="date" class="form-control" id="from_date" name="from_date"
+                                        placeholder="From Date" value="{{ request('from_date') }}">
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="date" class="form-control" id="to_date" name="to_date"
+                                        placeholder="To Date" value="{{ request('to_date') }}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
@@ -56,7 +94,7 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="products-table-body">
                                     @include('dashboard.pages.products.partials.table')
                                 </tbody>
                             </table>
@@ -64,13 +102,19 @@
                     </div>
 
                     <!-- Pagination -->
-                    @if (method_exists($products, 'links'))
-                        <div class="mt-4">
-                            {{ $products->links('pagination::bootstrap-5') }}
-                        </div>
-                    @endif
+                    <div id="products-pagination">
+                        @if (method_exists($products, 'links'))
+                            <div class="mt-4">
+                                {{ $products->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script src="{{ asset('dashboard/assets/js/ajax-product-search.js') }}"></script>
 @endsection

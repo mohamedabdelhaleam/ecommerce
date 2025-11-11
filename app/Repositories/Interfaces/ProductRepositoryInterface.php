@@ -5,15 +5,17 @@ namespace App\Repositories\Interfaces;
 use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 
 interface ProductRepositoryInterface
 {
     /**
      * Get all products (paginated)
      *
-     * @return LengthAwarePaginator
+     * @param array $filters
+     * @return LengthAwarePaginator|Collection
      */
-    public function all();
+    public function all(array $filters = []);
 
     /**
      * Find a product by ID
@@ -71,4 +73,30 @@ interface ProductRepositoryInterface
      * @return Collection
      */
     public function getActive(): Collection;
+
+    /**
+     * Build filters array from request
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function buildFiltersFromRequest(Request $request): array;
+
+    /**
+     * Toggle product status
+     *
+     * @param int $id
+     * @param bool $isActive
+     * @return Product
+     */
+    public function toggleStatus(int $id, bool $isActive): Product;
+
+    /**
+     * Get pagination HTML for products
+     *
+     * @param LengthAwarePaginator $products
+     * @param string $view
+     * @return string
+     */
+    public function getPaginationHtml(LengthAwarePaginator $products, string $view = 'pagination::bootstrap-5'): string;
 }
