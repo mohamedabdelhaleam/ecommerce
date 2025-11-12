@@ -51,6 +51,9 @@ return [
     'new_product' => 'منتج جديد',
     'product_name' => 'اسم المنتج',
     'price' => 'السعر',
+    'size' => 'المقاس',
+    'color' => 'اللون',
+    'stock' => 'المخزون',
 
     // Products
     'product_list' => 'قائمة المنتجات',
@@ -77,6 +80,8 @@ return [
     'no_products_found' => 'لم يتم العثور على منتجات.',
     'max_size' => 'الحجم الأقصى: 2 ميجابايت. المسموح: jpeg, png, jpg, gif',
     'auto_generated_if_empty' => 'يتم إنشاؤه تلقائياً إذا تركت فارغاً',
+    'additional_images' => 'الصور الإضافية',
+    'product_variants' => 'متغيرات المنتج',
 
     // Categories
     'category_list' => 'الفئات',

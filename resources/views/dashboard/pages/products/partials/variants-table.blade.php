@@ -2,12 +2,12 @@
     <tr id="variant-row-{{ $variant->id }}">
         <td>
             <div class="userDatatable-content">
-                {{ $variant->size->name_en ?? 'N/A' }}
+                {{ $variant->size->name ?? 'N/A' }}
             </div>
         </td>
         <td>
             <div class="userDatatable-content">
-                {{ $variant->color->name_en ?? 'N/A' }}
+                {{ $variant->color->name ?? 'N/A' }}
             </div>
         </td>
         <td>

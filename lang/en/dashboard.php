@@ -51,6 +51,9 @@ return [
     'new_product' => 'New Product',
     'product_name' => 'Product Name',
     'price' => 'Price',
+    'size' => 'Size',
+    'color' => 'Color',
+    'stock' => 'Stock',
 
     // Products
     'product_list' => 'Product List',
@@ -77,6 +80,8 @@ return [
     'no_products_found' => 'No products found.',
     'max_size' => 'Max size: 2MB. Allowed: jpeg, png, jpg, gif',
     'auto_generated_if_empty' => 'Auto-generated if left empty',
+    'additional_images' => 'Additional Images',
+    'product_variants' => 'Product Variants',
 
     // Categories
     'category_list' => 'Categories',

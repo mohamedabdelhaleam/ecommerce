@@ -5,8 +5,8 @@
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">{{ __('dashboard.category_details') }}</h6>
-                    <div>
-                        <a href="{{ route('dashboard.categories.edit', $category) }}" class="btn btn-warning btn-sm">
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('dashboard.categories.edit', $category) }}" class="btn btn-secondary btn-sm">
                             <i class="uil uil-edit"></i> {{ __('dashboard.edit') }}
                         </a>
                         <a href="{{ route('dashboard.categories.index') }}" class="btn btn-secondary btn-sm">
