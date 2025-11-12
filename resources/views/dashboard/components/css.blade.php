@@ -17,7 +17,24 @@
 <link rel="stylesheet" href="{{ asset('dashboard/assets/vendor_assets/css/trumbowyg.min.css') }}">
 <link rel="stylesheet" href="{{ asset('dashboard/assets/vendor_assets/css/wickedpicker.min.css') }}">
 <link rel="stylesheet" href="{{ asset('dashboard/style.css') }}">
-{{-- <link rel="stylesheet" href="{{ asset('dashboard/rtl.css') }}"> --}}
+@if (app()->getLocale() == 'ar')
+    <link rel="stylesheet" href="{{ asset('dashboard/rtl.css') }}">
+    <style>
+        /* Ensure sidebar is on the right in RTL mode */
+        .sidebar-wrapper {
+            left: auto !important;
+            right: 0 !important;
+        }
+    </style>
+@else
+    <style>
+        /* Ensure sidebar is on the left in LTR mode */
+        .sidebar-wrapper {
+            left: 0 !important;
+            right: auto !important;
+        }
+    </style>
+@endif
 
 <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('img/favicon.png') }}">
 

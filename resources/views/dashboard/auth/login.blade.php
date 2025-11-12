@@ -11,7 +11,7 @@
                             <div class="card border-0">
                                 <div class="card-header">
                                     <div class="edit-profile__title">
-                                        <h6>Login</h6>
+                                        <h6>{{ __('dashboard.login') }}</h6>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -19,7 +19,7 @@
                                         <form method="POST" action="{{ route('dashboard.login') }}">
                                             @csrf
                                             <div class="form-group mb-25">
-                                                <label for="phone">Phone Number</label>
+                                                <label for="phone">{{ __('dashboard.phone_number') }}</label>
                                                 <input type="tel" class="form-control" id="phone" name="phone"
                                                     placeholder="0123456789" :value="old('phone')" required autofocus
                                                     autocomplete="phone">
@@ -28,7 +28,7 @@
                                                 @endif
                                             </div>
                                             <div class="form-group mb-15">
-                                                <label for="password-field">Password</label>
+                                                <label for="password-field">{{ __('dashboard.password') }}</label>
                                                 <div class="position-relative">
                                                     <input id="password-field" type="password" class="form-control"
                                                         name="password" required autocomplete="current-password"
@@ -47,7 +47,7 @@
                                                     <input class="checkbox" type="checkbox" id="remember_me" name="remember"
                                                         value="1" {{ old('remember') ? 'checked' : '' }}>
                                                     <label for="remember_me">
-                                                        <span class="checkbox-text">Remember Me</span>
+                                                        <span class="checkbox-text">{{ __('dashboard.remember_me') }}</span>
                                                     </label>
                                                 </div>
                                             </div>
@@ -55,7 +55,7 @@
                                                 class="admin__button-group button-group d-flex pt-1 justify-content-md-start justify-content-center">
                                                 <button
                                                     class="btn btn-primary w-100 btn-squared text-capitalize lh-normal px-50 signIn-createBtn">
-                                                    Login
+                                                    {{ __('dashboard.login') }}
                                                 </button>
                                             </div>
                                         </form>

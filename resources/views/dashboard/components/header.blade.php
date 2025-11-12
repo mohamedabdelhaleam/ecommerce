@@ -14,7 +14,7 @@
         <!-- ends: navbar-left -->
         <div class="navbar-right">
             <ul class="navbar-right__menu">
-
+                @include('dashboard.components.language-switcher')
                 <!-- ends: .nav-flag-select -->
                 <li class="nav-author">
                     <div class="dropdown-custom">
@@ -41,7 +41,7 @@
                                         <li id="ChangePassword">
                                             <a style="cursor: pointer">
                                                 <img src="{{ asset('dashboard/img/svg/settings.svg') }}" alt="settings"
-                                                    class="svg">Change Password</a>
+                                                    class="svg">{{ __('dashboard.change_password') }}</a>
                                         </li>
                                     </ul>
 
@@ -54,7 +54,7 @@
                                             <button type="submit"
                                                 class="nav-author__signout border-0 bg-transparent w-100 text-left p-1"
                                                 style="cursor: pointer;">
-                                                <i class="uil uil-sign-out-alt"></i>Logout
+                                                <i class="uil uil-sign-out-alt"></i>{{ __('dashboard.logout') }}
                                             </button>
                                         </form>
                                     </div>

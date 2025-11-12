@@ -4,9 +4,9 @@
         <div class="col-lg-12 mb-30">
             <div class="card">
                 <div class="card-header color-dark fw-500 d-flex justify-content-between align-items-center">
-                    <span>Product List</span>
+                    <span>{{ __('dashboard.product_list') }}</span>
                     <a href="{{ route('dashboard.products.create') }}" class="btn btn-primary btn-sm">
-                        <i class="uil uil-plus"></i> Add New Product
+                        <i class="uil uil-plus"></i> {{ __('dashboard.add_new_product') }}
                     </a>
                 </div>
                 <div class="card-body">
@@ -16,11 +16,11 @@
                                 data-search-url="{{ route('dashboard.products.index') }}">
                                 <div class="col-md-3">
                                     <input type="text" class="form-control" id="search" name="search"
-                                        placeholder="Search by name (Arabic or English)" value="{{ request('search') }}">
+                                        placeholder="{{ __('dashboard.search_by_name') }}" value="{{ request('search') }}">
                                 </div>
                                 <div class="col-md-3">
                                     <select class="form-control" id="category_id" name="category_id">
-                                        <option value="">All Categories</option>
+                                        <option value="">{{ __('dashboard.all_categories') }}</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}"
                                                 {{ request('category_id') == $category->id ? 'selected' : '' }}>
@@ -31,20 +31,22 @@
                                 </div>
                                 <div class="col-md-2">
                                     <select class="form-control" id="is_active" name="is_active">
-                                        <option value="">All Status</option>
-                                        <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>Active
+                                        <option value="">{{ __('dashboard.all_status') }}</option>
+                                        <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>
+                                            {{ __('dashboard.active') }}
                                         </option>
-                                        <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>Inactive
+                                        <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>
+                                            {{ __('dashboard.inactive') }}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" class="form-control" id="from_date" name="from_date"
-                                        placeholder="From Date" value="{{ request('from_date') }}">
+                                        placeholder="{{ __('dashboard.from_date') }}" value="{{ request('from_date') }}">
                                 </div>
                                 <div class="col-md-2">
                                     <input type="date" class="form-control" id="to_date" name="to_date"
-                                        placeholder="To Date" value="{{ request('to_date') }}">
+                                        placeholder="{{ __('dashboard.to_date') }}" value="{{ request('to_date') }}">
                                 </div>
                             </form>
                         </div>
@@ -69,29 +71,31 @@
                                                 <div class="custom-checkbox check-all">
                                                     <input class="checkbox" type="checkbox" id="check-all-products">
                                                     <label for="check-all-products">
-                                                        <span class="checkbox-text userDatatable-title">product</span>
+                                                        <span
+                                                            class="checkbox-text userDatatable-title">{{ __('dashboard.product') }}</span>
                                                     </label>
                                                 </div>
                                             </div>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title">category</span>
+                                            <span class="userDatatable-title">{{ __('dashboard.category') }}</span>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title">English Name</span>
+                                            <span class="userDatatable-title">{{ __('dashboard.english_name') }}</span>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title">Stocks</span>
+                                            <span class="userDatatable-title">{{ __('dashboard.stocks') }}</span>
                                         </th>
 
                                         <th>
-                                            <span class="userDatatable-title">created date</span>
+                                            <span class="userDatatable-title">{{ __('dashboard.created_date') }}</span>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title">status</span>
+                                            <span class="userDatatable-title">{{ __('dashboard.status') }}</span>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title float-end">action</span>
+                                            <span
+                                                class="userDatatable-title float-end">{{ __('dashboard.actions') }}</span>
                                         </th>
                                     </tr>
                                 </thead>

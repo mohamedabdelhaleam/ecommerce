@@ -5,21 +5,21 @@
                 <li class="{{ request()->routeIs('dashboard.home') ? 'active' : '' }}">
                     <a href="{{ route('dashboard.home') }}" class="">
                         <span class="nav-icon uil uil-create-dashboard"></span>
-                        <span class="menu-text">Dashboard</span>
+                        <span class="menu-text">{{ __('dashboard.dashboard') }}</span>
                         {{-- <span class="toggle-icon"></span> --}}
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('dashboard.products.*') ? 'active' : '' }}">
                     <a href="{{ route('dashboard.products.index') }}" class="">
                         <span class="nav-icon uil uil-box"></span>
-                        <span class="menu-text">Products</span>
+                        <span class="menu-text">{{ __('dashboard.products') }}</span>
                         {{-- <span class="toggle-icon"></span> --}}
                     </a>
                 </li>
                 <li class="{{ request()->routeIs('dashboard.categories.*') ? 'active' : '' }}">
                     <a href="{{ route('dashboard.categories.index') }}" class="">
                         <span class="nav-icon uil uil-list-ul"></span>
-                        <span class="menu-text">Categories</span>
+                        <span class="menu-text">{{ __('dashboard.categories') }}</span>
                         {{-- <span class="toggle-icon"></span> --}}
                     </a>
                 </li>

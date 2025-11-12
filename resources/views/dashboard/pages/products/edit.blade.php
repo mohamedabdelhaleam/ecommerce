@@ -4,7 +4,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header">
-                    <h6 class="mb-0">Edit Product</h6>
+                    <h6 class="mb-0">{{ __('dashboard.edit_product') }}</h6>
                 </div>
                 <div class="card-body">
                     @if ($errors->any())
@@ -26,7 +26,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="name_ar" class="form-label">Product Name (Arabic) <span
+                                    <label for="name_ar" class="form-label">{{ __('dashboard.product_name_arabic') }} <span
                                             class="text-danger">*</span></label>
                                     <input type="text" class="form-control @error('name_ar') is-invalid @enderror"
                                         id="name_ar" name="name_ar" value="{{ old('name_ar', $product->name_ar) }}"
@@ -39,7 +39,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="name_en" class="form-label">Product Name (English)</label>
+                                    <label for="name_en"
+                                        class="form-label">{{ __('dashboard.product_name_english') }}</label>
                                     <input type="text" class="form-control @error('name_en') is-invalid @enderror"
                                         id="name_en" name="name_en" value="{{ old('name_en', $product->name_en) }}">
                                     @error('name_en')
@@ -55,7 +56,7 @@
                                     <label for="slug" class="form-label">Slug</label>
                                     <input type="text" class="form-control @error('slug') is-invalid @enderror"
                                         id="slug" name="slug" value="{{ old('slug', $product->slug) }}"
-                                        placeholder="Auto-generated if left empty">
+                                        placeholder="{{ __('dashboard.auto_generated_if_empty') }}">
                                     @error('slug')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
@@ -64,11 +65,11 @@
 
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="category_id" class="form-label">Category <span
+                                    <label for="category_id" class="form-label">{{ __('dashboard.category') }} <span
                                             class="text-danger">*</span></label>
                                     <select class="form-control @error('category_id') is-invalid @enderror" id="category_id"
                                         name="category_id" required>
-                                        <option value="">Select Category</option>
+                                        <option value="">{{ __('dashboard.select_category') }}</option>
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}"
                                                 {{ old('category_id', $product->category_id) == $category->id ? 'selected' : '' }}>
@@ -86,7 +87,8 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="description_ar" class="form-label">Description (Arabic)</label>
+                                    <label for="description_ar"
+                                        class="form-label">{{ __('dashboard.description_arabic') }}</label>
                                     <textarea class="form-control @error('description_ar') is-invalid @enderror" id="description_ar" name="description_ar"
                                         rows="4">{{ old('description_ar', $product->description_ar) }}</textarea>
                                     @error('description_ar')
@@ -97,7 +99,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="description_en" class="form-label">Description (English)</label>
+                                    <label for="description_en"
+                                        class="form-label">{{ __('dashboard.description_english') }}</label>
                                     <textarea class="form-control @error('description_en') is-invalid @enderror" id="description_en" name="description_en"
                                         rows="4">{{ old('description_en', $product->description_en) }}</textarea>
                                     @error('description_en')
@@ -110,13 +113,13 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
-                                    <label for="image" class="form-label">Product Image</label>
+                                    <label for="image" class="form-label">{{ __('dashboard.product_image') }}</label>
                                     <input type="file" class="form-control @error('image') is-invalid @enderror"
                                         id="image" name="image" accept="image/*" onchange="previewImage(this)">
                                     @error('image')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
-                                    <small class="form-text text-muted">Max size: 2MB. Allowed: jpeg, png, jpg, gif</small>
+                                    <small class="form-text text-muted">{{ __('dashboard.max_size') }}</small>
                                     <div class="mt-2">
                                         <img id="imagePreview" src="{{ $product->image }}" alt="Current Image"
                                             class="img-thumbnail" style="max-width: 200px;">
@@ -127,10 +130,10 @@
 
                         <div class="form-group mb-0">
                             <button type="submit" class="btn btn-primary">
-                                <i class="uil uil-save"></i> Update Product
+                                <i class="uil uil-save"></i> {{ __('dashboard.update') }} {{ __('dashboard.product') }}
                             </button>
                             <a href="{{ route('dashboard.products.index') }}" class="btn btn-secondary">
-                                <i class="uil uil-times"></i> Cancel
+                                <i class="uil uil-times"></i> {{ __('dashboard.cancel') }}
                             </a>
                         </div>
                     </form>

@@ -1,21 +1,21 @@
 @extends('dashboard.layout.app')
 @section('content')
     <div class="row">
-        <x-dashboard.statics-card title="Total Products" value="100+" percentage="25.36%" percentageText="Since last month"
-            icon="<i class='uil uil-box'></i>" />
-        <x-dashboard.statics-card title="Total Orders" value="100+" percentage="25.36%" percentageText="Since last month"
-            icon="<i class='uil uil-shopping-cart'></i>" />
-        <x-dashboard.statics-card title="Total Customers" value="100+" percentage="25.36%"
-            percentageText="Since last month" icon="<i class='uil uil-users-alt'></i>" />
-        <x-dashboard.statics-card title="Total Revenue" value="100+" percentage="25.36%" percentageText="Since last month"
-            icon="<i class='uil uil-money-bill'></i>" />
+        <x-dashboard.statics-card title="{{ __('dashboard.total_products') }}" value="100+" percentage="25.36%"
+            percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-box'></i>" />
+        <x-dashboard.statics-card title="{{ __('dashboard.total_orders') }}" value="100+" percentage="25.36%"
+            percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-shopping-cart'></i>" />
+        <x-dashboard.statics-card title="{{ __('dashboard.total_customers') }}" value="100+" percentage="25.36%"
+            percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-users-alt'></i>" />
+        <x-dashboard.statics-card title="{{ __('dashboard.total_revenue') }}" value="100+" percentage="25.36%"
+            percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-money-bill'></i>" />
 
     </div>
     <div class="row">
         <div class="col-xxl-6 mb-4">
             <div class="card">
                 <div class="card-header">
-                    Products Chart
+                    {{ __('dashboard.products_chart') }}
                 </div>
                 <div class="card-body">
                     <div>
@@ -27,8 +27,8 @@
         <div class="col-xxl-6 mb-4">
             <div class="card border-0 px-25" style="height: 100% !important ;">
                 <div class="card-header px-0 border-0">
-                    <h6>New Product</h6>
-                    
+                    <h6>{{ __('dashboard.new_product') }}</h6>
+
                 </div>
                 <div class="card-body p-0">
                     <div class="tab-content">
@@ -39,8 +39,8 @@
                                     <table class="table table--default table-borderless ">
                                         <thead>
                                             <tr>
-                                                <th>PRDUCTS NAME</th>
-                                                <th>Price</th>
+                                                <th>{{ __('dashboard.product_name') }}</th>
+                                                <th>{{ __('dashboard.price') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -110,8 +110,8 @@
                                     <table class="table table--default table-borderless">
                                         <thead>
                                             <tr>
-                                                <th>PRDUCTS NAME</th>
-                                                <th>Price</th>
+                                                <th>{{ __('dashboard.product_name') }}</th>
+                                                <th>{{ __('dashboard.price') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -149,8 +149,7 @@
                                                 <td>
                                                     <div class="selling-product-img d-flex align-items-center">
                                                         <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/315.png"
-                                                            alt="img">
+                                                            src="http://45.33.34.15:8002/assets/img/315.png" alt="img">
                                                         <span>15" Mackbook Pro</span>
                                                     </div>
                                                 </td>
@@ -160,8 +159,7 @@
                                                 <td>
                                                     <div class="selling-product-img d-flex align-items-center">
                                                         <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/506.png"
-                                                            alt="img">
+                                                            src="http://45.33.34.15:8002/assets/img/506.png" alt="img">
                                                         <span>Apple iPhone X</span>
                                                     </div>
                                                 </td>
@@ -179,8 +177,8 @@
                                     <table class="table table--default table-borderless">
                                         <thead>
                                             <tr>
-                                                <th>PRDUCTS NAME</th>
-                                                <th>Price</th>
+                                                <th>{{ __('dashboard.product_name') }}</th>
+                                                <th>{{ __('dashboard.price') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -188,8 +186,7 @@
                                                 <td>
                                                     <div class="selling-product-img d-flex align-items-center">
                                                         <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/287.png"
-                                                            alt="img">
+                                                            src="http://45.33.34.15:8002/assets/img/287.png" alt="img">
                                                         <span>Samsung Galaxy S8 256GB</span>
                                                     </div>
                                                 </td>

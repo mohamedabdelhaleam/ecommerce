@@ -1,0 +1,110 @@
+<?php
+
+return [
+    // Navigation
+    'dashboard' => 'Dashboard',
+    'products' => 'Products',
+    'categories' => 'Categories',
+    'logout' => 'Logout',
+    'change_password' => 'Change Password',
+
+    // Common
+    'actions' => 'Actions',
+    'status' => 'Status',
+    'active' => 'Active',
+    'inactive' => 'Inactive',
+    'create' => 'Create',
+    'edit' => 'Edit',
+    'delete' => 'Delete',
+    'view' => 'View',
+    'save' => 'Save',
+    'cancel' => 'Cancel',
+    'search' => 'Search',
+    'filter' => 'Filter',
+    'all' => 'All',
+    'yes' => 'Yes',
+    'no' => 'No',
+    'close' => 'Close',
+    'submit' => 'Submit',
+    'back' => 'Back',
+    'update' => 'Update',
+    'show' => 'Show',
+
+    // Auth
+    'login' => 'Login',
+    'phone_number' => 'Phone Number',
+    'password' => 'Password',
+    'remember_me' => 'Remember Me',
+    'forgot_password' => 'Forgot Password?',
+
+    // Home/Dashboard
+    'total_products' => 'Total Products',
+    'total_orders' => 'Total Orders',
+    'total_customers' => 'Total Customers',
+    'total_revenue' => 'Total Revenue',
+    'since_last_month' => 'Since last month',
+    'products_chart' => 'Products Chart',
+    'new_product' => 'New Product',
+    'product_name' => 'Product Name',
+    'price' => 'Price',
+
+    // Products
+    'product_list' => 'Product List',
+    'add_new_product' => 'Add New Product',
+    'create_new_product' => 'Create New Product',
+    'edit_product' => 'Edit Product',
+    'product_details' => 'Product Details',
+    'product_name_arabic' => 'Product Name (Arabic)',
+    'product_name_english' => 'Product Name (English)',
+    'description_arabic' => 'Description (Arabic)',
+    'description_english' => 'Description (English)',
+    'product_image' => 'Product Image',
+    'category' => 'Category',
+    'select_category' => 'Select Category',
+    'all_categories' => 'All Categories',
+    'english_name' => 'English Name',
+    'stocks' => 'Stocks',
+    'created_date' => 'Created Date',
+    'search_by_name' => 'Search by name (Arabic or English)',
+    'all_status' => 'All Status',
+    'from_date' => 'From Date',
+    'to_date' => 'To Date',
+    'product' => 'Product',
+    'no_products_found' => 'No products found.',
+    'max_size' => 'Max size: 2MB. Allowed: jpeg, png, jpg, gif',
+    'auto_generated_if_empty' => 'Auto-generated if left empty',
+
+    // Categories
+    'category_list' => 'Categories',
+    'add_new_category' => 'Add New Category',
+    'create_new_category' => 'Create New Category',
+    'edit_category' => 'Edit Category',
+    'category_details' => 'Category Details',
+    'category_name_arabic' => 'Category Name (Arabic)',
+    'category_name_english' => 'Category Name (English)',
+    'name_arabic' => 'Name (AR)',
+    'name_english' => 'Name (EN)',
+    "products_count" => "Products Count",
+    "created_at" => "Created At",
+    "no_categories_found" => "No categories found.",
+    "search_by_name_or_description" => "Search by name or description...",
+
+    // Messages
+    'success' => 'Success',
+    'error' => 'Error',
+    'are_you_sure' => 'Are you sure?',
+    'delete_confirmation' => 'Are you sure you want to delete this :item?',
+    'item_deleted' => ':item deleted successfully',
+    'item_created' => ':item created successfully',
+    'item_updated' => ':item updated successfully',
+    'item_not_found' => ':item not found',
+
+    // Validation
+    'required' => 'This field is required',
+    'invalid' => 'Invalid value',
+
+    // Language
+    'language' => 'Language',
+    'english' => 'English',
+    'arabic' => 'Arabic',
+];

@@ -12,6 +12,11 @@ Route::middleware('guest:admin')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
 });
 
+// Language switching route (available to all)
+Route::get('/language/{locale}', [\App\Http\Controllers\Dashboard\LanguageController::class, 'switch'])
+    ->name('language.switch')
+    ->where('locale', 'en|ar');
+
 // Authenticated routes
 Route::middleware('auth:admin')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');

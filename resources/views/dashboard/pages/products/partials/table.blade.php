@@ -73,6 +73,6 @@
     </tr>
 @empty
     <tr>
-        <td colspan="7" class="text-center">No products found.</td>
+        <td colspan="7" class="text-center">{{ __('dashboard.no_products_found') }}</td>
     </tr>
 @endforelse

@@ -4,9 +4,9 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Categories</h6>
+                    <h6 class="mb-0">{{ __('dashboard.category_list') }}</h6>
                     <a href="{{ route('dashboard.categories.create') }}" class="btn btn-primary btn-sm">
-                        <i class="uil uil-plus"></i> Add New Category
+                        <i class="uil uil-plus"></i> {{ __('dashboard.add_new_category') }}
                     </a>
                 </div>
                 <div class="card-body">
@@ -21,23 +21,26 @@
                     <form method="GET" action="{{ route('dashboard.categories.index') }}" class="mb-4">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label for="search" class="form-label">Search</label>
+                                <label for="search" class="form-label">{{ __('dashboard.search') }}</label>
                                 <input type="text" class="form-control" id="search" name="search"
-                                    value="{{ request('search') }}" placeholder="Search by name or description...">
+                                    value="{{ request('search') }}"
+                                    placeholder="{{ __('dashboard.search_by_name_or_description') }}">
                             </div>
                             <div class="col-md-4">
-                                <label for="is_active" class="form-label">Status</label>
+                                <label for="is_active" class="form-label">{{ __('dashboard.status') }}</label>
                                 <select class="form-control" id="is_active" name="is_active">
-                                    <option value="">All</option>
-                                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>Active
+                                    <option value="">{{ __('dashboard.all') }}</option>
+                                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>
+                                        {{ __('dashboard.active') }}
                                     </option>
-                                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>Inactive
+                                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>
+                                        {{ __('dashboard.inactive') }}
                                     </option>
                                 </select>
                             </div>
                             <div class="col-md-2 d-flex align-items-end">
                                 <button type="submit" class="btn btn-primary w-100">
-                                    <i class="uil uil-search"></i> Filter
+                                    <i class="uil uil-search"></i> {{ __('dashboard.filter') }}
                                 </button>
                             </div>
                         </div>
@@ -49,13 +52,13 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Image</th>
-                                    <th>Name (AR)</th>
-                                    <th>Name (EN)</th>
-                                    <th>Products Count</th>
-                                    <th>Status</th>
-                                    <th>Created At</th>
-                                    <th>Actions</th>
+                                    <th>{{ __('dashboard.product_image') }}</th>
+                                    <th>{{ __('dashboard.name_arabic') }}</th>
+                                    <th>{{ __('dashboard.name_english') }}</th>
+                                    <th>{{ __('dashboard.products_count') }}</th>
+                                    <th>{{ __('dashboard.status') }}</th>
+                                    <th>{{ __('dashboard.created_at') }}</th>
+                                    <th>{{ __('dashboard.actions') }}</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -73,20 +76,20 @@
                                         </td>
                                         <td>
                                             @if ($category->is_active)
-                                                <span class="badge bg-success">Active</span>
+                                                <span class="badge bg-success">{{ __('dashboard.active') }}</span>
                                             @else
-                                                <span class="badge bg-danger">Inactive</span>
+                                                <span class="badge bg-danger">{{ __('dashboard.inactive') }}</span>
                                             @endif
                                         </td>
                                         <td>{{ $category->created_at->format('Y-m-d') }}</td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="{{ route('dashboard.categories.show', $category) }}"
-                                                    class="btn btn-sm btn-info" title="View">
+                                                    class="btn btn-sm btn-info" title="{{ __('dashboard.view') }}">
                                                     <i class="uil uil-eye"></i>
                                                 </a>
                                                 <a href="{{ route('dashboard.categories.edit', $category) }}"
-                                                    class="btn btn-sm btn-warning" title="Edit">
+                                                    class="btn btn-sm btn-warning" title="{{ __('dashboard.edit') }}">
                                                     <i class="uil uil-edit"></i>
                                                 </a>
                                                 <x-dashboard.delete-button
@@ -98,7 +101,8 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="8" class="text-center">No categories found.</td>
+                                        <td colspan="8" class="text-center">{{ __('dashboard.no_categories_found') }}
+                                        </td>
                                     </tr>
                                 @endforelse
                             </tbody>

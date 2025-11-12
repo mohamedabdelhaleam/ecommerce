@@ -1,0 +1,110 @@
+<?php
+
+return [
+    // Navigation
+    'dashboard' => 'لوحة التحكم',
+    'products' => 'المنتجات',
+    'categories' => 'الفئات',
+    'logout' => 'تسجيل الخروج',
+    'change_password' => 'تغيير كلمة المرور',
+
+    // Common
+    'actions' => 'الإجراءات',
+    'status' => 'الحالة',
+    'active' => 'نشط',
+    'inactive' => 'غير نشط',
+    'create' => 'إنشاء',
+    'edit' => 'تعديل',
+    'delete' => 'حذف',
+    'view' => 'عرض',
+    'save' => 'حفظ',
+    'cancel' => 'إلغاء',
+    'search' => 'بحث',
+    'filter' => 'تصفية',
+    'all' => 'الكل',
+    'yes' => 'نعم',
+    'no' => 'لا',
+    'close' => 'إغلاق',
+    'submit' => 'إرسال',
+    'back' => 'رجوع',
+    'update' => 'تحديث',
+    'show' => 'عرض',
+
+    // Auth
+    'login' => 'تسجيل الدخول',
+    'phone_number' => 'رقم الهاتف',
+    'password' => 'كلمة المرور',
+    'remember_me' => 'تذكرني',
+    'forgot_password' => 'نسيت كلمة المرور؟',
+
+    // Home/Dashboard
+    'total_products' => 'إجمالي المنتجات',
+    'total_orders' => 'إجمالي الطلبات',
+    'total_customers' => 'إجمالي العملاء',
+    'total_revenue' => 'إجمالي الإيرادات',
+    'since_last_month' => 'منذ الشهر الماضي',
+    'products_chart' => 'رسم بياني للمنتجات',
+    'new_product' => 'منتج جديد',
+    'product_name' => 'اسم المنتج',
+    'price' => 'السعر',
+
+    // Products
+    'product_list' => 'قائمة المنتجات',
+    'add_new_product' => 'إضافة منتج جديد',
+    'create_new_product' => 'إنشاء منتج جديد',
+    'edit_product' => 'تعديل المنتج',
+    'product_details' => 'تفاصيل المنتج',
+    'product_name_arabic' => 'اسم المنتج (عربي)',
+    'product_name_english' => 'اسم المنتج (إنجليزي)',
+    'description_arabic' => 'الوصف (عربي)',
+    'description_english' => 'الوصف (إنجليزي)',
+    'product_image' => 'صورة المنتج',
+    'category' => 'الفئة',
+    'select_category' => 'اختر الفئة',
+    'all_categories' => 'جميع الفئات',
+    'english_name' => 'الاسم بالإنجليزية',
+    'stocks' => 'المخزون',
+    'created_date' => 'تاريخ الإنشاء',
+    'search_by_name' => 'البحث بالاسم (عربي أو إنجليزي)',
+    'all_status' => 'جميع الحالات',
+    'from_date' => 'من تاريخ',
+    'to_date' => 'إلى تاريخ',
+    'product' => 'المنتج',
+    'no_products_found' => 'لم يتم العثور على منتجات.',
+    'max_size' => 'الحجم الأقصى: 2 ميجابايت. المسموح: jpeg, png, jpg, gif',
+    'auto_generated_if_empty' => 'يتم إنشاؤه تلقائياً إذا تركت فارغاً',
+
+    // Categories
+    'category_list' => 'الفئات',
+    'add_new_category' => 'إضافة فئة جديدة',
+    'create_new_category' => 'إنشاء فئة جديدة',
+    'edit_category' => 'تعديل الفئة',
+    'category_details' => 'تفاصيل الفئة',
+    'category_name_arabic' => 'اسم الفئة (عربي)',
+    'category_name_english' => 'اسم الفئة (إنجليزي)',
+    'name_arabic' => 'الاسم (عربي)',
+    'name_english' => 'الاسم (إنجليزي)',
+    "products_count" => "عدد المنتجات",
+    "created_at" => "تاريخ الإنشاء",
+    "no_categories_found" => "لم يتم العثور على فئات.",
+    "search_by_name_or_description" => "البحث بالاسم أو الوصف...",
+
+    // Messages
+    'success' => 'نجح',
+    'error' => 'خطأ',
+    'are_you_sure' => 'هل أنت متأكد؟',
+    'delete_confirmation' => 'هل أنت متأكد من حذف هذا :item؟',
+    'item_deleted' => 'تم حذف :item بنجاح',
+    'item_created' => 'تم إنشاء :item بنجاح',
+    'item_updated' => 'تم تحديث :item بنجاح',
+    'item_not_found' => 'لم يتم العثور على :item',
+
+    // Validation
+    'required' => 'هذا الحقل مطلوب',
+    'invalid' => 'قيمة غير صحيحة',
+
+    // Language
+    'language' => 'اللغة',
+    'english' => 'الإنجليزية',
+    'arabic' => 'العربية',
+];
