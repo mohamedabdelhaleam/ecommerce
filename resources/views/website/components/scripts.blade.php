@@ -236,3 +236,56 @@
         }
     })();
 </script>
+<script>
+    // Page Loader Handler
+    (function() {
+        const pageLoader = document.getElementById('page-loader');
+
+        if (!pageLoader) return;
+
+        // Check if dark mode is active and apply to loader
+        function checkDarkMode() {
+            if (document.documentElement.classList.contains('dark') ||
+                document.body.classList.contains('dark')) {
+                pageLoader.classList.add('dark');
+            }
+        }
+
+        // Hide loader when page is fully loaded
+        function hideLoader() {
+            if (pageLoader) {
+                pageLoader.classList.add('hidden');
+                // Remove from DOM after animation
+                setTimeout(() => {
+                    if (pageLoader && pageLoader.parentNode) {
+                        pageLoader.remove();
+                    }
+                }, 500);
+            }
+        }
+
+        // Check dark mode immediately
+        checkDarkMode();
+
+        // Watch for dark mode changes
+        const observer = new MutationObserver(checkDarkMode);
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['class']
+        });
+
+        // Hide loader when page is fully loaded
+        if (document.readyState === 'complete') {
+            // Page already loaded
+            setTimeout(hideLoader, 300);
+        } else {
+            // Wait for all resources to load
+            window.addEventListener('load', () => {
+                setTimeout(hideLoader, 300);
+            });
+        }
+
+        // Fallback: hide after maximum wait time
+        setTimeout(hideLoader, 3000);
+    })();
+</script>
