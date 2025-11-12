@@ -5,6 +5,9 @@ use App\Http\Controllers\Dashboard\AuthController;
 use App\Http\Controllers\Dashboard\HomeController;
 use App\Http\Controllers\Dashboard\ProductController;
 use App\Http\Controllers\Dashboard\CategoryController;
+use App\Http\Controllers\Dashboard\ColorController;
+use App\Http\Controllers\Dashboard\SizeController;
+use App\Http\Controllers\Dashboard\AdminController;
 
 // Guest routes (not authenticated)
 Route::middleware('guest:admin')->group(function () {
@@ -47,4 +50,25 @@ Route::middleware('auth:admin')->group(function () {
     // Category status toggle route
     Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])
         ->name('categories.toggle-status');
+
+    // Colors CRUD routes
+    Route::resource('colors', ColorController::class);
+
+    // Color status toggle route
+    Route::patch('colors/{color}/toggle-status', [ColorController::class, 'toggleStatus'])
+        ->name('colors.toggle-status');
+
+    // Sizes CRUD routes
+    Route::resource('sizes', SizeController::class);
+
+    // Size status toggle route
+    Route::patch('sizes/{size}/toggle-status', [SizeController::class, 'toggleStatus'])
+        ->name('sizes.toggle-status');
+
+    // Admins CRUD routes
+    Route::resource('admins', AdminController::class);
+
+    // Admin status toggle route
+    Route::patch('admins/{admin}/toggle-status', [AdminController::class, 'toggleStatus'])
+        ->name('admins.toggle-status');
 });

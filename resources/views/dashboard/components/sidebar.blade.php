@@ -23,6 +23,27 @@
                         {{-- <span class="toggle-icon"></span> --}}
                     </a>
                 </li>
+                <li class="{{ request()->routeIs('dashboard.colors.*') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.colors.index') }}" class="">
+                        <span class="nav-icon uil uil-palette"></span>
+                        <span class="menu-text">{{ __('dashboard.colors') }}</span>
+                        {{-- <span class="toggle-icon"></span> --}}
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('dashboard.sizes.*') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.sizes.index') }}" class="">
+                        <span class="nav-icon uil uil-ruler"></span>
+                        <span class="menu-text">{{ __('dashboard.sizes') }}</span>
+                        {{-- <span class="toggle-icon"></span> --}}
+                    </a>
+                </li>
+                <li class="{{ request()->routeIs('dashboard.admins.*') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.admins.index') }}" class="">
+                        <span class="nav-icon uil uil-users-alt"></span>
+                        <span class="menu-text">{{ __('dashboard.admins') }}</span>
+                        {{-- <span class="toggle-icon"></span> --}}
+                    </a>
+                </li>
 
 
             </ul>

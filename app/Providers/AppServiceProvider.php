@@ -2,9 +2,15 @@
 
 namespace App\Providers;
 
+use App\Repositories\AdminRepository;
 use App\Repositories\CategoryRepository;
+use App\Repositories\ColorRepository;
+use App\Repositories\SizeRepository;
+use App\Repositories\Interfaces\AdminRepositoryInterface;
 use App\Repositories\Interfaces\CategoryRepositoryInterface;
+use App\Repositories\Interfaces\ColorRepositoryInterface;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
+use App\Repositories\Interfaces\SizeRepositoryInterface;
 use App\Repositories\ProductRepository;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +32,21 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             CategoryRepositoryInterface::class,
             CategoryRepository::class
+        );
+
+        $this->app->bind(
+            ColorRepositoryInterface::class,
+            ColorRepository::class
+        );
+
+        $this->app->bind(
+            SizeRepositoryInterface::class,
+            SizeRepository::class
+        );
+
+        $this->app->bind(
+            AdminRepositoryInterface::class,
+            AdminRepository::class
         );
     }
 

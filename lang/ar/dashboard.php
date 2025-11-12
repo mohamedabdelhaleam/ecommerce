@@ -5,6 +5,9 @@ return [
     'dashboard' => 'لوحة التحكم',
     'products' => 'المنتجات',
     'categories' => 'الفئات',
+    'colors' => 'الألوان',
+    'sizes' => 'المقاسات',
+    'admins' => 'المسؤولون',
     'logout' => 'تسجيل الخروج',
     'change_password' => 'تغيير كلمة المرور',
 
@@ -98,6 +101,47 @@ return [
     "no_categories_found" => "لم يتم العثور على فئات.",
     "search_by_name_or_description" => "البحث بالاسم أو الوصف...",
     "products_in_category" => "المنتجات في هذه الفئة",
+
+    // Colors
+    'color_list' => 'الألوان',
+    'add_new_color' => 'إضافة لون جديد',
+    'create_new_color' => 'إنشاء لون جديد',
+    'edit_color' => 'تعديل اللون',
+    'color_details' => 'تفاصيل اللون',
+    'color_name_arabic' => 'اسم اللون (عربي)',
+    'color_name_english' => 'اسم اللون (إنجليزي)',
+    'hex_code' => 'رمز اللون',
+    'hex_code_format' => 'التنسيق: #RRGGBB (مثال: #FF5733)',
+    'variants_count' => 'عدد المتغيرات',
+    'no_colors_found' => 'لم يتم العثور على ألوان.',
+
+    // Sizes
+    'size_list' => 'المقاسات',
+    'add_new_size' => 'إضافة مقاس جديد',
+    'create_new_size' => 'إنشاء مقاس جديد',
+    'edit_size' => 'تعديل المقاس',
+    'size_details' => 'تفاصيل المقاس',
+    'size_name_arabic' => 'اسم المقاس (عربي)',
+    'size_name_english' => 'اسم المقاس (إنجليزي)',
+    'value' => 'القيمة',
+    'order' => 'الترتيب',
+    'order_hint' => 'الأرقام الأقل تظهر أولاً',
+    'size_value_hint' => 'مثال: 12، 18، 24 للبوصة',
+    'no_sizes_found' => 'لم يتم العثور على مقاسات.',
+
+    // Admins
+    'admin_list' => 'المسؤولون',
+    'add_new_admin' => 'إضافة مسؤول جديد',
+    'create_new_admin' => 'إنشاء مسؤول جديد',
+    'edit_admin' => 'تعديل المسؤول',
+    'admin_details' => 'تفاصيل المسؤول',
+    'admin' => 'مسؤول',
+    'email' => 'البريد الإلكتروني',
+    'confirm_password' => 'تأكيد كلمة المرور',
+    'password_min_8' => 'الحد الأدنى 8 أحرف',
+    'password_leave_blank' => 'اتركه فارغاً للاحتفاظ بكلمة المرور الحالية',
+    'search_by_name_email_phone' => 'البحث بالاسم أو البريد الإلكتروني أو الهاتف',
+    'no_admins_found' => 'لم يتم العثور على مسؤولين.',
 
     // Messages
     'success' => 'نجح',

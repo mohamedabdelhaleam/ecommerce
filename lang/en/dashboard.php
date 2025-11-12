@@ -5,6 +5,9 @@ return [
     'dashboard' => 'Dashboard',
     'products' => 'Products',
     'categories' => 'Categories',
+    'colors' => 'Colors',
+    'sizes' => 'Sizes',
+    'admins' => 'Admins',
     'logout' => 'Logout',
     'change_password' => 'Change Password',
 
@@ -98,6 +101,47 @@ return [
     "no_categories_found" => "No categories found.",
     "search_by_name_or_description" => "Search by name or description...",
     "products_in_category" => "Products in this Category",
+
+    // Colors
+    'color_list' => 'Colors',
+    'add_new_color' => 'Add New Color',
+    'create_new_color' => 'Create New Color',
+    'edit_color' => 'Edit Color',
+    'color_details' => 'Color Details',
+    'color_name_arabic' => 'Color Name (Arabic)',
+    'color_name_english' => 'Color Name (English)',
+    'hex_code' => 'Hex Code',
+    'hex_code_format' => 'Format: #RRGGBB (e.g., #FF5733)',
+    'variants_count' => 'Variants Count',
+    'no_colors_found' => 'No colors found.',
+
+    // Sizes
+    'size_list' => 'Sizes',
+    'add_new_size' => 'Add New Size',
+    'create_new_size' => 'Create New Size',
+    'edit_size' => 'Edit Size',
+    'size_details' => 'Size Details',
+    'size_name_arabic' => 'Size Name (Arabic)',
+    'size_name_english' => 'Size Name (English)',
+    'value' => 'Value',
+    'order' => 'Order',
+    'order_hint' => 'Lower numbers appear first',
+    'size_value_hint' => 'e.g., 12, 18, 24 for inches',
+    'no_sizes_found' => 'No sizes found.',
+
+    // Admins
+    'admin_list' => 'Admins',
+    'add_new_admin' => 'Add New Admin',
+    'create_new_admin' => 'Create New Admin',
+    'edit_admin' => 'Edit Admin',
+    'admin_details' => 'Admin Details',
+    'admin' => 'Admin',
+    'email' => 'Email',
+    'confirm_password' => 'Confirm Password',
+    'password_min_8' => 'Minimum 8 characters',
+    'password_leave_blank' => 'Leave blank to keep current password',
+    'search_by_name_email_phone' => 'Search by name, email or phone',
+    'no_admins_found' => 'No admins found.',
 
     // Messages
     'success' => 'Success',
