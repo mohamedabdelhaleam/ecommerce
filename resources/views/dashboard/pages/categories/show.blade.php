@@ -17,16 +17,10 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-lg-4 mb-4 mb-lg-0">
-                            <div class="card border-0 shadow-sm">
-                                <div class="card-body text-center p-4">
-                                    <div class="mb-3">
-                                        <img src="{{ $category->image }}" alt="{{ $category->name }}"
-                                            class="img-fluid rounded"
-                                            style="max-width: 100%; height: auto; max-height: 300px;">
-                                    </div>
-                                    <h5 class="mb-2">{{ $category->name }}</h5>
-                                    <p class="text-muted mb-0">CAT-{{ $category->id }}</p>
-                                </div>
+                            <div class="mb-3">
+                                <img src="{{ $category->image }}" alt="{{ $category->name }}"
+                                    class="img-fluid rounded"
+                                    style="width: 100%; height: auto; max-height: 300px;">
                             </div>
                         </div>
                         <div class="col-lg-8">
@@ -90,28 +84,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($category->description_ar)
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm">
-                                            <div class="card-body p-3">
-                                                <label
-                                                    class="form-label text-muted small mb-2">{{ __('dashboard.description_arabic') }}</label>
-                                                <p class="mb-0">{{ $category->description_ar }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
-                                @if ($category->description_en)
-                                    <div class="col-12">
-                                        <div class="card border-0 shadow-sm">
-                                            <div class="card-body p-3">
-                                                <label
-                                                    class="form-label text-muted small mb-2">{{ __('dashboard.description_english') }}</label>
-                                                <p class="mb-0">{{ $category->description_en }}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                @endif
                             </div>
                         </div>
                     </div>
