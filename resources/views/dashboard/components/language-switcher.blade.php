@@ -4,12 +4,12 @@
             @if (app()->getLocale() == 'ar')
                 <img src="https://flagcdn.com/w20/sa.png" alt="Arabic" class="rounded-circle"
                     style="width: 20px; height: 20px;">
-                <span class="nav-item__title">{{ __('dashboard.arabic') }}<i
+                <span class="nav-item__title"><i
                         class="las la-angle-down nav-item__arrow"></i></span>
             @else
                 <img src="https://flagcdn.com/w20/gb.png" alt="English" class="rounded-circle"
                     style="width: 20px; height: 20px;">
-                <span class="nav-item__title">{{ __('dashboard.english') }}<i
+                <span class="nav-item__title"><i
                         class="las la-angle-down nav-item__arrow"></i></span>
             @endif
         </a>
