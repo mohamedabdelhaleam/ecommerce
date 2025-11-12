@@ -53,7 +53,7 @@ class AuthController extends Controller
 
         $request->session()->regenerate();
 
-        return redirect()->intended(route('dashboard.home.index'));
+        return redirect()->intended(route('dashboard.home'));
     }
 
     /**

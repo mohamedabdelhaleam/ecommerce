@@ -20,6 +20,12 @@ class ProductController extends Controller
     public function __construct(ProductRepositoryInterface $productRepository)
     {
         $this->productRepository = $productRepository;
+
+        $this->middleware('permission:view products')->only(['index', 'show']);
+        $this->middleware('permission:create products')->only(['create', 'store']);
+        $this->middleware('permission:edit products')->only(['edit', 'update', 'updateVariantPrice', 'updateVariantStock']);
+        $this->middleware('permission:delete products')->only(['destroy']);
+        $this->middleware('permission:toggle products status')->only(['toggleStatus', 'toggleVariantStatus']);
     }
 
     /**

@@ -18,7 +18,7 @@ class AdminRepository implements AdminRepositoryInterface
      */
     public function all(array $filters = [])
     {
-        $query = Admin::query();
+        $query = Admin::with('roles');
 
         // Apply filters
         if (isset($filters['is_active'])) {
@@ -84,7 +84,18 @@ class AdminRepository implements AdminRepositoryInterface
             $data['password'] = Hash::make($data['password']);
         }
 
-        return Admin::create($data);
+        // Extract roles if provided
+        $roles = $data['roles'] ?? [];
+        unset($data['roles']);
+
+        $admin = Admin::create($data);
+
+        // Assign roles if provided
+        if (!empty($roles)) {
+            $admin->syncRoles($roles);
+        }
+
+        return $admin;
     }
 
     /**
@@ -106,7 +117,18 @@ class AdminRepository implements AdminRepositoryInterface
             unset($data['password']);
         }
 
+        // Extract roles if provided
+        $roles = $data['roles'] ?? null;
+        if (isset($data['roles'])) {
+            unset($data['roles']);
+        }
+
         $admin->update($data);
+
+        // Sync roles if provided
+        if ($roles !== null) {
+            $admin->syncRoles($roles);
+        }
 
         return $admin->fresh();
     }

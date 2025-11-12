@@ -18,6 +18,12 @@ class ColorController extends Controller
     public function __construct(ColorRepositoryInterface $colorRepository)
     {
         $this->colorRepository = $colorRepository;
+
+        $this->middleware('permission:view colors')->only(['index', 'show']);
+        $this->middleware('permission:create colors')->only(['create', 'store']);
+        $this->middleware('permission:edit colors')->only(['edit', 'update']);
+        $this->middleware('permission:delete colors')->only(['destroy']);
+        $this->middleware('permission:toggle colors status')->only(['toggleStatus']);
     }
 
     /**

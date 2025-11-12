@@ -23,6 +23,16 @@
                     <p class="d-block mb-0">
                         {{ $admin->email }}
                     </p>
+                    @if ($admin->roles && $admin->roles->count() > 0)
+                        <div class="mt-1">
+                            @foreach ($admin->roles->take(2) as $role)
+                                <span class="badge bg-primary badge-sm">{{ $role->name }}</span>
+                            @endforeach
+                            @if ($admin->roles->count() > 2)
+                                <span class="badge bg-secondary badge-sm">+{{ $admin->roles->count() - 2 }}</span>
+                            @endif
+                        </div>
+                    @endif
                 </div>
             </div>
         </td>

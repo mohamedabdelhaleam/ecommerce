@@ -18,6 +18,12 @@ class AdminController extends Controller
     public function __construct(AdminRepositoryInterface $adminRepository)
     {
         $this->adminRepository = $adminRepository;
+
+        $this->middleware('permission:view admins')->only(['index', 'show']);
+        $this->middleware('permission:create admins')->only(['create', 'store']);
+        $this->middleware('permission:edit admins')->only(['edit', 'update']);
+        $this->middleware('permission:delete admins')->only(['destroy']);
+        $this->middleware('permission:toggle admins status')->only(['toggleStatus']);
     }
 
     /**
@@ -70,7 +76,8 @@ class AdminController extends Controller
      */
     public function create(): View
     {
-        return view('dashboard.pages.admins.create');
+        $roles = \Spatie\Permission\Models\Role::where('guard_name', 'admin')->orderBy('name')->get();
+        return view('dashboard.pages.admins.create', compact('roles'));
     }
 
     /**
@@ -97,6 +104,7 @@ class AdminController extends Controller
     public function show(Admin $admin): View
     {
         $admin = $this->adminRepository->findOrFail($admin->id);
+        $admin->load('roles');
         return view('dashboard.pages.admins.show', compact('admin'));
     }
 
@@ -109,7 +117,9 @@ class AdminController extends Controller
     public function edit(Admin $admin): View
     {
         $admin = $this->adminRepository->findOrFail($admin->id);
-        return view('dashboard.pages.admins.edit', compact('admin'));
+        $admin->load('roles');
+        $roles = \Spatie\Permission\Models\Role::where('guard_name', 'admin')->orderBy('name')->get();
+        return view('dashboard.pages.admins.edit', compact('admin', 'roles'));
     }
 
     /**

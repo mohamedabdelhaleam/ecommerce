@@ -30,6 +30,8 @@ class UpdateAdminRequest extends FormRequest
             'phone' => ['nullable', 'string', 'max:255', Rule::unique('admins', 'phone')->ignore($adminId)],
             'password' => 'nullable|string|min:8|confirmed',
             'is_active' => 'boolean',
+            'roles' => 'nullable|array',
+            'roles.*' => 'exists:roles,id',
         ];
     }
 }

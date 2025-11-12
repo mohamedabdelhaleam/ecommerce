@@ -62,6 +62,27 @@
 
                             <div class="col-md-6">
                                 <div class="form-group mb-25">
+                                    <label for="roles" class="form-label">{{ __('dashboard.roles') }}</label>
+                                    <select class="form-control @error('roles') is-invalid @enderror" id="roles"
+                                        name="roles[]" multiple>
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}"
+                                                {{ in_array($role->id, old('roles', $admin->roles->pluck('id')->toArray())) ? 'selected' : '' }}>
+                                                {{ $role->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('roles')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                    <small class="form-text text-muted">{{ __('dashboard.select_roles_hint') }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-25">
                                     <label for="is_active" class="form-label">{{ __('dashboard.status') }}</label>
                                     <div class="checkbox-theme-default custom-checkbox">
                                         <input class="checkbox" type="checkbox" id="is_active" name="is_active"

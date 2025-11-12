@@ -53,6 +53,23 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="card border-0 shadow-sm h-100">
+                                        <div class="card-body p-3">
+                                            <label
+                                                class="form-label text-muted small mb-1">{{ __('dashboard.roles') }}</label>
+                                            <div class="mt-1">
+                                                @if ($admin->roles && $admin->roles->count() > 0)
+                                                    @foreach ($admin->roles as $role)
+                                                        <span class="badge bg-primary me-1">{{ $role->name }}</span>
+                                                    @endforeach
+                                                @else
+                                                    <span class="text-muted">{{ __('dashboard.no_roles_assigned') }}</span>
+                                                @endif
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-12">
                                     <div class="card border-0 shadow-sm h-100">
                                         <div class="card-body p-3">

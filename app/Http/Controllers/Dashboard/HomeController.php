@@ -8,6 +8,11 @@ use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('permission:view dashboard');
+    }
+
     /**
      * Display the dashboard home page.
      */

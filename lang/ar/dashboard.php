@@ -8,6 +8,7 @@ return [
     'colors' => 'الألوان',
     'sizes' => 'المقاسات',
     'admins' => 'المسؤولون',
+    'roles' => 'الأدوار',
     'logout' => 'تسجيل الخروج',
     'change_password' => 'تغيير كلمة المرور',
 
@@ -142,6 +143,21 @@ return [
     'password_leave_blank' => 'اتركه فارغاً للاحتفاظ بكلمة المرور الحالية',
     'search_by_name_email_phone' => 'البحث بالاسم أو البريد الإلكتروني أو الهاتف',
     'no_admins_found' => 'لم يتم العثور على مسؤولين.',
+    'select_roles_hint' => 'اضغط Ctrl (أو Cmd على Mac) لتحديد عدة أدوار',
+    'no_roles_assigned' => 'لا توجد أدوار مخصصة',
+
+    // Roles
+    'role_list' => 'الأدوار',
+    'add_new_role' => 'إضافة دور جديد',
+    'create_new_role' => 'إنشاء دور جديد',
+    'edit_role' => 'تعديل الدور',
+    'role_details' => 'تفاصيل الدور',
+    'role' => 'دور',
+    'role_name' => 'اسم الدور',
+    'permissions' => 'الصلاحيات',
+    'permissions_count' => 'عدد الصلاحيات',
+    'users_count' => 'عدد المستخدمين',
+    'no_roles_found' => 'لم يتم العثور على أدوار.',
 
     // Messages
     'success' => 'نجح',

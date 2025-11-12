@@ -8,6 +8,7 @@ return [
     'colors' => 'Colors',
     'sizes' => 'Sizes',
     'admins' => 'Admins',
+    'roles' => 'Roles',
     'logout' => 'Logout',
     'change_password' => 'Change Password',
 
@@ -142,6 +143,21 @@ return [
     'password_leave_blank' => 'Leave blank to keep current password',
     'search_by_name_email_phone' => 'Search by name, email or phone',
     'no_admins_found' => 'No admins found.',
+    'select_roles_hint' => 'Hold Ctrl (or Cmd on Mac) to select multiple roles',
+    'no_roles_assigned' => 'No roles assigned',
+
+    // Roles
+    'role_list' => 'Roles',
+    'add_new_role' => 'Add New Role',
+    'create_new_role' => 'Create New Role',
+    'edit_role' => 'Edit Role',
+    'role_details' => 'Role Details',
+    'role' => 'Role',
+    'role_name' => 'Role Name',
+    'permissions' => 'Permissions',
+    'permissions_count' => 'Permissions Count',
+    'users_count' => 'Users Count',
+    'no_roles_found' => 'No roles found.',
 
     // Messages
     'success' => 'Success',

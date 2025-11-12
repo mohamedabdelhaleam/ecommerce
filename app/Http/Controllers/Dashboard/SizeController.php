@@ -18,6 +18,12 @@ class SizeController extends Controller
     public function __construct(SizeRepositoryInterface $sizeRepository)
     {
         $this->sizeRepository = $sizeRepository;
+
+        $this->middleware('permission:view sizes')->only(['index', 'show']);
+        $this->middleware('permission:create sizes')->only(['create', 'store']);
+        $this->middleware('permission:edit sizes')->only(['edit', 'update']);
+        $this->middleware('permission:delete sizes')->only(['destroy']);
+        $this->middleware('permission:toggle sizes status')->only(['toggleStatus']);
     }
 
     /**

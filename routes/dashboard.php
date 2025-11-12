@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboard\CategoryController;
 use App\Http\Controllers\Dashboard\ColorController;
 use App\Http\Controllers\Dashboard\SizeController;
 use App\Http\Controllers\Dashboard\AdminController;
+use App\Http\Controllers\Dashboard\RoleController;
 
 // Guest routes (not authenticated)
 Route::middleware('guest:admin')->group(function () {
@@ -71,4 +72,7 @@ Route::middleware('auth:admin')->group(function () {
     // Admin status toggle route
     Route::patch('admins/{admin}/toggle-status', [AdminController::class, 'toggleStatus'])
         ->name('admins.toggle-status');
+
+    // Roles CRUD routes
+    Route::resource('roles', RoleController::class);
 });
