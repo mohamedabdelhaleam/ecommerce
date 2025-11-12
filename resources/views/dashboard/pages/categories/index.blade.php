@@ -1,13 +1,45 @@
 @extends('dashboard.layout.app')
 @section('content')
     <div class="row">
-        <div class="col-12">
+        <div class="col-lg-12 mb-30">
             <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">{{ __('dashboard.category_list') }}</h6>
+                <div class="card-header color-dark fw-500 d-flex justify-content-between align-items-center">
+                    <span>{{ __('dashboard.category_list') }}</span>
                     <a href="{{ route('dashboard.categories.create') }}" class="btn btn-primary btn-sm">
                         <i class="uil uil-plus"></i> {{ __('dashboard.add_new_category') }}
                     </a>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <form id="category-search-form" class="row g-3"
+                                data-search-url="{{ route('dashboard.categories.index') }}">
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" id="search" name="search"
+                                        placeholder="{{ __('dashboard.search_by_name') }}" value="{{ request('search') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <select class="form-control" id="is_active" name="is_active">
+                                        <option value="">{{ __('dashboard.all_status') }}</option>
+                                        <option value="1" {{ request('is_active') === '1' ? 'selected' : '' }}>
+                                            {{ __('dashboard.active') }}
+                                        </option>
+                                        <option value="0" {{ request('is_active') === '0' ? 'selected' : '' }}>
+                                            {{ __('dashboard.inactive') }}
+                                        </option>
+                                    </select>
+                                </div>
+                                <div class="col-md-2">
+                                    <input type="date" class="form-control" id="from_date" name="from_date"
+                                        placeholder="{{ __('dashboard.from_date') }}" value="{{ request('from_date') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="date" class="form-control" id="to_date" name="to_date"
+                                        placeholder="{{ __('dashboard.to_date') }}" value="{{ request('to_date') }}">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     @if (session('success'))
@@ -17,110 +49,53 @@
                         </div>
                     @endif
 
-                    <!-- Search and Filter Form -->
-                    <form method="GET" action="{{ route('dashboard.categories.index') }}" class="mb-4">
-                        <div class="row g-3">
-                            <div class="col-md-6">
-                                <label for="search" class="form-label">{{ __('dashboard.search') }}</label>
-                                <input type="text" class="form-control" id="search" name="search"
-                                    value="{{ request('search') }}"
-                                    placeholder="{{ __('dashboard.search_by_name_or_description') }}">
-                            </div>
-                            <div class="col-md-4">
-                                <label for="is_active" class="form-label">{{ __('dashboard.status') }}</label>
-                                <select class="form-control" id="is_active" name="is_active">
-                                    <option value="">{{ __('dashboard.all') }}</option>
-                                    <option value="1" {{ request('is_active') == '1' ? 'selected' : '' }}>
-                                        {{ __('dashboard.active') }}
-                                    </option>
-                                    <option value="0" {{ request('is_active') == '0' ? 'selected' : '' }}>
-                                        {{ __('dashboard.inactive') }}
-                                    </option>
-                                </select>
-                            </div>
-                            <div class="col-md-2 d-flex align-items-end">
-                                <button type="submit" class="btn btn-primary w-100">
-                                    <i class="uil uil-search"></i> {{ __('dashboard.filter') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-
                     <!-- Categories Table -->
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>{{ __('dashboard.product_image') }}</th>
-                                    <th>{{ __('dashboard.name_arabic') }}</th>
-                                    <th>{{ __('dashboard.name_english') }}</th>
-                                    <th>{{ __('dashboard.products_count') }}</th>
-                                    <th>{{ __('dashboard.status') }}</th>
-                                    <th>{{ __('dashboard.created_at') }}</th>
-                                    <th>{{ __('dashboard.actions') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @forelse ($categories as $category)
-                                    <tr id="category-row-{{ $category->id }}">
-                                        <td>{{ $category->id }}</td>
-                                        <td>
-                                            <img src="{{ $category->image }}" alt="{{ $category->name_ar }}"
-                                                class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
-                                        </td>
-                                        <td>{{ $category->name_ar }}</td>
-                                        <td>{{ $category->name_en ?? 'N/A' }}</td>
-                                        <td>
-                                            <span class="badge bg-info">{{ $category->products->count() ?? 0 }}</span>
-                                        </td>
-                                        <td>
-                                            @if ($category->is_active)
-                                                <span class="badge bg-success">{{ __('dashboard.active') }}</span>
-                                            @else
-                                                <span class="badge bg-danger">{{ __('dashboard.inactive') }}</span>
-                                            @endif
-                                        </td>
-                                        <td>
-                                            @if (app()->getLocale() == 'ar')
-                                                {{ $category->created_at->locale('ar')->translatedFormat('d F Y') }}
-                                            @else
-                                                {{ $category->created_at->format('Y-m-d') }}
-                                            @endif
-                                        </td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                <a href="{{ route('dashboard.categories.show', $category) }}"
-                                                    class="btn btn-sm btn-info" title="{{ __('dashboard.view') }}">
-                                                    <i class="uil uil-eye"></i>
-                                                </a>
-                                                <a href="{{ route('dashboard.categories.edit', $category) }}"
-                                                    class="btn btn-sm btn-warning" title="{{ __('dashboard.edit') }}">
-                                                    <i class="uil uil-edit"></i>
-                                                </a>
-                                                <x-dashboard.delete-button
-                                                    route="{{ route('dashboard.categories.destroy', $category) }}"
-                                                    item-id="{{ $category->id }}" item-name="{{ $category->name }}"
-                                                    item-type="category" table-row-id="category-row-{{ $category->id }}" />
+                    <div class="userDatatable global-shadow border-light-0 w-100">
+                        <div class="table-responsive">
+                            <table class="table mb-0 table-borderless">
+                                <thead>
+                                    <tr class="userDatatable-header">
+                                        <th>
+                                            <div class="d-flex align-items-center">
+                                                <div class="custom-checkbox check-all">
+                                                    <input class="checkbox" type="checkbox" id="check-all-categories">
+                                                    <label for="check-all-categories">
+                                                        <span
+                                                            class="checkbox-text userDatatable-title">{{ __('dashboard.category') }}</span>
+                                                    </label>
+                                                </div>
                                             </div>
-                                        </td>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">{{ __('dashboard.products_count') }}</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">{{ __('dashboard.created_date') }}</span>
+                                        </th>
+                                        <th>
+                                            <span class="userDatatable-title">{{ __('dashboard.status') }}</span>
+                                        </th>
+                                        <th>
+                                            <span
+                                                class="userDatatable-title float-end">{{ __('dashboard.actions') }}</span>
+                                        </th>
                                     </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="8" class="text-center">{{ __('dashboard.no_categories_found') }}
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody id="categories-table-body">
+                                    @include('dashboard.pages.categories.partials.table')
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Pagination -->
-                    @if (method_exists($categories, 'links'))
-                        <div class="mt-4">
-                            {{ $categories->links() }}
-                        </div>
-                    @endif
+                    <div id="categories-pagination">
+                        @if (method_exists($categories, 'links'))
+                            <div class="mt-4">
+                                {{ $categories->links('pagination::bootstrap-5') }}
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

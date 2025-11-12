@@ -43,4 +43,8 @@ Route::middleware('auth:admin')->group(function () {
 
     // Categories CRUD routes
     Route::resource('categories', CategoryController::class);
+
+    // Category status toggle route
+    Route::patch('categories/{category}/toggle-status', [CategoryController::class, 'toggleStatus'])
+        ->name('categories.toggle-status');
 });

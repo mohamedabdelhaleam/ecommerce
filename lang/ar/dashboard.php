@@ -29,6 +29,10 @@ return [
     'back' => 'رجوع',
     'update' => 'تحديث',
     'show' => 'عرض',
+    'id' => 'المعرف',
+    'name' => 'الاسم',
+    'slug' => 'الرابط',
+    'updated_at' => 'تاريخ التحديث',
 
     // Auth
     'login' => 'تسجيل الدخول',
@@ -88,6 +92,7 @@ return [
     "created_at" => "تاريخ الإنشاء",
     "no_categories_found" => "لم يتم العثور على فئات.",
     "search_by_name_or_description" => "البحث بالاسم أو الوصف...",
+    "products_in_category" => "المنتجات في هذه الفئة",
 
     // Messages
     'success' => 'نجح',

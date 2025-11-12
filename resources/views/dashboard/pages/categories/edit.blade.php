@@ -121,7 +121,7 @@
                             </div>
                         </div>
 
-                        <div class="form-group mb-0">
+                        <div class="form-group mb-0 d-flex gap-2 align-items-center">
                             <button type="submit" class="btn btn-primary">
                                 <i class="uil uil-save"></i> {{ __('dashboard.update') }} {{ __('dashboard.category') }}
                             </button>

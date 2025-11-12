@@ -110,6 +110,38 @@ class CategoryController extends Controller
     }
 
     /**
+     * Toggle the status of the specified category.
+     *
+     * @param Request $request
+     * @param Category $category
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleStatus(Request $request, Category $category)
+    {
+        try {
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
+
+            $updatedCategory = $this->categoryRepository->toggleStatus(
+                $category->id,
+                $validated['is_active']
+            );
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Category status updated successfully.',
+                'is_active' => $updatedCategory->is_active,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update category status. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
      * Remove the specified category from storage.
      *
      * @param Category $category

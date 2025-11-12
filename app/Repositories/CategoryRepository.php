@@ -70,7 +70,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function findOrFail(int $id): Category
     {
-        return Category::with('products')->findOrFail($id);
+        return Category::with(['products.variants'])->findOrFail($id);
     }
 
     /**
@@ -161,5 +161,19 @@ class CategoryRepository implements CategoryRepositoryInterface
             ->with('products')
             ->orderBy('created_at', 'desc')
             ->get();
+    }
+
+    /**
+     * Toggle the status of a category
+     *
+     * @param int $id
+     * @param bool $isActive
+     * @return Category
+     */
+    public function toggleStatus(int $id, bool $isActive): Category
+    {
+        $category = $this->findOrFail($id);
+        $category->update(['is_active' => $isActive]);
+        return $category->fresh('products');
     }
 }

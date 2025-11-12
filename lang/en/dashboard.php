@@ -29,6 +29,10 @@ return [
     'back' => 'Back',
     'update' => 'Update',
     'show' => 'Show',
+    'id' => 'ID',
+    'name' => 'Name',
+    'slug' => 'Slug',
+    'updated_at' => 'Updated At',
 
     // Auth
     'login' => 'Login',
@@ -88,6 +92,7 @@ return [
     "created_at" => "Created At",
     "no_categories_found" => "No categories found.",
     "search_by_name_or_description" => "Search by name or description...",
+    "products_in_category" => "Products in this Category",
 
     // Messages
     'success' => 'Success',

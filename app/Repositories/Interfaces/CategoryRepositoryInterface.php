@@ -64,4 +64,13 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function getActive(): Collection;
+
+    /**
+     * Toggle the status of a category
+     *
+     * @param int $id
+     * @param bool $isActive
+     * @return Category
+     */
+    public function toggleStatus(int $id, bool $isActive): Category;
 }
