@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="text-center mb-4">
-                                <img src="{{ $category->image }}" alt="{{ $category->name_ar }}" class="img-fluid rounded"
+                                <img src="{{ $category->image }}" alt="{{ $category->name }}" class="img-fluid rounded"
                                     style="max-width: 100%; height: auto;">
                             </div>
                         </div>
@@ -67,11 +67,23 @@
                                     </tr>
                                     <tr>
                                         <th>Created At</th>
-                                        <td>{{ $category->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            @if (app()->getLocale() == 'ar')
+                                                {{ $category->created_at->locale('ar')->translatedFormat('d F Y H:i:s') }}
+                                            @else
+                                                {{ $category->created_at->format('Y-m-d H:i:s') }}
+                                            @endif
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Updated At</th>
-                                        <td>{{ $category->updated_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            @if (app()->getLocale() == 'ar')
+                                                {{ $category->updated_at->locale('ar')->translatedFormat('d F Y H:i:s') }}
+                                            @else
+                                                {{ $category->updated_at->format('Y-m-d H:i:s') }}
+                                            @endif
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -98,8 +110,9 @@
                                                 <tr>
                                                     <td>{{ $product->id }}</td>
                                                     <td>
-                                                        <img src="{{ $product->image }}" alt="{{ $product->name_ar }}"
-                                                            class="img-thumbnail" style="width: 50px; height: 50px; object-fit: cover;">
+                                                        <img src="{{ $product->image }}" alt="{{ $product->name }}"
+                                                            class="img-thumbnail"
+                                                            style="width: 50px; height: 50px; object-fit: cover;">
                                                     </td>
                                                     <td>{{ $product->name_ar }}</td>
                                                     <td>{{ $product->name_en ?? 'N/A' }}</td>
@@ -123,4 +136,3 @@
         </div>
     </div>
 @endsection
-

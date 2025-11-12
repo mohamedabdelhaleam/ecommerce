@@ -81,7 +81,13 @@
                                                 <span class="badge bg-danger">{{ __('dashboard.inactive') }}</span>
                                             @endif
                                         </td>
-                                        <td>{{ $category->created_at->format('Y-m-d') }}</td>
+                                        <td>
+                                            @if (app()->getLocale() == 'ar')
+                                                {{ $category->created_at->locale('ar')->translatedFormat('d F Y') }}
+                                            @else
+                                                {{ $category->created_at->format('Y-m-d') }}
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="d-flex gap-2">
                                                 <a href="{{ route('dashboard.categories.show', $category) }}"
@@ -94,7 +100,7 @@
                                                 </a>
                                                 <x-dashboard.delete-button
                                                     route="{{ route('dashboard.categories.destroy', $category) }}"
-                                                    item-id="{{ $category->id }}" item-name="{{ $category->name_ar }}"
+                                                    item-id="{{ $category->id }}" item-name="{{ $category->name }}"
                                                     item-type="category" table-row-id="category-row-{{ $category->id }}" />
                                             </div>
                                         </td>

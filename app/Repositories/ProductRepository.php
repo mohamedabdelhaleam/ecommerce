@@ -22,7 +22,7 @@ class ProductRepository implements ProductRepositoryInterface
     {
         $query = Product::with([
             'category' => function ($query) {
-                $query->select('id', 'name_ar');
+                $query->select('id', 'name_ar', 'name_en');
             },
             'variants' => function ($query) {
                 $query->select('id', 'product_id', 'stock');

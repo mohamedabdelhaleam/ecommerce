@@ -17,7 +17,7 @@
                 </div>
                 <div class="userDatatable-inline-title">
                     <a href="{{ route('dashboard.products.show', $product) }}" class="text-dark fw-500">
-                        <h6>{{ $product->name_ar }}</h6>
+                        <h6>{{ $product->name }}</h6>
                     </a>
                     <p class="d-block mb-0">
                         PROD-{{ $product->id }}
@@ -27,12 +27,7 @@
         </td>
         <td>
             <div class="userDatatable-content">
-                {{ $product->category->name_ar ?? ($product->category->name_en ?? 'N/A') }}
-            </div>
-        </td>
-        <td>
-            <div class="userDatatable-content">
-                {{ $product->name_en ?? 'N/A' }}
+                {{ $product->category->name }}
             </div>
         </td>
         <td>
@@ -42,7 +37,11 @@
         </td>
         <td>
             <div class="userDatatable-content">
-                {{ $product->created_at->format('F d, Y') }}
+                @if (app()->getLocale() == 'ar')
+                    {{ $product->created_at->locale('ar')->translatedFormat('d F Y') }}
+                @else
+                    {{ $product->created_at->format('F d, Y') }}
+                @endif
             </div>
         </td>
         <td class="status-cell">
@@ -65,7 +64,7 @@
                 </li>
                 <li>
                     <x-dashboard.delete-button route="{{ route('dashboard.products.destroy', $product) }}"
-                        item-id="{{ $product->id }}" item-name="{{ $product->name_ar }}" item-type="product"
+                        item-id="{{ $product->id }}" item-name="{{ $product->name }}" item-type="product"
                         table-row-id="product-row-{{ $product->id }}" />
                 </li>
             </ul>

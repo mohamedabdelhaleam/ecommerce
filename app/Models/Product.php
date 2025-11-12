@@ -52,4 +52,14 @@ class Product extends Model
     {
         return $this->hasMany(Comment::class)->where('is_approved', true)->orderBy('created_at', 'desc');
     }
+
+    /**
+     * Get the name based on current locale
+     */
+    public function getNameAttribute()
+    {
+        return app()->getLocale() == 'ar'
+            ? ($this->name_ar ?? $this->name_en ?? 'N/A')
+            : ($this->name_en ?? $this->name_ar ?? 'N/A');
+    }
 }

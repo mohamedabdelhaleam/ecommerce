@@ -24,7 +24,7 @@
                                         @foreach ($categories as $category)
                                             <option value="{{ $category->id }}"
                                                 {{ request('category_id') == $category->id ? 'selected' : '' }}>
-                                                {{ $category->name_ar ?? $category->name_en }}
+                                                {{ $category->name }}
                                             </option>
                                         @endforeach
                                     </select>
@@ -80,9 +80,7 @@
                                         <th>
                                             <span class="userDatatable-title">{{ __('dashboard.category') }}</span>
                                         </th>
-                                        <th>
-                                            <span class="userDatatable-title">{{ __('dashboard.english_name') }}</span>
-                                        </th>
+
                                         <th>
                                             <span class="userDatatable-title">{{ __('dashboard.stocks') }}</span>
                                         </th>

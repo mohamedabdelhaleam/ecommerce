@@ -18,7 +18,7 @@
                     <div class="row">
                         <div class="col-md-4">
                             <div class="text-center mb-4">
-                                <img src="{{ $product->image }}" alt="{{ $product->name_ar }}" class="img-fluid rounded"
+                                <img src="{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid rounded"
                                     style="max-width: 100%; height: auto;">
                             </div>
                         </div>
@@ -45,7 +45,7 @@
                                         <th>Category</th>
                                         <td>
                                             <span class="badge bg-info">
-                                                {{ $product->category->name_ar ?? ($product->category->name_en ?? 'N/A') }}
+                                                {{ $product->category->name }}
                                             </span>
                                         </td>
                                     </tr>
@@ -69,11 +69,23 @@
                                     </tr>
                                     <tr>
                                         <th>Created At</th>
-                                        <td>{{ $product->created_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            @if (app()->getLocale() == 'ar')
+                                                {{ $product->created_at->locale('ar')->translatedFormat('d F Y H:i:s') }}
+                                            @else
+                                                {{ $product->created_at->format('Y-m-d H:i:s') }}
+                                            @endif
+                                        </td>
                                     </tr>
                                     <tr>
                                         <th>Updated At</th>
-                                        <td>{{ $product->updated_at->format('Y-m-d H:i:s') }}</td>
+                                        <td>
+                                            @if (app()->getLocale() == 'ar')
+                                                {{ $product->updated_at->locale('ar')->translatedFormat('d F Y H:i:s') }}
+                                            @else
+                                                {{ $product->updated_at->format('Y-m-d H:i:s') }}
+                                            @endif
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
