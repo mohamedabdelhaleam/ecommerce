@@ -81,8 +81,9 @@
                                             <span class="userDatatable-title">English Name</span>
                                         </th>
                                         <th>
-                                            <span class="userDatatable-title">Arabic Name</span>
+                                            <span class="userDatatable-title">Stocks</span>
                                         </th>
+
                                         <th>
                                             <span class="userDatatable-title">created date</span>
                                         </th>

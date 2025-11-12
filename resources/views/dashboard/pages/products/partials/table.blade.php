@@ -37,7 +37,7 @@
         </td>
         <td>
             <div class="userDatatable-content">
-                {{ $product->name_ar }}
+                {{ $product->variants->sum('stock') }}
             </div>
         </td>
         <td>

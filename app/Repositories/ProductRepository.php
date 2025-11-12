@@ -20,9 +20,14 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function all(array $filters = [])
     {
-        $query = Product::with(['category' => function ($query) {
-            $query->select('id', 'name_ar');
-        }]);
+        $query = Product::with([
+            'category' => function ($query) {
+                $query->select('id', 'name_ar');
+            },
+            'variants' => function ($query) {
+                $query->select('id', 'product_id', 'stock');
+            }
+        ]);
 
         // Search by name (Arabic or English)
         if (!empty($filters['search'])) {

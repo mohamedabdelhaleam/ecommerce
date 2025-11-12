@@ -8,6 +8,7 @@ use App\Http\Requests\Dashboard\products\UpdateProductRequest;
 use App\Repositories\Interfaces\ProductRepositoryInterface;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductVariant;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -149,6 +150,93 @@ class ProductController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to update product status. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Toggle the status of the specified product variant.
+     *
+     * @param Request $request
+     * @param ProductVariant $variant
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function toggleVariantStatus(Request $request, ProductVariant $variant)
+    {
+        try {
+            $validated = $request->validate([
+                'is_active' => 'required|boolean',
+            ]);
+
+            $variant->update(['is_active' => $validated['is_active']]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Variant status updated successfully.',
+                'is_active' => $variant->is_active,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update variant status. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Update the price of the specified product variant.
+     *
+     * @param Request $request
+     * @param ProductVariant $variant
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateVariantPrice(Request $request, ProductVariant $variant)
+    {
+        try {
+            $validated = $request->validate([
+                'price' => 'required|numeric|min:0',
+            ]);
+
+            $variant->update(['price' => $validated['price']]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Variant price updated successfully.',
+                'price' => $variant->price,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update variant price. Please try again.',
+            ], 500);
+        }
+    }
+
+    /**
+     * Update the stock of the specified product variant.
+     *
+     * @param Request $request
+     * @param ProductVariant $variant
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function updateVariantStock(Request $request, ProductVariant $variant)
+    {
+        try {
+            $validated = $request->validate([
+                'stock' => 'required|integer|min:0',
+            ]);
+
+            $variant->update(['stock' => $validated['stock']]);
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Variant stock updated successfully.',
+                'stock' => $variant->stock,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Failed to update variant stock. Please try again.',
             ], 500);
         }
     }

@@ -99,36 +99,34 @@
                     @if ($product->variants && $product->variants->count() > 0)
                         <div class="row mt-4">
                             <div class="col-12">
-                                <h6>Product Variants</h6>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered">
-                                        <thead>
-                                            <tr>
-                                                <th>Size</th>
-                                                <th>Color</th>
-                                                <th>Price</th>
-                                                <th>Stock</th>
-                                                <th>Status</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach ($product->variants as $variant)
-                                                <tr>
-                                                    <td>{{ $variant->size->name ?? 'N/A' }}</td>
-                                                    <td>{{ $variant->color->name ?? 'N/A' }}</td>
-                                                    <td>{{ $variant->price ?? 'N/A' }}</td>
-                                                    <td>{{ $variant->stock ?? 'N/A' }}</td>
-                                                    <td>
-                                                        @if ($variant->is_active)
-                                                            <span class="badge bg-success">Active</span>
-                                                        @else
-                                                            <span class="badge bg-danger">Inactive</span>
-                                                        @endif
-                                                    </td>
+                                <h6 class="mb-3">Product Variants</h6>
+                                <div class="userDatatable global-shadow border-light-0 w-100">
+                                    <div class="table-responsive">
+                                        <table class="table mb-0 table-borderless">
+                                            <thead>
+                                                <tr class="userDatatable-header">
+                                                    <th>
+                                                        <span class="userDatatable-title">Size</span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="userDatatable-title">Color</span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="userDatatable-title">Price</span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="userDatatable-title">Stock</span>
+                                                    </th>
+                                                    <th>
+                                                        <span class="userDatatable-title">Status</span>
+                                                    </th>
                                                 </tr>
-                                            @endforeach
-                                        </tbody>
-                                    </table>
+                                            </thead>
+                                            <tbody id="variants-table-body">
+                                                @include('dashboard.pages.products.partials.variants-table')
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -137,4 +135,131 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        // AJAX update for variant price and stock
+        (function() {
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') ||
+                document.querySelector('input[name="_token"]')?.value;
+
+            // Handle price updates
+            document.querySelectorAll('.variant-price-input').forEach(function(input) {
+                let timeout;
+                input.addEventListener('blur', function() {
+                    updateVariantField(this, 'price');
+                });
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.blur();
+                    }
+                });
+            });
+
+            // Handle stock updates
+            document.querySelectorAll('.variant-stock-input').forEach(function(input) {
+                let timeout;
+                input.addEventListener('blur', function() {
+                    updateVariantField(this, 'stock');
+                });
+                input.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        this.blur();
+                    }
+                });
+            });
+
+            function updateVariantField(input, field) {
+                const variantId = input.getAttribute('data-variant-id');
+                const updateUrl = input.getAttribute('data-update-url');
+                const value = field === 'price' ? parseFloat(input.value) : parseInt(input.value);
+                const originalValue = input.getAttribute('data-original-value') || input.defaultValue;
+
+                // Don't update if value hasn't changed
+                if (value === (field === 'price' ? parseFloat(originalValue) : parseInt(originalValue))) {
+                    return;
+                }
+
+                // Validate value
+                if (isNaN(value) || value < 0) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Value',
+                        text: `Please enter a valid ${field === 'price' ? 'price' : 'stock'} value.`,
+                    });
+                    input.value = originalValue;
+                    return;
+                }
+
+                // Disable input during request
+                input.disabled = true;
+                const originalBorder = input.style.border;
+                input.style.border = '2px solid #42b6f0';
+
+                // Make AJAX request
+                fetch(updateUrl, {
+                        method: 'PATCH',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': csrfToken,
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Accept': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            [field]: value,
+                        }),
+                    })
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            input.setAttribute('data-original-value', value);
+                            input.style.border = '2px solid #28a745';
+                            setTimeout(() => {
+                                input.style.border = originalBorder;
+                            }, 1000);
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Updated!',
+                                text: data.message || `Variant ${field} updated successfully.`,
+                                timer: 1500,
+                                showConfirmButton: false,
+                            });
+                        } else {
+                            throw new Error(data.message || 'Update failed');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        input.value = originalValue;
+                        input.style.border = '2px solid #dc3545';
+                        setTimeout(() => {
+                            input.style.border = originalBorder;
+                        }, 2000);
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Update Failed',
+                            text: error.message || 'Failed to update variant. Please try again.',
+                        });
+                    })
+                    .finally(() => {
+                        input.disabled = false;
+                    });
+            }
+
+            // Store original values on page load
+            document.querySelectorAll('.variant-price-input, .variant-stock-input').forEach(function(input) {
+                input.setAttribute('data-original-value', input.value);
+            });
+        })();
+    </script>
 @endsection

@@ -24,6 +24,18 @@ Route::middleware('auth:admin')->group(function () {
     Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])
         ->name('products.toggle-status');
 
+    // Product variant status toggle route
+    Route::patch('products/variants/{variant}/toggle-status', [ProductController::class, 'toggleVariantStatus'])
+        ->name('products.variants.toggle-status');
+
+    // Product variant price update route
+    Route::patch('products/variants/{variant}/update-price', [ProductController::class, 'updateVariantPrice'])
+        ->name('products.variants.update-price');
+
+    // Product variant stock update route
+    Route::patch('products/variants/{variant}/update-stock', [ProductController::class, 'updateVariantStock'])
+        ->name('products.variants.update-stock');
+
     // Categories CRUD routes
     Route::resource('categories', CategoryController::class);
 });
