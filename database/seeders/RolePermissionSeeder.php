@@ -64,23 +64,46 @@ class RolePermissionSeeder extends Seeder
             'edit roles',
             'delete roles',
             'assign roles',
+
+            // Coupons
+            'view coupons',
+            'create coupons',
+            'edit coupons',
+            'delete coupons',
+            'toggle coupons status',
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission, 'guard_name' => 'admin']);
+            Permission::firstOrCreate(
+                ['name' => $permission, 'guard_name' => 'admin'],
+                ['name' => $permission, 'guard_name' => 'admin']
+            );
         }
 
         // Create roles
-        $superAdmin = Role::create(['name' => 'Super Admin', 'guard_name' => 'admin']);
-        $admin = Role::create(['name' => 'Admin', 'guard_name' => 'admin']);
-        $manager = Role::create(['name' => 'Manager', 'guard_name' => 'admin']);
-        $editor = Role::create(['name' => 'Editor', 'guard_name' => 'admin']);
+        $superAdmin = Role::firstOrCreate(
+            ['name' => 'Super Admin', 'guard_name' => 'admin'],
+            ['name' => 'Super Admin', 'guard_name' => 'admin']
+        );
+        $admin = Role::firstOrCreate(
+            ['name' => 'Admin', 'guard_name' => 'admin'],
+            ['name' => 'Admin', 'guard_name' => 'admin']
+        );
+        $manager = Role::firstOrCreate(
+            ['name' => 'Manager', 'guard_name' => 'admin'],
+            ['name' => 'Manager', 'guard_name' => 'admin']
+        );
+        $editor = Role::firstOrCreate(
+            ['name' => 'Editor', 'guard_name' => 'admin'],
+            ['name' => 'Editor', 'guard_name' => 'admin']
+        );
 
         // Assign all permissions to Super Admin
-        $superAdmin->givePermissionTo(Permission::all());
+        $allPermissions = Permission::where('guard_name', 'admin')->get();
+        $superAdmin->syncPermissions($allPermissions);
 
         // Assign permissions to Admin (all except roles management)
-        $admin->givePermissionTo([
+        $adminPermissions = [
             'view dashboard',
             'view products',
             'create products',
@@ -107,10 +130,16 @@ class RolePermissionSeeder extends Seeder
             'edit admins',
             'delete admins',
             'toggle admins status',
-        ]);
+            'view coupons',
+            'create coupons',
+            'edit coupons',
+            'delete coupons',
+            'toggle coupons status',
+        ];
+        $admin->syncPermissions($adminPermissions);
 
         // Assign permissions to Manager (view and edit, no delete)
-        $manager->givePermissionTo([
+        $managerPermissions = [
             'view dashboard',
             'view products',
             'edit products',
@@ -125,10 +154,11 @@ class RolePermissionSeeder extends Seeder
             'edit sizes',
             'toggle sizes status',
             'view admins',
-        ]);
+        ];
+        $manager->syncPermissions($managerPermissions);
 
         // Assign permissions to Editor (view and create, limited edit)
-        $editor->givePermissionTo([
+        $editorPermissions = [
             'view dashboard',
             'view products',
             'create products',
@@ -142,7 +172,8 @@ class RolePermissionSeeder extends Seeder
             'view sizes',
             'create sizes',
             'edit sizes',
-        ]);
+        ];
+        $editor->syncPermissions($editorPermissions);
 
         // Create a default super admin user if it doesn't exist
         $superAdminUser = Admin::firstOrCreate(

@@ -21,6 +21,7 @@
 
             const searchInput = searchForm.querySelector("#search");
             const statusSelect = searchForm.querySelector("#is_active");
+            const typeSelect = searchForm.querySelector("#type");
             const fromDateInput = searchForm.querySelector("#from_date");
             const toDateInput = searchForm.querySelector("#to_date");
             const tableBody = document.getElementById(tableBodyId);
@@ -109,6 +110,11 @@
                 statusSelect.addEventListener("change", performSearch);
             }
 
+            // Type select change (for coupons)
+            if (typeSelect) {
+                typeSelect.addEventListener("change", performSearch);
+            }
+
             // Date range inputs change
             if (fromDateInput) {
                 fromDateInput.addEventListener("change", performSearch);
@@ -138,6 +144,9 @@
                             }
                             if (params.get("is_active") && statusSelect) {
                                 statusSelect.value = params.get("is_active");
+                            }
+                            if (params.get("type") && typeSelect) {
+                                typeSelect.value = params.get("type");
                             }
                             if (params.get("from_date") && fromDateInput) {
                                 fromDateInput.value = params.get("from_date");

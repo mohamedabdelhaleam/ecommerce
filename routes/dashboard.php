@@ -9,6 +9,7 @@ use App\Http\Controllers\Dashboard\ColorController;
 use App\Http\Controllers\Dashboard\SizeController;
 use App\Http\Controllers\Dashboard\AdminController;
 use App\Http\Controllers\Dashboard\RoleController;
+use App\Http\Controllers\Dashboard\CouponController;
 
 // Guest routes (not authenticated)
 Route::middleware('guest:admin')->group(function () {
@@ -75,4 +76,9 @@ Route::middleware('auth:admin')->group(function () {
 
     // Roles CRUD routes
     Route::resource('roles', RoleController::class);
+
+    // Coupons CRUD routes
+    Route::resource('coupons', CouponController::class);
+    Route::patch('coupons/{coupon}/toggle-status', [CouponController::class, 'toggleStatus'])
+        ->name('coupons.toggle-status');
 });

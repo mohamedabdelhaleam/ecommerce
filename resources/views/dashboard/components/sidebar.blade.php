@@ -65,6 +65,15 @@
                         </a>
                     </li>
                 @endcan
+                @can('view coupons')
+                    <li class="{{ request()->routeIs('dashboard.coupons.*') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.coupons.index') }}" class="">
+                            <span class="nav-icon uil uil-tag-alt"></span>
+                            <span class="menu-text">{{ __('dashboard.coupons') }}</span>
+                            {{-- <span class="toggle-icon"></span> --}}
+                        </a>
+                    </li>
+                @endcan
 
 
             </ul>
