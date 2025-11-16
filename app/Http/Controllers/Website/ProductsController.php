@@ -61,12 +61,28 @@ class ProductsController extends Controller
         // Get price range for filter
         $priceRange = $this->productRepository->getPriceRange();
 
-        // Get selected categories from request
+        // Get selected categories from request (slugs)
         $selectedCategories = $request->get('categories', []);
         if (is_string($selectedCategories)) {
             $selectedCategories = explode(',', $selectedCategories);
         }
-        $selectedCategories = array_filter(array_map('intval', $selectedCategories));
+        $selectedCategories = array_filter(array_map('trim', $selectedCategories));
+
+        // If AJAX request, return JSON with products HTML
+        if ($request->ajax() || $request->wantsJson()) {
+            $productsHtml = view('website.products.partials.products-grid', [
+                'products' => $products,
+                'productsData' => $productsData,
+            ])->render();
+
+            return response()->json([
+                'success' => true,
+                'html' => $productsHtml,
+                'currentPage' => $products->currentPage(),
+                'lastPage' => $products->lastPage(),
+                'total' => $products->total(),
+            ]);
+        }
 
         return view('website.products.index', [
             'products' => $products,

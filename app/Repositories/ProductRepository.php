@@ -44,8 +44,18 @@ class ProductRepository implements ProductRepositoryInterface
             });
         }
 
-        // Filter by category
-        if (!empty($filters['category_id'])) {
+        // Filter by category (slug or name)
+        if (!empty($filters['categories'])) {
+            $categories = is_array($filters['categories']) ? $filters['categories'] : [$filters['categories']];
+            $query->whereHas('category', function ($q) use ($categories) {
+                $q->where(function ($subQuery) use ($categories) {
+                    $subQuery->whereIn('slug', $categories)
+                        ->orWhereIn('name_en', $categories)
+                        ->orWhereIn('name_ar', $categories);
+                });
+            });
+        } elseif (!empty($filters['category_id'])) {
+            // Fallback to ID for backward compatibility
             if (is_array($filters['category_id'])) {
                 $query->whereIn('category_id', $filters['category_id']);
             } else {
@@ -298,15 +308,16 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function buildFiltersFromRequest(Request $request): array
     {
-        $categoryIds = $request->get('categories', []);
-        if (is_string($categoryIds)) {
-            $categoryIds = explode(',', $categoryIds);
+        $categories = $request->get('categories', []);
+        if (is_string($categories)) {
+            $categories = explode(',', $categories);
         }
-        $categoryIds = array_filter(array_map('intval', $categoryIds));
+        $categories = array_filter(array_map('trim', $categories));
 
         return [
             'search' => $request->get('search'),
-            'category_id' => !empty($categoryIds) ? $categoryIds : $request->get('category_id'),
+            'categories' => !empty($categories) ? $categories : null,
+            'category_id' => $request->get('category_id'), // Keep for backward compatibility
             'min_price' => $request->get('min_price'),
             'max_price' => $request->get('max_price'),
             'is_active' => $request->get('is_active'),

@@ -32,6 +32,7 @@
         </div>
     </div>
     @include('website.components.scripts')
+    @stack('scripts')
 </body>
 
 </html>
