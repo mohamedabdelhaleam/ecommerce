@@ -34,11 +34,22 @@
         </label>
     </div>
     <div class="flex items-center gap-2">
-        <button
-            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
-            <span class="material-symbols-outlined">person</span>
-        </button>
-        <a href="{{ route('cart.index') }}"
+        @auth('web')
+            <div class="relative group">
+                <a href="{{ route('profile') }}"
+                    class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                    <span class="material-symbols-outlined">person</span>
+                    <span class="hidden sm:inline">{{ auth('web')->user()->name }}</span>
+                </a>
+            </div>
+        @else
+            <a href="{{ route('login') }}"
+                class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+                <span class="material-symbols-outlined">person</span>
+                <span class="hidden sm:inline">Login</span>
+            </a>
+        @endauth
+        <a href="{{ auth('web')->check() ? route('cart.index') : route('login') }}"
             class="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
             <span class="material-symbols-outlined">shopping_bag</span>
             @php

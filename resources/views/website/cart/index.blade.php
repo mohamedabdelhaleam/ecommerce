@@ -18,10 +18,11 @@
                                         <!-- Product Image -->
                                         <div class="w-24 h-24 flex-shrink-0">
                                             @php
-                                                $image = $item['product']->primaryImage ?? $item['product']->images->first();
+                                                $image =
+                                                    $item['product']->primaryImage ?? $item['product']->images->first();
                                                 $imageUrl = $image
                                                     ? asset('storage/' . $image->getRawOriginal('image'))
-                                                    : ($item['product']->image ?? 'https://placehold.co/400');
+                                                    : $item['product']->image ?? 'https://placehold.co/400';
                                             @endphp
                                             <div class="w-full h-full bg-center bg-no-repeat bg-cover rounded-lg"
                                                 style='background-image: url("{{ $imageUrl }}");'></div>
@@ -61,14 +62,16 @@
                                             <div class="flex items-center justify-between">
                                                 <!-- Quantity Controls -->
                                                 <div class="flex items-center gap-2">
-                                                    <label class="text-sm font-medium text-text-light dark:text-text-dark">Qty:</label>
+                                                    <label
+                                                        class="text-sm font-medium text-text-light dark:text-text-dark">Qty:</label>
                                                     <div
                                                         class="flex items-center border border-border-light dark:border-border-dark rounded-lg overflow-hidden">
                                                         <button type="button"
                                                             class="quantity-decrease px-3 py-1 text-lg text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">-</button>
                                                         <input type="number" min="1"
                                                             class="cart-quantity w-16 text-center border-0 bg-transparent focus:ring-0 text-text-light dark:text-text-dark py-1"
-                                                            value="{{ $item['quantity'] }}" data-key="{{ $item['key'] }}" />
+                                                            value="{{ $item['quantity'] }}"
+                                                            data-key="{{ $item['key'] }}" />
                                                         <button type="button"
                                                             class="quantity-increase px-3 py-1 text-lg text-gray-500 dark:text-gray-400 hover:text-primary transition-colors">+</button>
                                                     </div>
@@ -77,7 +80,8 @@
                                                 <!-- Price -->
                                                 <div class="text-right">
                                                     <p class="text-lg font-bold text-text-light dark:text-text-dark">
-                                                        $<span class="item-total">{{ number_format($item['total'], 2) }}</span>
+                                                        $<span
+                                                            class="item-total">{{ number_format($item['total'], 2) }}</span>
                                                     </p>
                                                     <p class="text-sm text-gray-500 dark:text-gray-400">
                                                         ${{ number_format($item['price'], 2) }} each
@@ -110,10 +114,10 @@
                                         <span>$<span id="cart-total">{{ number_format($total, 2) }}</span></span>
                                     </div>
                                 </div>
-                                <button type="button"
+                                <a href="{{ route('cart.checkout') }}"
                                     class="block w-full text-center bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                                     Proceed to Checkout
-                                </button>
+                                </a>
                                 <a href="{{ route('products') }}"
                                     class="block w-full text-center border border-border-light dark:border-border-dark py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                                     Continue Shopping
@@ -126,7 +130,8 @@
                 <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-12 text-center">
                     <span class="material-symbols-outlined text-6xl text-gray-400 mb-4">shopping_bag</span>
                     <h2 class="text-2xl font-bold mb-2">Your cart is empty</h2>
-                    <p class="text-gray-500 dark:text-gray-400 mb-6">Looks like you haven't added anything to your cart yet.</p>
+                    <p class="text-gray-500 dark:text-gray-400 mb-6">Looks like you haven't added anything to your cart yet.
+                    </p>
                     <a href="{{ route('products') }}"
                         class="inline-block bg-primary text-white px-6 py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                         Start Shopping
@@ -140,4 +145,3 @@
         <script src="{{ asset('assets/js/cart.js') }}"></script>
     @endpush
 @endsection
-

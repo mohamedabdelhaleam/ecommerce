@@ -248,4 +248,53 @@ class CartController extends Controller
             'total' => number_format($total, 2),
         ]);
     }
+
+    /**
+     * Show checkout page
+     */
+    public function checkout()
+    {
+        $cart = Session::get('cart', []);
+        $cartItems = [];
+        $total = 0;
+        $subtotal = 0;
+
+        foreach ($cart as $key => $item) {
+            $product = Product::with(['category', 'images'])->find($item['product_id']);
+
+            if (!$product || !$product->is_active) {
+                continue;
+            }
+
+            $variant = null;
+            if (isset($item['variant_id'])) {
+                $variant = ProductVariant::with(['size', 'color'])->find($item['variant_id']);
+            }
+
+            $price = $variant && $variant->price ? $variant->price : ($product->min_price ?? 0);
+            $quantity = $item['quantity'] ?? 1;
+            $itemTotal = $price * $quantity;
+
+            $cartItems[] = [
+                'key' => $key,
+                'product' => $product,
+                'variant' => $variant,
+                'quantity' => $quantity,
+                'price' => $price,
+                'total' => $itemTotal,
+            ];
+
+            $subtotal += $itemTotal;
+        }
+
+        $total = $subtotal; // Can add shipping, tax, etc. later
+
+        if (count($cartItems) === 0) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $user = auth()->guard('web')->user();
+
+        return view('website.cart.checkout', compact('cartItems', 'subtotal', 'total', 'user'));
+    }
 }

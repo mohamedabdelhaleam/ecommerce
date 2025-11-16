@@ -20,7 +20,13 @@ return Application::configure(basePath: dirname(__DIR__))
         },
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        $middleware->redirectGuestsTo(fn() => route('dashboard.login'));
+        // Redirect guests based on the route prefix
+        $middleware->redirectGuestsTo(function ($request) {
+            if ($request->is('dashboard/*')) {
+                return route('dashboard.login');
+            }
+            return route('login');
+        });
         $middleware->web(append: [
             \App\Http\Middleware\SetLocale::class,
         ]);
