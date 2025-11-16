@@ -91,4 +91,42 @@
     #page-loader.dark .loader-text {
         color: #f6f7f8;
     }
+
+    /* Custom Scrollbar Styles */
+    /* Webkit browsers (Chrome, Safari, Edge) */
+    ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #f6f7f8;
+        border-radius: 10px;
+    }
+
+    .dark ::-webkit-scrollbar-track {
+        background: #101c22;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #42b6f0 0%, #2a9dd4 50%, #1e8bc0 100%);
+        border-radius: 10px;
+        border: 2px solid transparent;
+        background-clip: padding-box;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #2a9dd4 0%, #1e8bc0 50%, #1578a3 100%);
+        background-clip: padding-box;
+    }
+
+    /* Firefox */
+    * {
+        scrollbar-width: thin;
+        scrollbar-color: #42b6f0 #f6f7f8;
+    }
+
+    .dark * {
+        scrollbar-color: #42b6f0 #101c22;
+    }
 </style>

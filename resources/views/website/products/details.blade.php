@@ -240,71 +240,12 @@
                 </details>
             </div>
             <!-- Customer Reviews Section -->
+
             <div class="mt-16">
+
                 <h2 class="text-3xl font-bold mb-6">Customer Reviews</h2>
 
-                <!-- Write a Review Form -->
-                <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm mb-8">
-                    <h3 class="text-xl font-bold mb-4">Write a Review</h3>
-                    <form id="review-form" class="space-y-4">
-                        @csrf
-                        <input type="hidden" name="product_id" value="{{ $product->id }}">
 
-                        <!-- Name and Email -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="review-name"
-                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Name
-                                    *</label>
-                                <input type="text" id="review-name" name="name" required
-                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
-                                    placeholder="Your name">
-                            </div>
-                            <div>
-                                <label for="review-email"
-                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Email
-                                    *</label>
-                                <input type="email" id="review-email" name="email" required
-                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
-                                    placeholder="your.email@example.com">
-                            </div>
-                        </div>
-
-                        <!-- Rating -->
-                        <div>
-                            <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Rating
-                                *</label>
-                            <div class="flex gap-2" id="rating-stars">
-                                @for ($i = 1; $i <= 5; $i++)
-                                    <button type="button"
-                                        class="rating-star text-3xl text-gray-300 dark:text-gray-600 hover:text-primary transition-colors"
-                                        data-rating="{{ $i }}">
-                                        <span class="material-symbols-outlined">star_outline</span>
-                                    </button>
-                                @endfor
-                            </div>
-                            <input type="hidden" id="review-rating" name="rating" required>
-                        </div>
-
-                        <!-- Comment -->
-                        <div>
-                            <label for="review-comment"
-                                class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Your Review
-                                *</label>
-                            <textarea id="review-comment" name="comment" rows="5" required
-                                class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary resize-none"
-                                placeholder="Share your thoughts about this product..."></textarea>
-                        </div>
-
-                        <!-- Submit Button -->
-                        <div>
-                            <button type="submit" id="submit-review-btn"
-                                class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
-                                Submit Review
-                            </button>
-                        </div>
-                    </form>
-                </div>
 
                 @if ($reviewStats['total'] > 0)
                     <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm">
@@ -338,8 +279,7 @@
                                     <div class="flex items-center gap-2">
                                         <span class="w-12">{{ $rating }} star</span>
                                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                            <div class="bg-primary h-2.5 rounded-full"
-                                                style="width: {{ $percentage }}%">
+                                            <div class="bg-primary h-2.5 rounded-full" style="width: {{ $percentage }}%">
                                             </div>
                                         </div>
                                         <span>{{ $count }}</span>
@@ -385,6 +325,68 @@
                     @endif
             </div>
             @endif
+            <!-- Write a Review Form -->
+            <div class="dark:bg-background-dark/50 shadow-lg rounded-xl mt-4 p-8 mb-8">
+                <h3 class="text-xl font-bold mb-4">Write a Review</h3>
+                <form id="review-form" class="space-y-4">
+                    @csrf
+                    <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                    <!-- Name and Email -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label for="review-name"
+                                class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Name
+                                *</label>
+                            <input type="text" id="review-name" name="name" required
+                                class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
+                                placeholder="Your name">
+                        </div>
+                        <div>
+                            <label for="review-email"
+                                class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Email
+                                *</label>
+                            <input type="email" id="review-email" name="email" required
+                                class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
+                                placeholder="your.email@example.com">
+                        </div>
+                    </div>
+
+                    <!-- Rating -->
+                    <div>
+                        <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Rating
+                            *</label>
+                        <div class="flex gap-2" id="rating-stars">
+                            @for ($i = 1; $i <= 5; $i++)
+                                <button type="button"
+                                    class="rating-star text-3xl text-gray-300 dark:text-gray-600 hover:text-primary transition-colors"
+                                    data-rating="{{ $i }}">
+                                    <span class="material-symbols-outlined">star_outline</span>
+                                </button>
+                            @endfor
+                        </div>
+                        <input type="hidden" id="review-rating" name="rating" required>
+                    </div>
+
+                    <!-- Comment -->
+                    <div>
+                        <label for="review-comment"
+                            class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Your Review
+                            *</label>
+                        <textarea id="review-comment" name="comment" rows="5" required
+                            class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+                            placeholder="Share your thoughts about this product..."></textarea>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" id="submit-review-btn"
+                            class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                            Submit Review
+                        </button>
+                    </div>
+                </form>
+            </div>
             <!-- You Might Also Like Section -->
             @if (count($relatedProducts) > 0)
                 <div class="mt-24">
@@ -410,7 +412,12 @@
                                 <div class="text-center">
                                     <h4 class="font-semibold">{{ $relatedProduct->name ?? 'Product Name' }}</h4>
                                     <p class="text-gray-500 dark:text-gray-400">
-                                        {{ $relatedProduct->price->display ?? 'N/A' }}</p>
+                                        @if (isset($relatedProduct->price->min))
+                                            ${{ number_format($relatedProduct->price->min, 2) }}
+                                        @else
+                                            N/A
+                                        @endif
+                                    </p>
                                 </div>
                             </a>
                         @endforeach
