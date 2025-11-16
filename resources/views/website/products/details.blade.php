@@ -1,100 +1,175 @@
 @extends('website.layout.app')
 
-@section('title', 'Products')
+@section('title', $product->name . ' - Products')
 @section('contents')
     <main class="px-4 sm:px-10 lg:px-20 py-5">
         <div class="layout-content-container mx-auto flex max-w-7xl flex-col flex-1">
             <!-- Breadcrumbs Component -->
             <div class="flex flex-wrap gap-2 p-4">
-                <a class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal" href="#">Home</a>
+                <a class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal"
+                    href="{{ route('home') }}">Home</a>
                 <span class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal">/</span>
-                <a class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal" href="#">Toys</a>
+                <a class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal"
+                    href="{{ route('products') }}">Products</a>
+                @if ($product->category)
+                    <span class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+                    <a class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal"
+                        href="{{ route('products', ['categories' => $product->category->slug ?? $product->category->name]) }}">{{ $product->category->name }}</a>
+                @endif
                 <span class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal">/</span>
-                <span class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">Gerry the Gentle
-                    Giraffe</span>
+                <span
+                    class="text-text-light dark:text-text-dark text-sm font-medium leading-normal">{{ $product->name }}</span>
             </div>
             <!-- Main Product Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 mt-6">
                 <!-- Left Column: Image Gallery -->
                 <div class="flex flex-col gap-4">
+                    @php
+                        $primaryImage = $product->primaryImage ?? $product->images->first();
+                        if ($primaryImage) {
+                            $mainImagePath = $primaryImage->getRawOriginal('image');
+                            $mainImage = $mainImagePath
+                                ? asset('storage/' . $mainImagePath)
+                                : 'https://placehold.co/400';
+                        } else {
+                            $mainImage = $product->image;
+                        }
+                        $allImages = $product->images->count() > 0 ? $product->images : collect();
+                        if ($allImages->isEmpty() && $product->getRawOriginal('image')) {
+                            $allImages = collect([
+                                (object) ['image' => $product->getRawOriginal('image'), 'is_primary' => true],
+                            ]);
+                        }
+                    @endphp
                     <!-- Large Image -->
                     <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl shadow-lg"
-                        data-alt="Main view of a plush giraffe toy named Gerry"
-                        style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCGf_v7sPKoaqgfVQXqq-rgJe6GDEaH2bP32KTIyFNCtrN36hDSgmw0xmgHwghuPP2UWE8GQHRVbXfWKg5neBQ3p_T2xxcPKTzyry-p6gPMJlZt4UTZJ3VgA3_3w91aGxoPBZbmToM2yX10mEPNN48FEuIfb6YDggxagjlLw3ZfhrE9RU3wCl8TIh8wcsh2yuwBmjhYTuakBcO81CjwzuyGLAW_aRn8lah1oP0BRAdjj0BjjhjzB0pQz5pidj8gDZ431ogpczJBUII");'>
+                        id="main-product-image" data-alt="{{ $product->name }}"
+                        style='background-image: url("{{ $mainImage }}");'>
                     </div>
                     <!-- Thumbnail Grid -->
-                    <div class="grid grid-cols-4 gap-4">
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg border-2 border-primary"
-                            data-alt="Side view of the plush giraffe"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBFxZUAmhAt2amSgEMYm822qGjr2nTYmVkp_rj0xiWl1MwxFjc5Cifzdb6xM1jd6KRMJtvm9QYYGOJ3OdFtBfNaHTaSOZ3nIYVArZfE5SkL8CU0U0-TGfr5R3t86JhSpYLeI5hhR0dKfORV0fjxEHESSnJIxpJeRTdzE_zJYRKtD8KraiJfLaXbB4uqlDQeD7c19eo0DpKNvv_aCeI6GBQ1pY3luKTz66fGa7OTnztP3TdmzV_rx47nniHuP0zQ48FhZQGTj-siRKc");'>
+                    @if ($allImages->count() > 1)
+                        <div class="grid grid-cols-4 gap-4">
+                            @foreach ($allImages->take(4) as $index => $image)
+                                @php
+                                    if ($image instanceof \App\Models\ProductImage) {
+                                        $imagePath = $image->getRawOriginal('image');
+                                    } elseif (is_object($image) && isset($image->image)) {
+                                        $imagePath = $image->image;
+                                    } else {
+                                        $imagePath = $product->getRawOriginal('image');
+                                    }
+                                    $imageUrl = $imagePath
+                                        ? asset('storage/' . $imagePath)
+                                        : 'https://placehold.co/400';
+                                    $isPrimary =
+                                        ($index === 0 && !$product->primaryImage) ||
+                                        (isset($image->is_primary) && $image->is_primary);
+                                @endphp
+                                <div class="thumbnail-image w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg cursor-pointer transition-all {{ $isPrimary ? 'border-2 border-primary' : 'border border-gray-300 dark:border-gray-700' }}"
+                                    data-alt="{{ $product->name }} - Image {{ $index + 1 }}"
+                                    data-image="{{ $imageUrl }}"
+                                    style='background-image: url("{{ $imageUrl }}");'>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
-                            data-alt="Close up of the giraffe's face"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBP6gZ0dx43w_ePAdytE2Syc8OGAiVhRLMq7k6wsjvJJti77msMSQu5cmouQyEY0EAEw30Uo-PniApwT8Z0-fqj0ScKe99Gmvspq0n4AbLbXMhzcbc1ugAojNZl7oxeY5xrngC-uaWTZnbA4AgZ_YkYkzI-W05kA3kx-Otxt8-xL2DH4HREHKgcIkdJDRg1mAtNiiE_xlMyha6WKWiPVjtWcLcQ8GpIpP037JDaWieSZujE1hO1pKUxL_x01h_3xVC4LiGwX7UqiMo");'>
-                        </div>
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
-                            data-alt="Child playing with the plush giraffe"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuC_P3xmupvWlmW_SGqLeNgPRRVsW462Mgi67VJIs5OwTgtXdHqwQnBzufQmkMlIeQwtXK-jheCo7jRYxdvLb9kpKWjApVAIWnqrptQ_9C90PiQ825VFDbiW1NKEMowTw1T1tKUN9jL6I9PQa6APkvEnPLuwUGpUs10eIGSP-C7R55NJ48kTxwHxIsQUIFXlhYtnGeEpW_Be5iTaPjYQLazGP9m--t3wF-DGa8pzOFb3AOM3NK-xZJRe9dHe4Uv_qZIG6-cTE6gkNpM");'>
-                        </div>
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg"
-                            data-alt="The plush giraffe in a nursery setting"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDNtUbD3Rp51jY-anpu91d3gjLEd80fUuEppxsGMwMp_IsuIcuqsQWlsq4l-bLTNLby4TislM3DHRpX7wTwiRFSYrtp6CtMl9i0rpw_aOEIcSSVzutKJgyC8PYPaq1R_WUqi9UrOlZ7e6XpQ0ejjzvgF9lTy_TcQURGMFsj4aVP__muYhDLEfW3Au-bhuUaaOqgBAoQwYfg4iO1LjKX9iXDLiJtZtRdxWpvegxGQ3cimPqO6jKQ_L_FkxNjI0ZoNf-DYhYbUbAWpOw");'>
-                        </div>
-                    </div>
+                    @endif
                 </div>
                 <!-- Right Column: Product Info -->
                 <div class="flex flex-col gap-6 py-4">
                     <!-- Product Heading -->
                     <div class="flex flex-col gap-2">
-                        <p class="text-sm font-medium text-gray-500 dark:text-gray-400">By Safari Friends Co.</p>
+                        @if ($product->category)
+                            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ $product->category->name }}
+                            </p>
+                        @endif
                         <h1
                             class="text-text-light dark:text-text-dark text-4xl font-black leading-tight tracking-[-0.033em]">
-                            Gerry the Gentle Giraffe</h1>
-                        <div class="flex items-center gap-2 mt-2">
-                            <div class="flex text-primary">
-                                <span class="material-symbols-outlined">star</span>
-                                <span class="material-symbols-outlined">star</span>
-                                <span class="material-symbols-outlined">star</span>
-                                <span class="material-symbols-outlined">star</span>
-                                <span class="material-symbols-outlined">star_half</span>
+                            {{ $product->name }}
+                        </h1>
+                        @if ($reviewStats['total'] > 0)
+                            <div class="flex items-center gap-2 mt-2">
+                                <div class="flex text-primary">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= floor($reviewStats['average']))
+                                            <span class="material-symbols-outlined">star</span>
+                                        @elseif($i - 0.5 <= $reviewStats['average'])
+                                            <span class="material-symbols-outlined">star_half</span>
+                                        @else
+                                            <span class="material-symbols-outlined">star_outline</span>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">
+                                    {{ number_format($reviewStats['average'], 1) }} ({{ $reviewStats['total'] }}
+                                    {{ $reviewStats['total'] == 1 ? 'Review' : 'Reviews' }})
+                                </p>
                             </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">4.7 (128 Reviews)</p>
-                        </div>
+                        @endif
                     </div>
                     <!-- Price -->
-                    <p class="text-4xl font-bold text-text-light dark:text-text-dark">$34.99</p>
+                    <p class="text-4xl font-bold text-text-light dark:text-text-dark" id="product-price">
+                        @if ($product->min_price && $product->max_price)
+                            @if ($product->min_price == $product->max_price)
+                                ${{ number_format($product->min_price, 2) }}
+                            @else
+                                ${{ number_format($product->min_price, 2) }} -
+                                ${{ number_format($product->max_price, 2) }}
+                            @endif
+                        @else
+                            N/A
+                        @endif
+                    </p>
                     <!-- Options -->
                     <div class="flex flex-col gap-4">
-                        <div>
-                            <label class="text-sm font-bold text-text-light dark:text-text-dark mb-2 block">Size</label>
-                            <div class="flex gap-3">
-                                <button
-                                    class="px-4 py-2 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-background-dark text-sm">Small
-                                    (12")</button>
-                                <button
-                                    class="px-4 py-2 rounded-lg border-2 border-primary bg-primary/20 text-sm font-bold">Medium
-                                    (18")</button>
-                                <button
-                                    class="px-4 py-2 rounded-lg border border-border-light dark:border-border-dark bg-white dark:bg-background-dark text-sm">Large
-                                    (24")</button>
+                        @if ($availableSizes->count() > 0)
+                            <div>
+                                <label class="text-sm font-bold text-text-light dark:text-text-dark mb-2 block">Size</label>
+                                <div class="flex gap-3 flex-wrap">
+                                    @foreach ($availableSizes as $index => $size)
+                                        <button
+                                            class="size-option px-4 py-2 rounded-lg border {{ $index === 0 ? 'border-2 border-primary bg-primary/20 font-bold' : 'border-border-light dark:border-border-dark' }} bg-white dark:bg-background-dark text-sm hover:border-primary transition-colors"
+                                            data-size-id="{{ $size->id }}">
+                                            {{ $size->name }}
+                                        </button>
+                                    @endforeach
+                                </div>
                             </div>
-                        </div>
+                        @endif
+                        @if ($availableColors->count() > 0)
+                            <div>
+                                <label
+                                    class="text-sm font-bold text-text-light dark:text-text-dark mb-2 block">Color</label>
+                                <div class="flex gap-3 flex-wrap">
+                                    @foreach ($availableColors as $index => $color)
+                                        <button
+                                            class="color-option px-4 py-2 rounded-lg border {{ $index === 0 ? 'border-2 border-primary bg-primary/20 font-bold' : 'border-border-light dark:border-border-dark' }} bg-white dark:bg-background-dark text-sm hover:border-primary transition-colors"
+                                            data-color-id="{{ $color->id }}">
+                                            {{ $color->name }}
+                                        </button>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
                         <div class="flex items-center gap-4">
                             <label class="text-sm font-bold text-text-light dark:text-text-dark">Quantity</label>
-                            <div class="flex items-center border border-border-light dark:border-border-dark rounded-lg">
-                                <button class="px-3 py-2 text-lg text-gray-500 dark:text-gray-400">-</button>
-                                <input
-                                    class="w-12 text-center border-0 bg-transparent focus:ring-0 text-text-light dark:text-text-dark"
-                                    type="text" value="1" />
-                                <button class="px-3 py-2 text-lg text-gray-500 dark:text-gray-400">+</button>
+                            <div
+                                class="flex items-center border border-border-light dark:border-border-dark rounded-lg overflow-hidden">
+                                <button
+                                    class="quantity-decrease px-3 py-2 text-lg text-gray-500 dark:text-gray-400 hover:text-primary transition-colors flex-shrink-0">-</button>
+                                <input id="quantity-input"
+                                    class="min-w-[3rem] w-16 max-w-[5rem] text-center border-0 bg-transparent focus:ring-0 text-text-light dark:text-text-dark py-2"
+                                    type="number" value="1" min="1" />
+                                <button
+                                    class="quantity-increase px-3 py-2 text-lg text-gray-500 dark:text-gray-400 hover:text-primary transition-colors flex-shrink-0">+</button>
                             </div>
                         </div>
                     </div>
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-4 mt-4">
                         <button
-                            class="flex-1 text-white bg-accent-coral hover:opacity-90 transition-opacity flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6">Add
-                            to Cart</button>
+                            class="flex-1 text-white bg-primary hover:opacity-90 transition-opacity flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6">
+                            Add to Cart
+                        </button>
                         <button
                             class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 bg-gray-200 dark:bg-white/10 text-text-light dark:text-text-dark gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-4">
                             <span
@@ -120,171 +195,534 @@
             </div>
             <!-- Details Accordion Section -->
             <div class="mt-16">
-                <div class="border-b border-border-light dark:border-border-dark">
-                    <h3 class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer">
-                        <span>Description</span>
-                        <span class="material-symbols-outlined">expand_more</span>
-                    </h3>
-                    <div class="pb-6 text-gray-600 dark:text-gray-300 space-y-3">
-                        <p>Meet Gerry, the friendliest giraffe in the savanna! Made from ultra-soft, GOTS-certified organic
-                            cotton, Gerry is designed for endless cuddles and imaginative adventures. His gentle smile and
-                            long, huggable neck make him the perfect companion for your little one, from naptime to
-                            playtime.</p>
-                        <p>Each Gerry is lovingly handcrafted with non-toxic, baby-safe dyes, ensuring a safe and healthy
-                            friend for your child. His embroidered eyes mean no small parts, making him suitable for all
-                            ages.</p>
-                    </div>
-                </div>
-                <div class="border-b border-border-light dark:border-border-dark">
-                    <h3
-                        class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer text-gray-500 dark:text-gray-400">
+                @if ($product->description_en || $product->description_ar)
+                    <details class="border-b border-border-light dark:border-border-dark" open>
+                        <summary class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer list-none">
+                            <span>Description</span>
+                            <span class="material-symbols-outlined transition-transform">expand_more</span>
+                        </summary>
+                        <div class="pb-6 text-gray-600 dark:text-gray-300 space-y-3">
+                            <p>{{ app()->getLocale() == 'ar' ? $product->description_ar ?? $product->description_en : $product->description_en ?? $product->description_ar }}
+                            </p>
+                        </div>
+                    </details>
+                @endif
+                <details class="border-b border-border-light dark:border-border-dark">
+                    <summary
+                        class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer list-none text-gray-500 dark:text-gray-400">
                         <span>Specifications</span>
-                        <span class="material-symbols-outlined">expand_more</span>
-                    </h3>
-                </div>
-                <div class="border-b border-border-light dark:border-border-dark">
-                    <h3
-                        class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer text-gray-500 dark:text-gray-400">
+                        <span class="material-symbols-outlined transition-transform">expand_more</span>
+                    </summary>
+                    <div class="pb-6 text-gray-600 dark:text-gray-300">
+                        <div class="grid grid-cols-2 gap-4">
+                            @if ($product->category)
+                                <div>
+                                    <span class="font-semibold">Category:</span> {{ $product->category->name }}
+                                </div>
+                            @endif
+                            @if ($product->sku)
+                                <div>
+                                    <span class="font-semibold">SKU:</span> {{ $product->sku }}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </details>
+                <details class="border-b border-border-light dark:border-border-dark">
+                    <summary
+                        class="py-4 text-lg font-bold flex justify-between items-center cursor-pointer list-none text-gray-500 dark:text-gray-400">
                         <span>Shipping &amp; Returns</span>
-                        <span class="material-symbols-outlined">expand_more</span>
-                    </h3>
-                </div>
+                        <span class="material-symbols-outlined transition-transform">expand_more</span>
+                    </summary>
+                    <div class="pb-6 text-gray-600 dark:text-gray-300">
+                        <p>Free shipping on orders over $50. Returns accepted within 30 days of purchase.</p>
+                    </div>
+                </details>
             </div>
             <!-- Customer Reviews Section -->
             <div class="mt-16">
                 <h2 class="text-3xl font-bold mb-6">Customer Reviews</h2>
-                <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div
-                            class="flex flex-col items-center justify-center gap-2 border-r border-border-light dark:border-border-dark pr-8">
-                            <p class="text-5xl font-black text-primary">4.7</p>
-                            <div class="flex text-primary">
-                                <span class="material-symbols-outlined">star</span><span
-                                    class="material-symbols-outlined">star</span><span
-                                    class="material-symbols-outlined">star</span><span
-                                    class="material-symbols-outlined">star</span><span
-                                    class="material-symbols-outlined">star_half</span>
+
+                <!-- Write a Review Form -->
+                <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm mb-8">
+                    <h3 class="text-xl font-bold mb-4">Write a Review</h3>
+                    <form id="review-form" class="space-y-4">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+
+                        <!-- Name and Email -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label for="review-name"
+                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Name
+                                    *</label>
+                                <input type="text" id="review-name" name="name" required
+                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
+                                    placeholder="Your name">
                             </div>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Based on 128 reviews</p>
-                        </div>
-                        <div class="col-span-2 flex flex-col gap-2 text-sm">
-                            <!-- Rating bars -->
-                            <div class="flex items-center gap-2"><span class="w-12">5 star</span>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                    <div class="bg-primary h-2.5 rounded-full" style="width: 80%"></div>
-                                </div><span>102</span>
-                            </div>
-                            <div class="flex items-center gap-2"><span class="w-12">4 star</span>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                    <div class="bg-primary h-2.5 rounded-full" style="width: 15%"></div>
-                                </div><span>19</span>
-                            </div>
-                            <div class="flex items-center gap-2"><span class="w-12">3 star</span>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                    <div class="bg-primary h-2.5 rounded-full" style="width: 3%"></div>
-                                </div><span>4</span>
-                            </div>
-                            <div class="flex items-center gap-2"><span class="w-12">2 star</span>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                    <div class="bg-primary h-2.5 rounded-full" style="width: 2%"></div>
-                                </div><span>2</span>
-                            </div>
-                            <div class="flex items-center gap-2"><span class="w-12">1 star</span>
-                                <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                    <div class="bg-primary h-2.5 rounded-full" style="width: 1%"></div>
-                                </div><span>1</span>
+                            <div>
+                                <label for="review-email"
+                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Email
+                                    *</label>
+                                <input type="email" id="review-email" name="email" required
+                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
+                                    placeholder="your.email@example.com">
                             </div>
                         </div>
-                    </div>
+
+                        <!-- Rating -->
+                        <div>
+                            <label class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Rating
+                                *</label>
+                            <div class="flex gap-2" id="rating-stars">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <button type="button"
+                                        class="rating-star text-3xl text-gray-300 dark:text-gray-600 hover:text-primary transition-colors"
+                                        data-rating="{{ $i }}">
+                                        <span class="material-symbols-outlined">star_outline</span>
+                                    </button>
+                                @endfor
+                            </div>
+                            <input type="hidden" id="review-rating" name="rating" required>
+                        </div>
+
+                        <!-- Comment -->
+                        <div>
+                            <label for="review-comment"
+                                class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Your Review
+                                *</label>
+                            <textarea id="review-comment" name="comment" rows="5" required
+                                class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary resize-none"
+                                placeholder="Share your thoughts about this product..."></textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div>
+                            <button type="submit" id="submit-review-btn"
+                                class="px-6 py-2 bg-primary text-white rounded-lg font-semibold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                                Submit Review
+                            </button>
+                        </div>
+                    </form>
                 </div>
-                <!-- Individual Reviews -->
-                <div class="mt-8 space-y-6">
-                    <div class="flex gap-4 border-b border-border-light dark:border-border-dark pb-6">
-                        <div class="w-12 h-12 rounded-full bg-cover bg-center" data-alt="Avatar of Sarah K."
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAzxlSNrm5NMgSfQ89EDLCQI61e8qV6On6zKkn09o39DkVzmgw-ZcTv9wI0xdPkr_CR8Ex_U9OrVhuNadI0WH7tCokH8ylzaND3lgkkrHtGWBTSOsmfJvL7W3IPceDhY2GsRIZcLSVlTBt4N8fRLCJDis64wAJhzMm11VflPjYJyZFrCDUu-h78ain20wn0-NhBCBONGlIsIDrpj4mepw89F2kPzLNSufzVhano3A15jjhsPJZe6HvOQ1taLg3J5ZBefiYV5elPnXQ')">
-                        </div>
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between">
-                                <p class="font-bold">Sarah K.</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">2 weeks ago</p>
+
+                @if ($reviewStats['total'] > 0)
+                    <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm">
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div
+                                class="flex flex-col items-center justify-center gap-2 border-r border-border-light dark:border-border-dark pr-8">
+                                <p class="text-5xl font-black text-primary">
+                                    {{ number_format($reviewStats['average'], 1) }}
+                                </p>
+                                <div class="flex text-primary">
+                                    @for ($i = 1; $i <= 5; $i++)
+                                        @if ($i <= floor($reviewStats['average']))
+                                            <span class="material-symbols-outlined">star</span>
+                                        @elseif($i - 0.5 <= $reviewStats['average'])
+                                            <span class="material-symbols-outlined">star_half</span>
+                                        @else
+                                            <span class="material-symbols-outlined">star_outline</span>
+                                        @endif
+                                    @endfor
+                                </div>
+                                <p class="text-sm text-gray-500 dark:text-gray-400">Based on {{ $reviewStats['total'] }}
+                                    {{ $reviewStats['total'] == 1 ? 'review' : 'reviews' }}</p>
                             </div>
-                            <div class="flex text-primary my-1"><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span></div>
-                            <p class="text-gray-600 dark:text-gray-300">So incredibly soft! My daughter absolutely loves
-                                her new giraffe. It's the perfect size for her to carry everywhere. Wonderful quality.</p>
+                            <div class="col-span-2 flex flex-col gap-2 text-sm">
+                                <!-- Rating bars -->
+                                @for ($rating = 5; $rating >= 1; $rating--)
+                                    @php
+                                        $count = $reviewStats['distribution'][$rating] ?? 0;
+                                        $percentage = $reviewStats['percentages'][$rating] ?? 0;
+                                    @endphp
+                                    <div class="flex items-center gap-2">
+                                        <span class="w-12">{{ $rating }} star</span>
+                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                            <div class="bg-primary h-2.5 rounded-full"
+                                                style="width: {{ $percentage }}%">
+                                            </div>
+                                        </div>
+                                        <span>{{ $count }}</span>
+                                    </div>
+                                @endfor
+                            </div>
                         </div>
                     </div>
-                    <div class="flex gap-4 border-b border-border-light dark:border-border-dark pb-6">
-                        <div class="w-12 h-12 rounded-full bg-cover bg-center" data-alt="Avatar of Mark T."
-                            style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuDpZQNNoW5nq2TZYy6zInzLHyYXUJb-TBJapk7Ot5qQ1YfxO9LIatol4o5ydEVUMrzwGXZr3g_kyVLY6JtgCypdyXoyKwfw_LxW1GMnjD46jHbZ6zUgc_6-90YkVJf6pvepyyQiYk9F7XOiAglZAi3irUzmo4CTMLpe289jxjKZ9B9TeNqL7gOD62wLCDQT7lfMD3zD6ggqs2U09WIFvObYcpM2WZ0CQozcZyPbGWgBtPO4v4dg7ipDLSyz5dLqbmJ1YQVoeW0_yks')">
+                    <!-- Individual Reviews -->
+                    @if ($reviews->count() > 0)
+                        <div class="mt-8 space-y-6">
+                            @foreach ($reviews as $review)
+                                <div class="flex gap-4 border-b border-border-light dark:border-border-dark pb-6">
+                                    <div
+                                        class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+                                        {{ strtoupper(substr($review->name ?? ($review->user->name ?? 'U'), 0, 1)) }}
+                                    </div>
+                                    <div class="flex-1">
+                                        <div class="flex items-center justify-between">
+                                            <p class="font-bold">
+                                                {{ $review->name ?? ($review->user->name ?? 'Anonymous') }}
+                                            </p>
+                                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                                {{ $review->created_at->diffForHumans() }}</p>
+                                        </div>
+                                        @if ($review->rating)
+                                            <div class="flex text-primary my-1">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    @if ($i <= $review->rating)
+                                                        <span class="material-symbols-outlined text-base">star</span>
+                                                    @else
+                                                        <span
+                                                            class="material-symbols-outlined text-base">star_outline</span>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        @endif
+                                        <p class="text-gray-600 dark:text-gray-300">{{ $review->comment }}</p>
+                                    </div>
+                                </div>
+                            @endforeach
                         </div>
-                        <div class="flex-1">
-                            <div class="flex items-center justify-between">
-                                <p class="font-bold">Mark T.</p>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">1 month ago</p>
-                            </div>
-                            <div class="flex text-primary my-1"><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star</span><span
-                                    class="material-symbols-outlined text-base">star_outline</span></div>
-                            <p class="text-gray-600 dark:text-gray-300">Great toy, very well-made. Feels durable and safe.
-                                A little pricier than others, but you can feel the quality difference. Would recommend.</p>
-                        </div>
-                    </div>
-                </div>
+                    @endif
             </div>
+            @endif
             <!-- You Might Also Like Section -->
-            <div class="mt-24">
-                <h2 class="text-3xl font-bold mb-6 text-center">You Might Also Like</h2>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-                    <div class="flex flex-col gap-3 group">
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform group-hover:scale-105"
-                            data-alt="Plush elephant toy"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBXwrn1-8XSiscTBHLsHJyLS04ci-x9cOufdAPcoQHdA2VOYy6UslWJePGfKkvwZLhk-WUMyrGd6xAFRzZchRNY3O8peUtdKoMfITof5ZRxG-OkWL6kxF3ywdmiJXhgaSSgt6joibrPIqDsb6P3AFL7gmuw-40pIdNmr5N0vyR3HcpdEXEcZOa1tu8n40EZtIa8u-5SZqWqAnOc2RSYOhmxFS6MgOAl5tXsjlbcza1JblhD2iwdpKZZMKd9pu34pxuRc_gFZNowtfU");'>
-                        </div>
-                        <div class="text-center">
-                            <h4 class="font-semibold">Elara the Elephant</h4>
-                            <p class="text-gray-500 dark:text-gray-400">$29.99</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 group">
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform group-hover:scale-105"
-                            data-alt="Wooden block set"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCHB0W8pjET1dscN9qmzI8-5tV4dfmAIPy9uaVllrL6QP2oCRSxBc63533xyAquXihaUzmH8r8GCBGRLMC8grBN6PHDgTiHqG9Dg8IT5br55T6zL6oonq265ZOeK-HlywjeXLW1czcn1KjSnQ_IBxh4p7CQKgWtj7sVI8RRUfQqYnTyKfaAp7Dq--oHLf-bo5FQ48yx5j2xIvgDDhFHPRrysqOkYB7SYdKblYzx6D1Y9B3R3idF5gRBxC9YPTt1A9pwOVpNsJ4_65Y");'>
-                        </div>
-                        <div class="text-center">
-                            <h4 class="font-semibold">Rainbow Building Blocks</h4>
-                            <p class="text-gray-500 dark:text-gray-400">$45.00</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 group">
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform group-hover:scale-105"
-                            data-alt="Soft baby blanket"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAOQv0_AomZVPRr9fIJFZVS1zcz8vxMHRA5neOBs3zhL4bKXwOm49szDl_M4LdOQcJICesLwan1DhwUETXD7E49-TTk3QztEbWowgYaMCMB7QC0R2NBaqQgxFHFrDvWapwxGCSx4KjszzCDVI7hjLgfg6QfpOYsfTPt5dkzxf2Yaco3kr2Fc0xf8Aat1mn6H-NJhJ2VNLsi8WTqppqaaxhwU1a3e7DorxPnBPGHLN0Z0BMMUe3niG0ZYFVfexO6pDy1vMT5-6UYf10");'>
-                        </div>
-                        <div class="text-center">
-                            <h4 class="font-semibold">Cozy Cloud Blanket</h4>
-                            <p class="text-gray-500 dark:text-gray-400">$39.99</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 group">
-                        <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform group-hover:scale-105"
-                            data-alt="Plush lion toy"
-                            style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCQ52IbUCnizWBRxHoxc1VOvK73a4TqSwQGtLgZ4DSUZltD40Ki7TWFf4jxU-9nWLddXoRcCruGPWSGPwiSD4cqHe4OA85EV8qWckX35hXkYwz7H-BxLTMFaXVERJNoH3ZieyD1IZkjm2Gx6yznuohJ8xNWxVHNKpqTfj44FVefWvjABdIoQRB-1t3VEm9lWtVzU3lEf6yjqX-EJtEIvE2TESi5uJl8GG8OiaO9o3V1yWWvqmjmRgq2Dp9J76xXc5A9NMthHa5Geo0");'>
-                        </div>
-                        <div class="text-center">
-                            <h4 class="font-semibold">Leo the Brave Lion</h4>
-                            <p class="text-gray-500 dark:text-gray-400">$29.99</p>
-                        </div>
+            @if (count($relatedProducts) > 0)
+                <div class="mt-24">
+                    <h2 class="text-3xl font-bold mb-6 text-center">You Might Also Like</h2>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                        @foreach ($relatedProducts as $relatedProduct)
+                            @php
+                                $relatedProduct = is_array($relatedProduct)
+                                    ? (object) $relatedProduct
+                                    : $relatedProduct;
+                                if (is_array($relatedProduct->category ?? null)) {
+                                    $relatedProduct->category = (object) $relatedProduct->category;
+                                }
+                                if (is_array($relatedProduct->price ?? null)) {
+                                    $relatedProduct->price = (object) $relatedProduct->price;
+                                }
+                            @endphp
+                            <a href="{{ $relatedProduct->url ?? '#' }}" class="flex flex-col gap-3 group">
+                                <div class="w-full bg-center bg-no-repeat aspect-square bg-cover rounded-xl transition-transform group-hover:scale-105"
+                                    data-alt="{{ $relatedProduct->name ?? 'Product' }}"
+                                    style='background-image: url("{{ $relatedProduct->image ?? 'https://placehold.co/400' }}");'>
+                                </div>
+                                <div class="text-center">
+                                    <h4 class="font-semibold">{{ $relatedProduct->name ?? 'Product Name' }}</h4>
+                                    <p class="text-gray-500 dark:text-gray-400">
+                                        {{ $relatedProduct->price->display ?? 'N/A' }}</p>
+                                </div>
+                            </a>
+                        @endforeach
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </main>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Variants data from server
+                const variants = @json($variantsData);
+                const priceElement = document.getElementById('product-price');
+                const minPrice = {{ $product->min_price ?? 0 }};
+                const maxPrice = {{ $product->max_price ?? 0 }};
+
+                // Selected size and color
+                let selectedSizeId = null;
+                let selectedColorId = null;
+
+                // Function to find matching variant
+                function findVariant(sizeId, colorId) {
+                    // Try exact match first
+                    let variant = variants.find(v => {
+                        const sizeMatch = sizeId ? v.size_id == sizeId : v.size_id === null;
+                        const colorMatch = colorId ? v.color_id == colorId : v.color_id === null;
+                        return sizeMatch && colorMatch;
+                    });
+
+                    // If no exact match, try with size only
+                    if (!variant && sizeId) {
+                        variant = variants.find(v => v.size_id == sizeId && v.color_id === null);
+                    }
+
+                    // If still no match, try with color only
+                    if (!variant && colorId) {
+                        variant = variants.find(v => v.size_id === null && v.color_id == colorId);
+                    }
+
+                    // If still no match, get first variant with price
+                    if (!variant) {
+                        variant = variants.find(v => v.price !== null);
+                    }
+
+                    return variant;
+                }
+
+                // Function to update price
+                function updatePrice() {
+                    if (!priceElement) return;
+
+                    const variant = findVariant(selectedSizeId, selectedColorId);
+
+                    if (variant && variant.price !== null) {
+                        priceElement.textContent = '$' + parseFloat(variant.price).toFixed(2);
+                    } else {
+                        // Fallback to price range
+                        if (minPrice && maxPrice) {
+                            if (minPrice === maxPrice) {
+                                priceElement.textContent = '$' + minPrice.toFixed(2);
+                            } else {
+                                priceElement.textContent = '$' + minPrice.toFixed(2) + ' - $' + maxPrice.toFixed(2);
+                            }
+                        } else {
+                            priceElement.textContent = 'N/A';
+                        }
+                    }
+                }
+
+                // Image gallery functionality
+                const mainImage = document.getElementById('main-product-image');
+                const thumbnailImages = document.querySelectorAll('.thumbnail-image');
+
+                thumbnailImages.forEach(thumbnail => {
+                    thumbnail.addEventListener('click', function() {
+                        const imageUrl = this.getAttribute('data-image');
+                        if (mainImage && imageUrl) {
+                            mainImage.style.backgroundImage = `url("${imageUrl}")`;
+
+                            // Update active thumbnail
+                            thumbnailImages.forEach(t => {
+                                t.classList.remove('border-2', 'border-primary');
+                                t.classList.add('border', 'border-gray-300',
+                                    'dark:border-gray-700');
+                            });
+                            this.classList.remove('border', 'border-gray-300', 'dark:border-gray-700');
+                            this.classList.add('border-2', 'border-primary');
+                        }
+                    });
+                });
+
+                // Quantity controls
+                const quantityInput = document.getElementById('quantity-input');
+                const decreaseBtn = document.querySelector('.quantity-decrease');
+                const increaseBtn = document.querySelector('.quantity-increase');
+
+                if (decreaseBtn && quantityInput) {
+                    decreaseBtn.addEventListener('click', function() {
+                        const currentValue = parseInt(quantityInput.value) || 1;
+                        if (currentValue > 1) {
+                            quantityInput.value = currentValue - 1;
+                        }
+                    });
+                }
+
+                if (increaseBtn && quantityInput) {
+                    increaseBtn.addEventListener('click', function() {
+                        const currentValue = parseInt(quantityInput.value) || 1;
+                        quantityInput.value = currentValue + 1;
+                    });
+                }
+
+                // Size and Color selection
+                const sizeOptions = document.querySelectorAll('.size-option');
+                const colorOptions = document.querySelectorAll('.color-option');
+
+                sizeOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        sizeOptions.forEach(opt => {
+                            opt.classList.remove('border-2', 'border-primary', 'bg-primary/20',
+                                'font-bold');
+                            opt.classList.add('border', 'border-border-light',
+                                'dark:border-border-dark');
+                        });
+                        this.classList.remove('border', 'border-border-light',
+                            'dark:border-border-dark');
+                        this.classList.add('border-2', 'border-primary', 'bg-primary/20', 'font-bold');
+
+                        // Update selected size and price
+                        selectedSizeId = parseInt(this.getAttribute('data-size-id'));
+                        updatePrice();
+                    });
+                });
+
+                colorOptions.forEach(option => {
+                    option.addEventListener('click', function() {
+                        colorOptions.forEach(opt => {
+                            opt.classList.remove('border-2', 'border-primary', 'bg-primary/20',
+                                'font-bold');
+                            opt.classList.add('border', 'border-border-light',
+                                'dark:border-border-dark');
+                        });
+                        this.classList.remove('border', 'border-border-light',
+                            'dark:border-border-dark');
+                        this.classList.add('border-2', 'border-primary', 'bg-primary/20', 'font-bold');
+
+                        // Update selected color and price
+                        selectedColorId = parseInt(this.getAttribute('data-color-id'));
+                        updatePrice();
+                    });
+                });
+
+                // Set initial selection if first option exists
+                if (sizeOptions.length > 0) {
+                    const firstSize = sizeOptions[0];
+                    selectedSizeId = parseInt(firstSize.getAttribute('data-size-id'));
+                }
+                if (colorOptions.length > 0) {
+                    const firstColor = colorOptions[0];
+                    selectedColorId = parseInt(firstColor.getAttribute('data-color-id'));
+                }
+
+                // Update price on initial load if we have selections
+                if (selectedSizeId || selectedColorId) {
+                    updatePrice();
+                }
+
+                // Review Form Functionality
+                const reviewForm = document.getElementById('review-form');
+                const ratingStars = document.querySelectorAll('.rating-star');
+                const ratingInput = document.getElementById('review-rating');
+                let selectedRating = 0;
+
+                // Rating stars interaction
+                ratingStars.forEach((star, index) => {
+                    star.addEventListener('click', function() {
+                        selectedRating = parseInt(this.getAttribute('data-rating'));
+                        ratingInput.value = selectedRating;
+
+                        // Update star display
+                        ratingStars.forEach((s, i) => {
+                            const icon = s.querySelector('span');
+                            if (i < selectedRating) {
+                                icon.textContent = 'star';
+                                s.classList.remove('text-gray-300', 'dark:text-gray-600');
+                                s.classList.add('text-primary');
+                            } else {
+                                icon.textContent = 'star_outline';
+                                s.classList.remove('text-primary');
+                                s.classList.add('text-gray-300', 'dark:text-gray-600');
+                            }
+                        });
+                    });
+
+                    star.addEventListener('mouseenter', function() {
+                        const hoverRating = parseInt(this.getAttribute('data-rating'));
+                        ratingStars.forEach((s, i) => {
+                            const icon = s.querySelector('span');
+                            if (i < hoverRating) {
+                                icon.textContent = 'star';
+                                s.classList.add('text-primary');
+                            } else {
+                                icon.textContent = 'star_outline';
+                            }
+                        });
+                    });
+                });
+
+                // Reset stars on mouse leave (if no rating selected)
+                document.getElementById('rating-stars').addEventListener('mouseleave', function() {
+                    if (selectedRating === 0) {
+                        ratingStars.forEach((s) => {
+                            const icon = s.querySelector('span');
+                            icon.textContent = 'star_outline';
+                            s.classList.remove('text-primary');
+                            s.classList.add('text-gray-300', 'dark:text-gray-600');
+                        });
+                    } else {
+                        // Restore selected rating
+                        ratingStars.forEach((s, i) => {
+                            const icon = s.querySelector('span');
+                            if (i < selectedRating) {
+                                icon.textContent = 'star';
+                                s.classList.add('text-primary');
+                            } else {
+                                icon.textContent = 'star_outline';
+                            }
+                        });
+                    }
+                });
+
+                // Form submission
+                if (reviewForm) {
+                    reviewForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+
+                        const submitBtn = document.getElementById('submit-review-btn');
+                        const formData = new FormData(this);
+
+                        // Validate rating
+                        if (!ratingInput.value || ratingInput.value === '0') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Rating Required',
+                                text: 'Please select a rating before submitting your review.',
+                                confirmButtonColor: '#42b6f0'
+                            });
+                            return;
+                        }
+
+                        // Disable submit button
+                        submitBtn.disabled = true;
+                        submitBtn.textContent = 'Submitting...';
+
+                        // Submit via AJAX
+                        fetch('{{ route('products.review.store', $product->id) }}', {
+                                method: 'POST',
+                                body: formData,
+                                headers: {
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Thank You!',
+                                        text: data.message ||
+                                            'Your review has been submitted successfully. It will be reviewed before being published.',
+                                        confirmButtonColor: '#42b6f0'
+                                    }).then(() => {
+                                        // Reset form
+                                        reviewForm.reset();
+                                        selectedRating = 0;
+                                        ratingInput.value = '';
+                                        ratingStars.forEach((s) => {
+                                            const icon = s.querySelector('span');
+                                            icon.textContent = 'star_outline';
+                                            s.classList.remove('text-primary');
+                                            s.classList.add('text-gray-300',
+                                                'dark:text-gray-600');
+                                        });
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: data.message ||
+                                            'There was an error submitting your review. Please try again.',
+                                        confirmButtonColor: '#42b6f0'
+                                    });
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'There was an error submitting your review. Please try again.',
+                                    confirmButtonColor: '#42b6f0'
+                                });
+                            })
+                            .finally(() => {
+                                submitBtn.disabled = false;
+                                submitBtn.textContent = 'Submit Review';
+                            });
+                    });
+                }
+            });
+        </script>
+    @endpush
 @endsection

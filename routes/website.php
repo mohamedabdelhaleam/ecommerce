@@ -10,3 +10,4 @@ Route::get('/about', AboutController::class)->name('about');
 
 Route::get('/products', ProductsController::class)->name('products');
 Route::get('/products/{id}', [ProductsController::class, 'show'])->name('products.show');
+Route::post('/products/{id}/review', [ProductsController::class, 'storeReview'])->name('products.review.store');

@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ProductResource;
+use App\Models\Comment;
 use App\Repositories\CategoryRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
@@ -98,6 +100,135 @@ class ProductsController extends Controller
 
     public function show($id)
     {
-        return view('website.products.details');
+        // Find product with all relationships
+        $product = $this->productRepository->findOrFail($id);
+
+        // Check if product is active
+        if (!$product->is_active) {
+            abort(404);
+        }
+
+        // Load relationships
+        $product->load([
+            'category',
+            'images' => function ($query) {
+                $query->orderBy('is_primary', 'desc')->orderBy('order');
+            },
+            'activeVariants' => function ($query) {
+                $query->with(['size', 'color'])->orderBy('price');
+            },
+            'approvedComments' => function ($query) {
+                $query->with('user')->orderBy('created_at', 'desc');
+            }
+        ]);
+
+        // Calculate review statistics
+        $approvedComments = $product->approvedComments;
+        $reviewsWithRating = $approvedComments->whereNotNull('rating');
+
+        $reviewStats = [
+            'average' => $reviewsWithRating->avg('rating') ?? 0,
+            'total' => $reviewsWithRating->count(),
+            'distribution' => [
+                5 => $reviewsWithRating->where('rating', 5)->count(),
+                4 => $reviewsWithRating->where('rating', 4)->count(),
+                3 => $reviewsWithRating->where('rating', 3)->count(),
+                2 => $reviewsWithRating->where('rating', 2)->count(),
+                1 => $reviewsWithRating->where('rating', 1)->count(),
+            ]
+        ];
+
+        // Calculate percentage for each rating
+        foreach ($reviewStats['distribution'] as $rating => $count) {
+            $reviewStats['percentages'][$rating] = $reviewStats['total'] > 0
+                ? round(($count / $reviewStats['total']) * 100, 0)
+                : 0;
+        }
+
+        // Get related products (same category, excluding current product)
+        $relatedProductsQuery = $this->productRepository->all([
+            'category_id' => $product->category_id,
+            'is_active' => true,
+            'paginate' => false,
+            'per_page' => 10,
+        ]);
+
+        $relatedProducts = $relatedProductsQuery->filter(function ($p) use ($product) {
+            return $p->id != $product->id;
+        })->take(4);
+
+        // Transform related products
+        $relatedProductsData = ProductResource::collection($relatedProducts)->resolve();
+
+        // Get unique sizes and colors from variants
+        $availableSizes = $product->activeVariants()
+            ->with('size')
+            ->get()
+            ->pluck('size')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        $availableColors = $product->activeVariants()
+            ->with('color')
+            ->get()
+            ->pluck('color')
+            ->filter()
+            ->unique('id')
+            ->values();
+
+        // Prepare variants data for JavaScript (size_id, color_id, price)
+        $variantsData = $product->activeVariants->map(function ($variant) {
+            return [
+                'id' => $variant->id,
+                'size_id' => $variant->size_id,
+                'color_id' => $variant->color_id,
+                'price' => $variant->price,
+                'stock' => $variant->stock,
+            ];
+        })->toArray();
+
+        return view('website.products.details', [
+            'product' => $product,
+            'reviewStats' => $reviewStats,
+            'reviews' => $approvedComments->take(10), // Show latest 10 reviews
+            'relatedProducts' => $relatedProductsData,
+            'availableSizes' => $availableSizes,
+            'availableColors' => $availableColors,
+            'variantsData' => $variantsData,
+        ]);
+    }
+
+    public function storeReview($id, \App\Http\Requests\StoreReviewRequest $request)
+    {
+        $product = $this->productRepository->findOrFail($id);
+
+        // Check if product is active
+        if (!$product->is_active) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found.'
+            ], 404);
+        }
+
+        // Get authenticated user if available
+        $userId = Auth::check() ? Auth::id() : null;
+
+        // Create comment/review
+        $comment = Comment::create([
+            'product_id' => $product->id,
+            'user_id' => $userId,
+            'name' => $request->name,
+            'email' => $request->email,
+            'comment' => $request->comment,
+            'rating' => $request->rating,
+            'is_approved' => false, // Reviews need approval before being displayed
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Your review has been submitted successfully. It will be reviewed before being published.',
+            'comment' => $comment
+        ]);
     }
 }
