@@ -62,4 +62,45 @@ class Product extends Model
             ? ($this->name_ar ?? $this->name_en ?? 'N/A')
             : ($this->name_en ?? $this->name_ar ?? 'N/A');
     }
+
+    /**
+     * Get the minimum price from active variants
+     */
+    public function getMinPriceAttribute()
+    {
+        $minPrice = $this->activeVariants()
+            ->whereNotNull('price')
+            ->min('price');
+        return $minPrice ? (float) $minPrice : null;
+    }
+
+    /**
+     * Get the maximum price from active variants
+     */
+    public function getMaxPriceAttribute()
+    {
+        $maxPrice = $this->activeVariants()
+            ->whereNotNull('price')
+            ->max('price');
+        return $maxPrice ? (float) $maxPrice : null;
+    }
+
+    /**
+     * Get formatted price range
+     */
+    public function getPriceRangeAttribute()
+    {
+        $min = $this->min_price;
+        $max = $this->max_price;
+
+        if ($min === null && $max === null) {
+            return 'N/A';
+        }
+
+        if ($min === $max) {
+            return '$' . number_format($min, 2);
+        }
+
+        return '$' . number_format($min, 2) . ' - $' . number_format($max, 2);
+    }
 }

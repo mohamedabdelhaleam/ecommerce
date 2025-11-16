@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\ProductRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,12 @@ class ProductRepository implements ProductRepositoryInterface
                 $query->select('id', 'name_ar', 'name_en');
             },
             'variants' => function ($query) {
-                $query->select('id', 'product_id', 'stock');
+                $query->select('id', 'product_id', 'price', 'stock', 'is_active');
+            },
+            'images' => function ($query) {
+                $query->select('id', 'product_id', 'image', 'is_primary', 'order')
+                    ->orderBy('is_primary', 'desc')
+                    ->orderBy('order');
             }
         ]);
 
@@ -40,12 +46,31 @@ class ProductRepository implements ProductRepositoryInterface
 
         // Filter by category
         if (!empty($filters['category_id'])) {
-            $query->where('category_id', $filters['category_id']);
+            if (is_array($filters['category_id'])) {
+                $query->whereIn('category_id', $filters['category_id']);
+            } else {
+                $query->where('category_id', $filters['category_id']);
+            }
+        }
+
+        // Filter by price range
+        if (!empty($filters['min_price']) || !empty($filters['max_price'])) {
+            $query->whereHas('variants', function ($q) use ($filters) {
+                if (!empty($filters['min_price'])) {
+                    $q->where('price', '>=', $filters['min_price']);
+                }
+                if (!empty($filters['max_price'])) {
+                    $q->where('price', '<=', $filters['max_price']);
+                }
+            });
         }
 
         // Filter by status
         if (isset($filters['is_active']) && $filters['is_active'] !== '') {
             $query->where('is_active', $filters['is_active']);
+        } else {
+            // Default to active products for website
+            $query->where('is_active', true);
         }
 
         // Filter by date range
@@ -60,7 +85,20 @@ class ProductRepository implements ProductRepositoryInterface
         // Order by
         $orderBy = $filters['order_by'] ?? 'created_at';
         $orderDirection = $filters['order_direction'] ?? 'desc';
-        $query->orderBy($orderBy, $orderDirection);
+
+        // Handle special sorting cases
+        if ($orderBy === 'price') {
+            // Sort by minimum variant price
+            $query->withMin('variants', 'price')
+                ->orderBy('variants_min_price', $orderDirection);
+        } elseif ($orderBy === 'popularity') {
+            // Sort by number of comments or created_at as fallback
+            $query->withCount('comments')
+                ->orderBy('comments_count', 'desc')
+                ->orderBy('created_at', 'desc');
+        } else {
+            $query->orderBy($orderBy, $orderDirection);
+        }
 
         // Pagination
         $perPage = $filters['per_page'] ?? 10;
@@ -226,6 +264,33 @@ class ProductRepository implements ProductRepositoryInterface
     }
 
     /**
+     * Get min and max prices from active product variants
+     *
+     * @return array
+     */
+    public function getPriceRange(): array
+    {
+        $minPrice = DB::table('product_variants')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->where('products.is_active', true)
+            ->where('product_variants.is_active', true)
+            ->whereNotNull('product_variants.price')
+            ->min('product_variants.price');
+
+        $maxPrice = DB::table('product_variants')
+            ->join('products', 'product_variants.product_id', '=', 'products.id')
+            ->where('products.is_active', true)
+            ->where('product_variants.is_active', true)
+            ->whereNotNull('product_variants.price')
+            ->max('product_variants.price');
+
+        return [
+            'min' => $minPrice ? (float) $minPrice : 0,
+            'max' => $maxPrice ? (float) $maxPrice : 1000,
+        ];
+    }
+
+    /**
      * Build filters array from request
      *
      * @param Request $request
@@ -233,14 +298,22 @@ class ProductRepository implements ProductRepositoryInterface
      */
     public function buildFiltersFromRequest(Request $request): array
     {
+        $categoryIds = $request->get('categories', []);
+        if (is_string($categoryIds)) {
+            $categoryIds = explode(',', $categoryIds);
+        }
+        $categoryIds = array_filter(array_map('intval', $categoryIds));
+
         return [
             'search' => $request->get('search'),
-            'category_id' => $request->get('category_id'),
+            'category_id' => !empty($categoryIds) ? $categoryIds : $request->get('category_id'),
+            'min_price' => $request->get('min_price'),
+            'max_price' => $request->get('max_price'),
             'is_active' => $request->get('is_active'),
             'from_date' => $request->get('from_date'),
             'to_date' => $request->get('to_date'),
             'paginate' => true,
-            'per_page' => $request->get('per_page', 10),
+            'per_page' => $request->get('per_page', 12),
             'order_by' => $request->get('order_by', 'created_at'),
             'order_direction' => $request->get('order_direction', 'desc'),
         ];

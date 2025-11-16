@@ -30,37 +30,19 @@
                                 <label class="block text-sm font-medium mb-2" for="sort-by">Sort by</label>
                                 <select
                                     class="w-full rounded border-stone-300 dark:border-stone-700 bg-background-light dark:bg-background-dark focus:border-primary focus:ring-primary text-sm"
-                                    id="sort-by">
-                                    <option>Popularity</option>
-                                    <option>Newest</option>
-                                    <option>Price: Low to High</option>
-                                    <option>Price: High to Low</option>
+                                    id="sort-by" name="sort">
+                                    <option value="popularity" {{ $currentSort === 'popularity' ? 'selected' : '' }}>
+                                        Popularity</option>
+                                    <option value="newest" {{ $currentSort === 'newest' ? 'selected' : '' }}>Newest</option>
+                                    <option value="price_low" {{ $currentSort === 'price_low' ? 'selected' : '' }}>Price:
+                                        Low to High</option>
+                                    <option value="price_high" {{ $currentSort === 'price_high' ? 'selected' : '' }}>Price:
+                                        High to Low</option>
                                 </select>
                             </div>
                             <!-- Accordions for filters -->
                             <div class="flex flex-col">
-                                <details class="flex flex-col border-t border-stone-200 dark:border-stone-800 py-2 group"
-                                    open="">
-                                    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-2">
-                                        <p class="text-sm font-medium">Age Group</p>
-                                        <span
-                                            class="material-symbols-outlined text-xl transition-transform group-open:rotate-180">expand_more</span>
-                                    </summary>
-                                    <div class="space-y-2 pt-2 text-sm">
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> 0-2 years</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> 3-5 years</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> 6-8 years</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> 9+ years</label>
-                                    </div>
-                                </details>
+
                                 <details class="flex flex-col border-t border-stone-200 dark:border-stone-800 py-2 group"
                                     open="">
                                     <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-2">
@@ -69,36 +51,18 @@
                                             class="material-symbols-outlined text-xl transition-transform group-open:rotate-180">expand_more</span>
                                     </summary>
                                     <div class="space-y-2 pt-2 text-sm">
-                                        <label class="flex items-center gap-2"><input checked=""
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Building Blocks</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Puzzles</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Stuffed Animals</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Art &amp; Craft</label>
-                                    </div>
-                                </details>
-                                <details class="flex flex-col border-t border-stone-200 dark:border-stone-800 py-2 group">
-                                    <summary class="flex cursor-pointer list-none items-center justify-between gap-6 py-2">
-                                        <p class="text-sm font-medium">Brand</p>
-                                        <span
-                                            class="material-symbols-outlined text-xl transition-transform group-open:rotate-180">expand_more</span>
-                                    </summary>
-                                    <div class="space-y-2 pt-2 text-sm">
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Blocktastic</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Creative Kids</label>
-                                        <label class="flex items-center gap-2"><input
-                                                class="rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
-                                                type="checkbox" /> Fun Times</label>
+                                        @forelse($categories as $category)
+                                            <label class="flex items-center gap-2">
+                                                <input
+                                                    class="category-checkbox rounded border-stone-300 dark:border-stone-700 text-primary focus:ring-primary"
+                                                    type="checkbox" value="{{ $category->id }}"
+                                                    {{ in_array($category->id, $selectedCategories) ? 'checked' : '' }} />
+                                                {{ $category->name }}
+                                            </label>
+                                        @empty
+                                            <p class="text-sm text-text-light/60 dark:text-text-dark/60">No categories
+                                                available</p>
+                                        @endforelse
                                     </div>
                                 </details>
                                 <details
@@ -109,16 +73,21 @@
                                             class="material-symbols-outlined text-xl transition-transform group-open:rotate-180">expand_more</span>
                                     </summary>
                                     <div class="pt-4 pb-2 text-sm">
-                                        <input
+                                        <input id="price-range"
                                             class="w-full h-2 bg-stone-200 rounded-lg appearance-none cursor-pointer dark:bg-stone-700 accent-primary"
-                                            max="100" min="0" type="range" value="50" />
-                                        <div class="flex justify-between mt-2 text-xs"><span>$0</span><span>$100+</span>
+                                            max="{{ $priceRange['max'] }}" min="{{ $priceRange['min'] }}" type="range"
+                                            value="{{ $currentMaxPrice }}" />
+                                        <div class="flex justify-between mt-2 text-xs">
+                                            <span>${{ number_format($priceRange['min'], 2) }}</span>
+                                            <span id="price-display">${{ number_format($currentMaxPrice, 2) }}+</span>
                                         </div>
+                                        <input type="hidden" id="min-price" value="{{ $priceRange['min'] }}">
+                                        <input type="hidden" id="max-price" value="{{ $priceRange['max'] }}">
                                     </div>
                                 </details>
                             </div>
                             <!-- Clear All Button -->
-                            <button
+                            <button id="clear-filters"
                                 class="w-full text-sm font-semibold py-2.5 rounded bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors">Clear
                                 All Filters</button>
                         </div>
@@ -126,160 +95,179 @@
                 </aside>
                 <!-- Product Grid -->
                 <div class="w-full lg:w-3/4 xl:w-4/5">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                        <!-- Product Card 1 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <div class="absolute top-3 left-3 z-10">
-                                <span
-                                    class="inline-block bg-primary text-white text-xs font-bold px-2.5 py-1 rounded-full">NEW</span>
-                            </div>
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="Colorful wooden building blocks arranged in a castle shape"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuD0V3ZQhmW3cK4ui--Zuou5lbE_Q_LMtofp29nh9tb0a22qxtN4NH6lvf2ES7DKyjxlKtTfmryqB4sdPpHtWfEwOgQH6zppUaM2ZRsuwKb1W2mJNAyd65uymsdTGypy2jjpYATeE7_A_sUzhmAF228McGdISzuVZwnGsQnWaNZospUxl802_F7c6pQ4fusoMx_MEw-RWAX5etUwahtoj8h7UvUQwrUblaH27GcRDMi82g2-CjeY-F0IdR-gWhzaDjmu9VWWX-9GbAI" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Blocktastic</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Rainbow Castle Blocks</a></h3>
-                                <p class="font-bold text-primary mt-2">$29.99</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
+                    @if ($products->count() > 0)
+                        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6" id="products-grid">
+                            @foreach ($productsData as $product)
+                                <x-website.cards.product-card :product="$product" />
+                            @endforeach
                         </div>
-                        <!-- Product Card 2 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="A child playing with natural wood building blocks"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuBc046RWern4kvRL5WL93jO0DDBSH6k5lDf8bxUCSYJsa4PrdF8pClz6kMvU1ulBTInaZZ02jTUUf6xgp1Fd9ZyWIIzJvSl2hn8FdLFwM8ScjdOjiBtJha6CzatwHmDpMsYfPTiPPfeN5dP_aKPqYCRb9oWds31Qv-qQ3KCh1DhkkxI2nTLSJNPpTQGhHrKLSvEGXBNfCC1xpkRwX-SLUQTkqbg8OMPMBY071MblVOq5wNdSy3qneh7O81a4FWAF__kLHAVkLn4idg" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Creative Kids</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Natural Wood Cubes</a></h3>
-                                <p class="font-bold text-primary mt-2">$19.99</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
+                    @else
+                        <div class="text-center py-12">
+                            <p class="text-lg text-text-light/70 dark:text-text-dark/70">No products found matching your
+                                filters.</p>
+                            <button id="clear-filters-empty"
+                                class="mt-4 text-sm font-semibold py-2 px-4 rounded bg-primary text-white hover:bg-primary/90 transition-colors">
+                                Clear All Filters
+                            </button>
                         </div>
-                        <!-- Product Card 3 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <div class="absolute top-3 left-3 z-10">
-                                <span
-                                    class="inline-block bg-[#A8D8B9] text-text-light text-xs font-bold px-2.5 py-1 rounded-full">SALE</span>
-                            </div>
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="A large set of interlocking plastic building bricks in various colors"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAa2pyUzUOvsEk9YO0A7tBJUs6FtFTgb3VKZkdh9JVI3NLwJ0Bl_f4lHN8_xlbK-zktFBufi9ZYvde8BzF-v0g_XJ9DddRne40dDcAesKKpC-dyTsVyvHk51Ld2boXaIPm3c-BHHVzyBbWprDurEgNkv4pxdTVvjeGae_NKlQgPpe4dhKbGUHrQXbAoECcJlBKexHgzfyIVwXZbmz_bsesUcvW5yYXx5ku6dNptxndc4LhQ7duRMQUDPZxsWVIq6-0Tde4-ZmmkTiE" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Fun Times</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Mega Brick Set</a></h3>
-                                <p class="font-bold text-primary mt-2"><span
-                                        class="line-through text-text-light/50 dark:text-text-dark/50 mr-2">$45.00</span>
-                                    $35.99</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Product Card 4 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="Soft alphabet blocks for toddlers"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuDB5toLn4fFSPnHV_PfWmjyRpNkofamWhLcyu3tZM1wmXVnay5eXMP2guzEqck5Xa00qXoBXUcTN7kXHoKk8t8mhHD2p0Q4PALLJAvEWn4nZgV47J-mvItCXScxM4ZoAlGV1K176spYSzKavLDTfwOKRO92Lp6w5pGGn0qhwugJCNufeixJXncliT46dMoDHJW2S_PiXOZkpVYzM9g8MfVfNX8aSXwJGfCw_KG3_yrDafckzVwWF7mcvxIdpGxlgqFO75EuLxcAjZg" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Blocktastic</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Soft ABC Blocks</a></h3>
-                                <p class="font-bold text-primary mt-2">$24.99</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Product Card 5 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="Magnetic building tiles in various geometric shapes"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuCL8MBEgHNcGhaJ1o3J-ML3Y1q0kGewKS1XAIowa1t8k3WLLfjXUbBff2k9EXnKacuvrSIy-Uu7Ca2SzMpFC4CPlw0Z0aDgskdD9s_Qq_aByFotK_mGKZxtR1Cs2j7M9v40IdsA9hDbQ9y3PmP6KAqWw0Nq-D2HG6EwREhwT_bc9mA3JbjF90SjzpnsKjDkI_NfZR46-PjpDPi8BOaC_kEuVCysokU19lHFSTY-xzofgyFrE9rW1tBghMuBWUdPd0-X-NO0OJbaKkc" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Creative Kids</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Magnetic Tile Set</a></h3>
-                                <p class="font-bold text-primary mt-2">$59.99</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
-                        </div>
-                        <!-- Product Card 6 -->
-                        <div
-                            class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
-                            <a class="block" href="#">
-                                <img class="w-full h-64 object-cover transition-transform duration-300 group-hover:scale-105"
-                                    data-alt="Wooden animal-shaped stacking blocks"
-                                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuA5K52fTkWtzpwsDAWrmwo6ymHRVZligPRhdQCwaNxxWC2ehVWD1jQcnwnYcvennZw_gLp3aiJ4w0H0WT5NR_9XLvxUZirtrANNK_GPbmV_fyQb8TEYTI8KyLKRS9jL_UWdpeJOsVaPsybz4Wtwulro5MjG-Cn3Cz4jS7NpfGnTn10xzaCj19Hx7KdeU6q8FLSICafslXQrf-j--emW32hU46qpSjm6FQy2zWxDDlHxMYgq9VkeSXvTg_815_q985A_Q-GSluZ-Pj8" />
-                            </a>
-                            <div class="p-4">
-                                <p class="text-xs text-text-light/60 dark:text-text-dark/60">Fun Times</p>
-                                <h3 class="font-bold text-lg mt-1"><a href="#">Animal Stacker Blocks</a></h3>
-                                <p class="font-bold text-primary mt-2">$22.50</p>
-                            </div>
-                            <div
-                                class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-                                <button
-                                    class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-                                    to Cart</button>
-                            </div>
-                        </div>
-                    </div>
+                    @endif
                     <!-- Pagination -->
-                    <nav class="flex items-center justify-center gap-2 mt-12">
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors"
-                            href="#">
-                            <span class="material-symbols-outlined text-xl">chevron_left</span>
-                        </a>
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white font-bold text-sm"
-                            href="#">1</a>
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors font-bold text-sm"
-                            href="#">2</a>
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors font-bold text-sm"
-                            href="#">3</a>
-                        <span class="flex h-10 w-10 items-center justify-center font-bold text-sm">...</span>
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors font-bold text-sm"
-                            href="#">8</a>
-                        <a class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors"
-                            href="#">
-                            <span class="material-symbols-outlined text-xl">chevron_right</span>
-                        </a>
-                    </nav>
+
+                    @if ($products->hasPages())
+                        <nav class="flex items-center justify-center gap-2 mt-12">
+                            {{-- Previous Page Link --}}
+                            @if ($products->onFirstPage())
+                                <span
+                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 opacity-50 cursor-not-allowed">
+                                    <span class="material-symbols-outlined text-xl">chevron_left</span>
+                                </span>
+                            @else
+                                <a class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors"
+                                    href="{{ $products->previousPageUrl() }}">
+                                    <span class="material-symbols-outlined text-xl">chevron_left</span>
+                                </a>
+                            @endif
+
+                            {{-- Pagination Elements --}}
+                            @foreach ($products->getUrlRange(1, $products->lastPage()) as $page => $url)
+                                @if ($page == $products->currentPage())
+                                    <span
+                                        class="flex h-10 w-10 items-center justify-center rounded-full bg-primary text-white font-bold text-sm">
+                                        {{ $page }}
+                                    </span>
+                                @elseif ($page == 1 || $page == $products->lastPage() || abs($page - $products->currentPage()) <= 2)
+                                    <a class="flex h-10 w-10 items-center justify-center rounded-full hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors font-bold text-sm"
+                                        href="{{ $url }}">{{ $page }}</a>
+                                @elseif (abs($page - $products->currentPage()) == 3)
+                                    <span class="flex h-10 w-10 items-center justify-center font-bold text-sm">...</span>
+                                @endif
+                            @endforeach
+
+                            {{-- Next Page Link --}}
+                            @if ($products->hasMorePages())
+                                <a class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 transition-colors"
+                                    href="{{ $products->nextPageUrl() }}">
+                                    <span class="material-symbols-outlined text-xl">chevron_right</span>
+                                </a>
+                            @else
+                                <span
+                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-stone-200 dark:bg-stone-800 opacity-50 cursor-not-allowed">
+                                    <span class="material-symbols-outlined text-xl">chevron_right</span>
+                                </span>
+                            @endif
+                        </nav>
+                    @endif
                 </div>
             </div>
         </div>
     </main>
+
+    @push('scripts')
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const sortSelect = document.getElementById('sort-by');
+                const categoryCheckboxes = document.querySelectorAll('.category-checkbox');
+                const priceRange = document.getElementById('price-range');
+                const priceDisplay = document.getElementById('price-display');
+                const clearFiltersBtn = document.getElementById('clear-filters');
+                const clearFiltersEmptyBtn = document.getElementById('clear-filters-empty');
+                const minPrice = parseFloat(document.getElementById('min-price').value);
+                const maxPrice = parseFloat(document.getElementById('max-price').value);
+
+                // Update price display when slider changes
+                if (priceRange && priceDisplay) {
+                    priceRange.addEventListener('input', function() {
+                        const value = parseFloat(this.value);
+                        priceDisplay.textContent = '$' + value.toFixed(2) + '+';
+                    });
+                }
+
+                // Function to build URL with current filters
+                function buildFilterUrl() {
+                    const url = new URL(window.location.href);
+                    const baseUrl = url.origin + url.pathname;
+                    const params = new URLSearchParams();
+
+                    // Get sort value
+                    if (sortSelect && sortSelect.value) {
+                        params.set('sort', sortSelect.value);
+                    }
+
+                    // Get selected categories
+                    const selectedCategories = Array.from(categoryCheckboxes)
+                        .filter(cb => cb.checked)
+                        .map(cb => cb.value);
+
+                    if (selectedCategories.length > 0) {
+                        params.set('categories', selectedCategories.join(','));
+                    }
+
+                    // Get price range
+                    if (priceRange) {
+                        const maxPriceValue = parseFloat(priceRange.value);
+                        const minPriceValue = parseFloat(document.getElementById('min-price').value);
+
+                        // Only set max_price if it's less than the maximum available price
+                        if (maxPriceValue < maxPrice) {
+                            params.set('max_price', maxPriceValue);
+                        }
+                        // Always set min_price from the range minimum
+                        params.set('min_price', minPriceValue);
+                    }
+
+                    // Build final URL
+                    const queryString = params.toString();
+                    return queryString ? baseUrl + '?' + queryString : baseUrl;
+                }
+
+                // Function to apply filters
+                function applyFilters() {
+                    const url = buildFilterUrl();
+                    window.location.href = url;
+                }
+
+                // Sort change handler
+                if (sortSelect) {
+                    sortSelect.addEventListener('change', function() {
+                        applyFilters();
+                    });
+                }
+
+                // Category checkbox change handler (with debounce)
+                let categoryTimeout;
+                categoryCheckboxes.forEach(checkbox => {
+                    checkbox.addEventListener('change', function() {
+                        clearTimeout(categoryTimeout);
+                        categoryTimeout = setTimeout(() => {
+                            applyFilters();
+                        }, 300); // Wait 300ms after last change
+                    });
+                });
+
+                // Price range change handler (with debounce)
+                let priceTimeout;
+                if (priceRange) {
+                    priceRange.addEventListener('change', function() {
+                        clearTimeout(priceTimeout);
+                        priceTimeout = setTimeout(() => {
+                            applyFilters();
+                        }, 500); // Wait 500ms after slider stops
+                    });
+                }
+
+                // Clear filters handler
+                function clearFilters() {
+                    window.location.href = window.location.origin + window.location.pathname;
+                }
+
+                if (clearFiltersBtn) {
+                    clearFiltersBtn.addEventListener('click', clearFilters);
+                }
+
+                if (clearFiltersEmptyBtn) {
+                    clearFiltersEmptyBtn.addEventListener('click', clearFilters);
+                }
+            });
+        </script>
+    @endpush
 @endsection
