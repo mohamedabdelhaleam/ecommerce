@@ -9,7 +9,7 @@
             <div class="@[480px]:p-4">
                 <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
                     data-alt="Happy children playing with colorful toys in a bright, sunlit room."
-                    style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuDChxTstqng6g4HL6rHUqYcOKs7aDGH0CUdZk2UgIbtOchFpQ5dteoZMQ6NLTuhQ6F94_yFTiul8jJXLoJFN_NJZTOp-v74_2OidhiJKoWej9ZK43-pvbbkvYVjwVR_OOprVNuA-vinZ3qJ1sITiduSomilEYHZP733u07_zaI8MaqXK_euykZfCIt6tkYZ2aUlhZa77sD6OKhQggZloDZXxN4QJG6gt_BXY8WQhWQdZqx9LUhaHFPJz5gvHgQacKffd5r1kLG3mpE");'>
+                    style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%), url("https://placehold.co/1920x900?text=Hello+World");'>
                     <div class="flex flex-col gap-3 text-center">
                         <h1
                             class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] text-shadow-lg">
@@ -88,9 +88,6 @@
                 <div
                     class="flex overflow-x-auto [-ms-scrollbar-style:none] [scrollbar-width:none] [&amp;::-webkit-scrollbar]:hidden pb-4">
                     <div class="flex items-stretch p-4 gap-6">
-                        {{-- <x-website.cards.category
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuCwVldfnjWNxct74qYi497PXgYVPKo9b19BmzmB2hq4ygET3UXvoibQoCM5JSBvVq3dmjLHIv7lJfopYmrZNxDYbqUd-l9UI_560Af1XDSKmFYZ14VISbvPyrmxCUi-bPUV4ZsAW30tkXieAll26MhDuKAGxKLLMKvE3klSDT9_7BvukVlLmix8ZMPYbEwnjVm2SkQofsqZ7gP8W7Xcunp0OnJ9sNvJAz0IQmgHHW1HXOc8gwOmBv4XkBJ8UMxvtFYH3WavehCHzQU"
-                        title="Clothes" /> --}}
                         @foreach ($categories as $category)
                             <x-website.cards.category image="{{ $category->image }}" title="{{ $category->name_en }}" />
                         @endforeach
@@ -120,7 +117,7 @@
             <div class="w-full md:w-1/2">
                 <img class="rounded-xl w-full h-auto object-cover aspect-video"
                     data-alt="A charming illustration of children playing under a large, leafy tree."
-                    src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZAUF_cpe0Nh2OjQYFD7UINoinEdU_b-0Q8jKxOpxPtWzU2qWb14f-ylXj58wqrgGaTYBuCjN8snWya0IqXryP-KwjxZVfr3knwt9OHs5hstirwZAi7AGF0cVrE_pGISXSAaUT8oTpti3aui-jCXqld7rM4PIz5jv7vOTlZ6y_4m8wXFXY0AKNY4cqlgUO9Kj5JgNl6Ae9_TyX5Xg0GMVfn8RZgUtW2h5691NnS92I9k3QxTC1vAGxb08xPaf8lsCvXMkmGG-vink" />
+                    src="https://placehold.co/600x400?text=Hello+World" />
             </div>
             <div class="w-full md:w-1/2 text-center md:text-left">
                 <h2 class="text-3xl font-bold text-brand-charcoal dark:text-white mb-4">Crafted with Love, Designed for Joy
