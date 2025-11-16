@@ -166,7 +166,7 @@
                     </div>
                     <!-- Action Buttons -->
                     <div class="flex items-center gap-4 mt-4">
-                        <button
+                        <button type="button" id="add-to-cart-btn"
                             class="flex-1 text-white bg-primary hover:opacity-90 transition-opacity flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 gap-2 text-base font-bold leading-normal tracking-[0.015em] px-6">
                             Add to Cart
                         </button>
@@ -279,7 +279,8 @@
                                     <div class="flex items-center gap-2">
                                         <span class="w-12">{{ $rating }} star</span>
                                         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                            <div class="bg-primary h-2.5 rounded-full" style="width: {{ $percentage }}%">
+                                            <div class="bg-primary h-2.5 rounded-full"
+                                                style="width: {{ $percentage }}%">
                                             </div>
                                         </div>
                                         <span>{{ $count }}</span>
@@ -429,307 +430,17 @@
 
     @push('scripts')
         <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                // Variants data from server
-                const variants = @json($variantsData);
-                const priceElement = document.getElementById('product-price');
-                const minPrice = {{ $product->min_price ?? 0 }};
-                const maxPrice = {{ $product->max_price ?? 0 }};
-
-                // Selected size and color
-                let selectedSizeId = null;
-                let selectedColorId = null;
-
-                // Function to find matching variant
-                function findVariant(sizeId, colorId) {
-                    // Try exact match first
-                    let variant = variants.find(v => {
-                        const sizeMatch = sizeId ? v.size_id == sizeId : v.size_id === null;
-                        const colorMatch = colorId ? v.color_id == colorId : v.color_id === null;
-                        return sizeMatch && colorMatch;
-                    });
-
-                    // If no exact match, try with size only
-                    if (!variant && sizeId) {
-                        variant = variants.find(v => v.size_id == sizeId && v.color_id === null);
-                    }
-
-                    // If still no match, try with color only
-                    if (!variant && colorId) {
-                        variant = variants.find(v => v.size_id === null && v.color_id == colorId);
-                    }
-
-                    // If still no match, get first variant with price
-                    if (!variant) {
-                        variant = variants.find(v => v.price !== null);
-                    }
-
-                    return variant;
-                }
-
-                // Function to update price
-                function updatePrice() {
-                    if (!priceElement) return;
-
-                    const variant = findVariant(selectedSizeId, selectedColorId);
-
-                    if (variant && variant.price !== null) {
-                        priceElement.textContent = '$' + parseFloat(variant.price).toFixed(2);
-                    } else {
-                        // Fallback to price range
-                        if (minPrice && maxPrice) {
-                            if (minPrice === maxPrice) {
-                                priceElement.textContent = '$' + minPrice.toFixed(2);
-                            } else {
-                                priceElement.textContent = '$' + minPrice.toFixed(2) + ' - $' + maxPrice.toFixed(2);
-                            }
-                        } else {
-                            priceElement.textContent = 'N/A';
-                        }
-                    }
-                }
-
-                // Image gallery functionality
-                const mainImage = document.getElementById('main-product-image');
-                const thumbnailImages = document.querySelectorAll('.thumbnail-image');
-
-                thumbnailImages.forEach(thumbnail => {
-                    thumbnail.addEventListener('click', function() {
-                        const imageUrl = this.getAttribute('data-image');
-                        if (mainImage && imageUrl) {
-                            mainImage.style.backgroundImage = `url("${imageUrl}")`;
-
-                            // Update active thumbnail
-                            thumbnailImages.forEach(t => {
-                                t.classList.remove('border-2', 'border-primary');
-                                t.classList.add('border', 'border-gray-300',
-                                    'dark:border-gray-700');
-                            });
-                            this.classList.remove('border', 'border-gray-300', 'dark:border-gray-700');
-                            this.classList.add('border-2', 'border-primary');
-                        }
-                    });
-                });
-
-                // Quantity controls
-                const quantityInput = document.getElementById('quantity-input');
-                const decreaseBtn = document.querySelector('.quantity-decrease');
-                const increaseBtn = document.querySelector('.quantity-increase');
-
-                if (decreaseBtn && quantityInput) {
-                    decreaseBtn.addEventListener('click', function() {
-                        const currentValue = parseInt(quantityInput.value) || 1;
-                        if (currentValue > 1) {
-                            quantityInput.value = currentValue - 1;
-                        }
-                    });
-                }
-
-                if (increaseBtn && quantityInput) {
-                    increaseBtn.addEventListener('click', function() {
-                        const currentValue = parseInt(quantityInput.value) || 1;
-                        quantityInput.value = currentValue + 1;
-                    });
-                }
-
-                // Size and Color selection
-                const sizeOptions = document.querySelectorAll('.size-option');
-                const colorOptions = document.querySelectorAll('.color-option');
-
-                sizeOptions.forEach(option => {
-                    option.addEventListener('click', function() {
-                        sizeOptions.forEach(opt => {
-                            opt.classList.remove('border-2', 'border-primary', 'bg-primary/20',
-                                'font-bold');
-                            opt.classList.add('border', 'border-border-light',
-                                'dark:border-border-dark');
-                        });
-                        this.classList.remove('border', 'border-border-light',
-                            'dark:border-border-dark');
-                        this.classList.add('border-2', 'border-primary', 'bg-primary/20', 'font-bold');
-
-                        // Update selected size and price
-                        selectedSizeId = parseInt(this.getAttribute('data-size-id'));
-                        updatePrice();
-                    });
-                });
-
-                colorOptions.forEach(option => {
-                    option.addEventListener('click', function() {
-                        colorOptions.forEach(opt => {
-                            opt.classList.remove('border-2', 'border-primary', 'bg-primary/20',
-                                'font-bold');
-                            opt.classList.add('border', 'border-border-light',
-                                'dark:border-border-dark');
-                        });
-                        this.classList.remove('border', 'border-border-light',
-                            'dark:border-border-dark');
-                        this.classList.add('border-2', 'border-primary', 'bg-primary/20', 'font-bold');
-
-                        // Update selected color and price
-                        selectedColorId = parseInt(this.getAttribute('data-color-id'));
-                        updatePrice();
-                    });
-                });
-
-                // Set initial selection if first option exists
-                if (sizeOptions.length > 0) {
-                    const firstSize = sizeOptions[0];
-                    selectedSizeId = parseInt(firstSize.getAttribute('data-size-id'));
-                }
-                if (colorOptions.length > 0) {
-                    const firstColor = colorOptions[0];
-                    selectedColorId = parseInt(firstColor.getAttribute('data-color-id'));
-                }
-
-                // Update price on initial load if we have selections
-                if (selectedSizeId || selectedColorId) {
-                    updatePrice();
-                }
-
-                // Review Form Functionality
-                const reviewForm = document.getElementById('review-form');
-                const ratingStars = document.querySelectorAll('.rating-star');
-                const ratingInput = document.getElementById('review-rating');
-                let selectedRating = 0;
-
-                // Rating stars interaction
-                ratingStars.forEach((star, index) => {
-                    star.addEventListener('click', function() {
-                        selectedRating = parseInt(this.getAttribute('data-rating'));
-                        ratingInput.value = selectedRating;
-
-                        // Update star display
-                        ratingStars.forEach((s, i) => {
-                            const icon = s.querySelector('span');
-                            if (i < selectedRating) {
-                                icon.textContent = 'star';
-                                s.classList.remove('text-gray-300', 'dark:text-gray-600');
-                                s.classList.add('text-primary');
-                            } else {
-                                icon.textContent = 'star_outline';
-                                s.classList.remove('text-primary');
-                                s.classList.add('text-gray-300', 'dark:text-gray-600');
-                            }
-                        });
-                    });
-
-                    star.addEventListener('mouseenter', function() {
-                        const hoverRating = parseInt(this.getAttribute('data-rating'));
-                        ratingStars.forEach((s, i) => {
-                            const icon = s.querySelector('span');
-                            if (i < hoverRating) {
-                                icon.textContent = 'star';
-                                s.classList.add('text-primary');
-                            } else {
-                                icon.textContent = 'star_outline';
-                            }
-                        });
-                    });
-                });
-
-                // Reset stars on mouse leave (if no rating selected)
-                document.getElementById('rating-stars').addEventListener('mouseleave', function() {
-                    if (selectedRating === 0) {
-                        ratingStars.forEach((s) => {
-                            const icon = s.querySelector('span');
-                            icon.textContent = 'star_outline';
-                            s.classList.remove('text-primary');
-                            s.classList.add('text-gray-300', 'dark:text-gray-600');
-                        });
-                    } else {
-                        // Restore selected rating
-                        ratingStars.forEach((s, i) => {
-                            const icon = s.querySelector('span');
-                            if (i < selectedRating) {
-                                icon.textContent = 'star';
-                                s.classList.add('text-primary');
-                            } else {
-                                icon.textContent = 'star_outline';
-                            }
-                        });
-                    }
-                });
-
-                // Form submission
-                if (reviewForm) {
-                    reviewForm.addEventListener('submit', function(e) {
-                        e.preventDefault();
-
-                        const submitBtn = document.getElementById('submit-review-btn');
-                        const formData = new FormData(this);
-
-                        // Validate rating
-                        if (!ratingInput.value || ratingInput.value === '0') {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Rating Required',
-                                text: 'Please select a rating before submitting your review.',
-                                confirmButtonColor: '#42b6f0'
-                            });
-                            return;
-                        }
-
-                        // Disable submit button
-                        submitBtn.disabled = true;
-                        submitBtn.textContent = 'Submitting...';
-
-                        // Submit via AJAX
-                        fetch('{{ route('products.review.store', $product->id) }}', {
-                                method: 'POST',
-                                body: formData,
-                                headers: {
-                                    'X-Requested-With': 'XMLHttpRequest',
-                                }
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.success) {
-                                    Swal.fire({
-                                        icon: 'success',
-                                        title: 'Thank You!',
-                                        text: data.message ||
-                                            'Your review has been submitted successfully. It will be reviewed before being published.',
-                                        confirmButtonColor: '#42b6f0'
-                                    }).then(() => {
-                                        // Reset form
-                                        reviewForm.reset();
-                                        selectedRating = 0;
-                                        ratingInput.value = '';
-                                        ratingStars.forEach((s) => {
-                                            const icon = s.querySelector('span');
-                                            icon.textContent = 'star_outline';
-                                            s.classList.remove('text-primary');
-                                            s.classList.add('text-gray-300',
-                                                'dark:text-gray-600');
-                                        });
-                                    });
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: data.message ||
-                                            'There was an error submitting your review. Please try again.',
-                                        confirmButtonColor: '#42b6f0'
-                                    });
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error:', error);
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'There was an error submitting your review. Please try again.',
-                                    confirmButtonColor: '#42b6f0'
-                                });
-                            })
-                            .finally(() => {
-                                submitBtn.disabled = false;
-                                submitBtn.textContent = 'Submit Review';
-                            });
-                    });
-                }
-            });
+            // Pass data to external JavaScript file
+            window.productVariants = @json($variantsData);
+            window.productMinPrice = {{ $product->min_price ?? 0 }};
+            window.productMaxPrice = {{ $product->max_price ?? 0 }};
+            window.reviewStoreUrl = '{{ route('products.review.store', $product->id) }}';
+            window.addToCartUrl = '{{ route('cart.add') }}';
+            window.cartCountUrl = '{{ route('cart.count') }}';
+            window.productId = {{ $product->id }};
+            window.primaryColor = '#42b6f0';
+            window.currencySymbol = '$';
         </script>
+        <script src="{{ asset('assets/js/product-details.js') }}"></script>
     @endpush
 @endsection

@@ -38,9 +38,23 @@
             class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
             <span class="material-symbols-outlined">person</span>
         </button>
-        <button
-            class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+        <a href="{{ route('cart.index') }}"
+            class="relative flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-10 bg-transparent text-brand-charcoal dark:text-gray-300 hover:bg-gray-200/50 dark:hover:bg-gray-700/50 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
             <span class="material-symbols-outlined">shopping_bag</span>
-        </button>
+            @php
+                $cart = session('cart', []);
+                $cartCount = 0;
+                foreach ($cart as $item) {
+                    $cartCount += $item['quantity'] ?? 1;
+                }
+            @endphp
+            @if ($cartCount > 0)
+                <span id="cart-count"
+                    class="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">{{ $cartCount }}</span>
+            @else
+                <span id="cart-count"
+                    class="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center hidden">0</span>
+            @endif
+        </a>
     </div>
 </header>
