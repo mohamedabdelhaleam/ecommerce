@@ -102,5 +102,11 @@
     </main>
 @endsection
 @push('scripts')
+    <script>
+        // Pass data to external JavaScript file
+        window.addToCartUrl = '{{ route('cart.add') }}';
+        window.cartCountUrl = '{{ route('cart.count') }}';
+        window.primaryColor = '#42b6f0';
+    </script>
     <script src="{{ asset('assets/js/products-filter.js') }}"></script>
 @endpush

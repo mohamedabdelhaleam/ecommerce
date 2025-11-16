@@ -35,8 +35,10 @@
     </div>
     <div
         class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
-        <button
-            class="w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105">Add
-            to Cart</button>
+        <button type="button"
+            class="add-to-cart-btn w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105"
+            data-product-id="{{ $product->id ?? '' }}" data-product-url="{{ $product->url ?? '#' }}">
+            Add to Cart
+        </button>
     </div>
 </div>

@@ -1,6 +1,7 @@
 /**
  * Products Filter - AJAX Filtering System
  * Handles filtering, sorting, and pagination without page reloads
+ * Also handles Add to Cart functionality on product cards
  */
 document.addEventListener("DOMContentLoaded", function () {
     const sortSelect = document.getElementById("sort-by");
@@ -254,6 +255,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success && data.html) {
                     productsContainer.innerHTML = data.html;
                     initPaginationListeners();
+                    initAddToCartListeners();
+                    initAddToCartListeners();
 
                     // Reset form elements
                     if (sortSelect) sortSelect.value = "newest";
@@ -283,4 +286,125 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Initialize pagination listeners on page load
     initPaginationListeners();
+
+    // Initialize Add to Cart functionality
+    initAddToCartListeners();
+
+    // Function to initialize Add to Cart button listeners
+    function initAddToCartListeners() {
+        const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+        const primaryColor = window.primaryColor || "#42b6f0";
+        const addToCartUrl = window.addToCartUrl || "/cart/add";
+        const cartCountUrl = window.cartCountUrl || "/cart/count";
+
+        addToCartButtons.forEach((btn) => {
+            // Remove existing listeners to prevent duplicates
+            const newBtn = btn.cloneNode(true);
+            btn.parentNode.replaceChild(newBtn, btn);
+
+            newBtn.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const productId = this.getAttribute("data-product-id");
+                const productUrl = this.getAttribute("data-product-url");
+
+                if (!productId) {
+                    console.error("Product ID not found");
+                    return;
+                }
+
+                // Disable button
+                const originalText = this.textContent;
+                this.disabled = true;
+                this.textContent = "Adding...";
+
+                // Prepare form data
+                const formData = new FormData();
+                formData.append("product_id", productId);
+                formData.append("quantity", 1);
+
+                // Submit via AJAX
+                fetch(addToCartUrl, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN":
+                            document
+                                .querySelector('meta[name="csrf-token"]')
+                                ?.getAttribute("content") || "",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            if (typeof Swal !== "undefined") {
+                                Swal.fire({
+                                    icon: "success",
+                                    title: "Added to Cart!",
+                                    text:
+                                        data.message ||
+                                        "Product added to cart successfully.",
+                                    confirmButtonColor: primaryColor,
+                                    timer: 2000,
+                                    showConfirmButton: false,
+                                });
+                            }
+                            // Update cart count in header
+                            updateCartCount();
+                        } else {
+                            if (typeof Swal !== "undefined") {
+                                Swal.fire({
+                                    icon: "error",
+                                    title: "Error",
+                                    text:
+                                        data.message ||
+                                        "Failed to add product to cart.",
+                                    confirmButtonColor: primaryColor,
+                                });
+                            }
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        if (typeof Swal !== "undefined") {
+                            Swal.fire({
+                                icon: "error",
+                                title: "Error",
+                                text: "There was an error adding the product to cart.",
+                                confirmButtonColor: primaryColor,
+                            });
+                        }
+                    })
+                    .finally(() => {
+                        this.disabled = false;
+                        this.textContent = originalText;
+                    });
+            });
+        });
+    }
+
+    // Function to update cart count in header
+    function updateCartCount() {
+        const cartCountUrl = window.cartCountUrl || "/cart/count";
+        fetch(cartCountUrl, {
+            method: "GET",
+            headers: {
+                "X-Requested-With": "XMLHttpRequest",
+            },
+        })
+            .then((response) => response.json())
+            .then((data) => {
+                const cartCountEl = document.getElementById("cart-count");
+                if (cartCountEl) {
+                    cartCountEl.textContent = data.count || 0;
+                    cartCountEl.style.display =
+                        data.count > 0 ? "flex" : "none";
+                }
+            })
+            .catch((error) =>
+                console.error("Error updating cart count:", error)
+            );
+    }
 });
