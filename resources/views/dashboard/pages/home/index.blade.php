@@ -1,13 +1,18 @@
 @extends('dashboard.layout.app')
 @section('content')
     <div class="row">
-        <x-dashboard.statics-card title="{{ __('dashboard.total_products') }}" value="100+" percentage="25.36%"
+        <x-dashboard.statics-card title="{{ __('dashboard.total_products') }}"
+            value="{{ $totalProducts >= 100 ? $totalProducts . '+' : $totalProducts }}" percentage="{{ $productsPercentage }}"
             percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-box'></i>" />
-        <x-dashboard.statics-card title="{{ __('dashboard.total_orders') }}" value="100+" percentage="25.36%"
+        <x-dashboard.statics-card title="{{ __('dashboard.total_orders') }}"
+            value="{{ $totalOrders >= 100 ? $totalOrders . '+' : $totalOrders }}" percentage="{{ $ordersPercentage }}"
             percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-shopping-cart'></i>" />
-        <x-dashboard.statics-card title="{{ __('dashboard.total_customers') }}" value="100+" percentage="25.36%"
-            percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-users-alt'></i>" />
-        <x-dashboard.statics-card title="{{ __('dashboard.total_revenue') }}" value="100+" percentage="25.36%"
+        <x-dashboard.statics-card title="{{ __('dashboard.total_customers') }}"
+            value="{{ $totalCustomers >= 100 ? $totalCustomers . '+' : $totalCustomers }}"
+            percentage="{{ $customersPercentage }}" percentageText="{{ __('dashboard.since_last_month') }}"
+            icon="<i class='uil uil-users-alt'></i>" />
+        <x-dashboard.statics-card title="{{ __('dashboard.total_revenue') }}"
+            value="${{ number_format($totalRevenue, 2) }}" percentage="{{ $revenuePercentage }}"
             percentageText="{{ __('dashboard.since_last_month') }}" icon="<i class='uil uil-money-bill'></i>" />
 
     </div>
@@ -19,11 +24,25 @@
                 </div>
                 <div class="card-body">
                     <div>
-                        <canvas id="clientBasic"></canvas>
+                        <canvas id="productsChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div class="col-xxl-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    {{ __('dashboard.orders_chart') }}
+                </div>
+                <div class="card-body">
+                    <div>
+                        <canvas id="ordersChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="col-xxl-6 mb-4">
             <div class="card border-0 px-25" style="height: 100% !important ;">
                 <div class="card-header px-0 border-0">
@@ -32,210 +51,241 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="tab-content">
-                        <div class="tab-pane fade active show" id="t_selling-today" role="tabpanel"
-                            aria-labelledby="t_selling-today-tab">
-                            <div class="selling-table-wrap">
-                                <div class="table-responsive">
-                                    <table class="table table--default table-borderless ">
-                                        <thead>
-                                            <tr>
-                                                <th>{{ __('dashboard.product_name') }}</th>
-                                                <th>{{ __('dashboard.price') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="radius-xs img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/giorgio.png"
-                                                            alt="img">
-                                                        <span>UV Protected Sunglass</span>
-                                                    </div>
-                                                </td>
-                                                <td>$38,536</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="radius-xs img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/headphone.png"
-                                                            alt="img">
-                                                        <span>Black Headphone</span>
-                                                    </div>
-                                                </td>
-                                                <td>$20,573</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="radius-xs img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/shoes.png"
-                                                            alt="img">
-                                                        <span>Nike Shoes</span>
-                                                    </div>
-                                                </td>
-                                                <td>$17,457</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="radius-xs img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/mac-pro.png"
-                                                            alt="img">
-                                                        <span>15" Mackbook Pro</span>
-                                                    </div>
-                                                </td>
-                                                <td>$15,354</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="radius-xs img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/creativ-bag.png"
-                                                            alt="img">
-                                                        <span>Women Bag</span>
-                                                    </div>
-                                                </td>
-                                                <td>$12,354</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="t_selling-week" role="tabpanel" aria-labelledby="t_selling-week-tab">
-                            <div class="selling-table-wrap">
-                                <div class="table-responsive">
-                                    <table class="table table--default table-borderless">
-                                        <thead>
-                                            <tr>
-                                                <th>{{ __('dashboard.product_name') }}</th>
-                                                <th>{{ __('dashboard.price') }}</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/287.png" alt="img">
-                                                        <span>Samsung Galaxy S8 256GB</span>
-                                                    </div>
-                                                </td>
-                                                <td>$60,258</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid"
-                                                            src="http://45.33.34.15:8002/assets/img/165.png" alt="img">
-                                                        <span>Half Sleeve Shirt</span>
-                                                    </div>
-                                                </td>
-                                                <td>$2,483</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/166.png" alt="img">
-                                                        <span>Marco Shoes</span>
-                                                    </div>
-                                                </td>
-                                                <td>$19,758</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/315.png" alt="img">
-                                                        <span>15" Mackbook Pro</span>
-                                                    </div>
-                                                </td>
-                                                <td>$197,458</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/506.png" alt="img">
-                                                        <span>Apple iPhone X</span>
-                                                    </div>
-                                                </td>
-                                                <td>115,254</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="tab-pane fade" id="t_selling-month" role="tabpanel"
+
+                        <div class="tab-pane fade active show" id="t_selling-month" role="tabpanel"
                             aria-labelledby="t_selling-month-tab">
                             <div class="selling-table-wrap">
                                 <div class="table-responsive">
-                                    <table class="table table--default table-borderless">
+                                    <table class="table mb-0 table-borderless">
                                         <thead>
-                                            <tr>
-                                                <th>{{ __('dashboard.product_name') }}</th>
-                                                <th>{{ __('dashboard.price') }}</th>
+                                            <tr class="userDatatable-header font-semibold">
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.product_name') }}</th>
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.price') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/287.png" alt="img">
-                                                        <span>Samsung Galaxy S8 256GB</span>
-                                                    </div>
-                                                </td>
-                                                <td>$60,258</td>
+                                            @forelse($productsMonth as $product)
+                                                <tr>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                        <a href="{{ route('dashboard.products.show', $product['id']) }}"
+                                                            class="text-decoration-none">
+                                                            <div
+                                                                class="selling-product-img  px-3 d-flex align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                                                <img class="{{ app()->getLocale() == 'ar' ? 'ms-15' : 'me-15' }} wh-34 img-fluid order-bg-opacity-primary"
+                                                                    src="{{ $product['image'] }}"
+                                                                    alt="{{ $product['name'] }}">
+                                                                <span>{{ $product['name'] }}</span>
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}  px-3">
+                                                        ${{ $product['price'] }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted py-4">
+                                                        {{ __('dashboard.no_products_this_month') }}
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-6 mb-4">
+            <div class="card border-0 px-25" style="height: 100% !important ;">
+                <div class="card-header px-0 border-0">
+                    <h6>{{ __('dashboard.new_customers') }}</h6>
+
+                </div>
+                <div class="card-body p-0">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade active show" id="t_customers-month" role="tabpanel"
+                            aria-labelledby="t_customers-month-tab">
+                            <div class="selling-table-wrap">
+                                <div class="table-responsive">
+                                    <table class="table mb-0 table-borderless">
+                                        <thead>
+                                            <tr class="userDatatable-header font-semibold">
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.customer_name') }}</th>
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.phone') }}</th>
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.member_since') }}</th>
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.email') }}</th>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid"
-                                                            src="http://45.33.34.15:8002/assets/img/165.png"
-                                                            alt="img">
-                                                        <span>Half Sleeve Shirt</span>
-                                                    </div>
-                                                </td>
-                                                <td>$2,483</td>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($usersMonth as $user)
+                                                <tr>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                        <a href="{{ route('dashboard.users.show', $user['id']) }}"
+                                                            class="text-decoration-none">
+                                                            <div class="selling-product-img  px-3 d-flex align-items-center">
+                                                                <span>{{ $user['name'] }}</span>
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}  px-3">
+                                                        {{ $user['phone'] }}</td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}  px-3">
+                                                        {{ $user['created_at']->format('d M Y') }}</td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}  px-3">
+                                                        {{ $user['email'] }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted py-4">
+                                                        {{ __('dashboard.no_customers_this_month') }}
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-6 mb-4">
+            <div class="card border-0 px-25" style="height: 100% !important ;">
+                <div class="card-header px-0 border-0">
+                    <h6>{{ __('dashboard.top_customers') }}</h6>
+
+                </div>
+                <div class="card-body p-0">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade active show" id="t_top-customers" role="tabpanel"
+                            aria-labelledby="t_top-customers-tab">
+                            <div class="selling-table-wrap">
+                                <div class="table-responsive">
+                                    <table class="table mb-0 table-borderless">
+                                        <thead>
+                                            <tr class="userDatatable-header font-semibold">
+                                                <th
+                                                    class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.customer_name') }}</th>
+                                                <th
+                                                    class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.phone') }}</th>
+                                                <th
+                                                    class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.member_since') }}</th>
+                                                <th
+                                                    class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.orders_count') }}</th>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/166.png"
-                                                            alt="img">
-                                                        <span>Marco Shoes</span>
-                                                    </div>
-                                                </td>
-                                                <td>$19,758</td>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($topCustomers as $customer)
+                                                <tr>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                        <a href="{{ route('dashboard.users.show', $customer['id']) }}"
+                                                            class="text-decoration-none">
+                                                            <div
+                                                                class="selling-product-img d-flex align-items-center px-3">
+                                                                <span>{{ $customer['name'] }}</span>
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }} px-3">
+                                                        {{ $customer['phone'] }}</td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }} px-3">
+                                                        {{ $customer['created_at']->format('d M Y') }}</td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }} px-3">
+                                                        {{ $customer['orders_count'] }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="4" class="text-center text-muted py-4">
+                                                        {{ __('dashboard.no_customers_found') }}
+                                                    </td>
+                                                </tr>
+                                            @endforelse
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xxl-6 mb-4">
+            <div class="card border-0 px-25" style="height: 100% !important ;">
+                <div class="card-header px-0 border-0">
+                    <h6>{{ __('dashboard.top_products') }}</h6>
+
+                </div>
+                <div class="card-body p-0">
+                    <div class="tab-content">
+
+                        <div class="tab-pane fade active show" id="t_top-products" role="tabpanel"
+                            aria-labelledby="t_top-products-tab">
+                            <div class="selling-table-wrap">
+                                <div class="table-responsive">
+                                    <table class="table mb-0 table-borderless">
+                                        <thead>
+                                            <tr class="userDatatable-header font-semibold">
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.product_name') }}</th>
+                                                <th class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                    {{ __('dashboard.orders_count') }}</th>
                                             </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/315.png"
-                                                            alt="img">
-                                                        <span>15" Mackbook Pro</span>
-                                                    </div>
-                                                </td>
-                                                <td>$197,458</td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    <div class="selling-product-img d-flex align-items-center">
-                                                        <img class="me-15 wh-34 img-fluid order-bg-opacity-primary"
-                                                            src="http://45.33.34.15:8002/assets/img/506.png"
-                                                            alt="img">
-                                                        <span>Apple iPhone X</span>
-                                                    </div>
-                                                </td>
-                                                <td>115,254</td>
-                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @forelse($topProducts as $product)
+                                                <tr>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}">
+                                                        <a href="{{ route('dashboard.products.show', $product['id']) }}"
+                                                            class="text-decoration-none">
+                                                            <div
+                                                                class="selling-product-img d-flex  px-3 align-items-center {{ app()->getLocale() == 'ar' ? 'flex-row-reverse' : '' }}">
+                                                                <img class="{{ app()->getLocale() == 'ar' ? 'ms-15' : 'me-15' }} wh-34 img-fluid order-bg-opacity-primary"
+                                                                    src="{{ $product['image'] }}"
+                                                                    alt="{{ $product['name'] }}">
+                                                                <span>{{ $product['name'] }}</span>
+                                                            </div>
+                                                        </a>
+                                                    </td>
+                                                    <td
+                                                        class="{{ app()->getLocale() == 'ar' ? 'text-end' : 'text-start' }}  px-3">
+                                                        {{ $product['orders_count'] }}</td>
+                                                </tr>
+                                            @empty
+                                                <tr>
+                                                    <td colspan="2" class="text-center text-muted py-4">
+                                                        {{ __('dashboard.no_products_found') }}
+                                                    </td>
+                                                </tr>
+                                            @endforelse
                                         </tbody>
                                     </table>
                                 </div>
@@ -249,10 +299,15 @@
 @endsection
 @section('script')
     <script>
-        exampleAreaChart("clientBasic", "105",
-            (data = [10, 20, 30, 25, 35, 40, 45]),
-            labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-            "Current period",
+        exampleAreaChart("productsChart", "105",
+            @json($productsChartData['data']),
+            @json($productsChartData['labels']),
+            "{{ __('dashboard.products') }}",
+            true);
+        exampleAreaChart("ordersChart", "105",
+            @json($ordersChartData['data']),
+            @json($ordersChartData['labels']),
+            "{{ __('dashboard.orders') }}",
             true);
     </script>
 @endsection

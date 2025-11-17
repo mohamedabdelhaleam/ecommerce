@@ -55,6 +55,11 @@ class Product extends Model
         return $this->hasMany(Comment::class)->where('is_approved', true)->orderBy('created_at', 'desc');
     }
 
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
+
     /**
      * Get the name based on current locale
      */
