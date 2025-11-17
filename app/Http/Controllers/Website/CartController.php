@@ -3,9 +3,12 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
+use App\Models\OrderItem;
 use App\Models\Product;
 use App\Models\ProductVariant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class CartController extends Controller
@@ -296,5 +299,123 @@ class CartController extends Controller
         $user = auth()->guard('web')->user();
 
         return view('website.cart.checkout', compact('cartItems', 'subtotal', 'total', 'user'));
+    }
+
+    /**
+     * Store order from checkout
+     */
+    public function storeOrder(Request $request)
+    {
+        $request->validate([
+            'shipping_name' => 'required|string|max:255',
+            'shipping_email' => 'required|email|max:255',
+            'shipping_phone' => 'nullable|string|max:20',
+            'shipping_address' => 'nullable|string',
+            'shipping_city' => 'nullable|string|max:100',
+            'shipping_state' => 'nullable|string|max:100',
+            'shipping_zip' => 'nullable|string|max:20',
+            'shipping_country' => 'nullable|string|max:100',
+            'payment_method' => 'required|in:cash,card',
+        ]);
+
+        $cart = Session::get('cart', []);
+
+        if (empty($cart)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $cartItems = [];
+        $total = 0;
+
+        foreach ($cart as $item) {
+            $product = Product::find($item['product_id']);
+
+            if (!$product || !$product->is_active) {
+                continue;
+            }
+
+            $variant = null;
+            if (isset($item['variant_id'])) {
+                $variant = ProductVariant::find($item['variant_id']);
+                if (!$variant || !$variant->is_active) {
+                    continue;
+                }
+                // Check stock
+                if ($variant->stock < ($item['quantity'] ?? 1)) {
+                    return redirect()->route('cart.checkout')
+                        ->with('error', 'Insufficient stock for ' . $product->name . '. Only ' . $variant->stock . ' available.');
+                }
+            }
+
+            $price = $variant && $variant->price ? $variant->price : ($product->min_price ?? 0);
+            $quantity = $item['quantity'] ?? 1;
+            $itemTotal = $price * $quantity;
+
+            $cartItems[] = [
+                'product' => $product,
+                'variant' => $variant,
+                'quantity' => $quantity,
+                'price' => $price,
+                'total' => $itemTotal,
+            ];
+
+            $total += $itemTotal;
+        }
+
+        if (empty($cartItems)) {
+            return redirect()->route('cart.index')->with('error', 'Your cart is empty.');
+        }
+
+        $user = auth()->guard('web')->user();
+
+        try {
+            DB::beginTransaction();
+
+            // Create order
+            $order = Order::create([
+                'user_id' => $user->id,
+                'order_number' => Order::generateOrderNumber(),
+                'total' => $total,
+                'is_paid' => $request->payment_method === 'card', // Assuming card payments are paid immediately
+                'payment_method' => $request->payment_method,
+                'shipping_name' => $request->shipping_name,
+                'shipping_email' => $request->shipping_email,
+                'shipping_phone' => $request->shipping_phone,
+                'shipping_address' => $request->shipping_address,
+                'shipping_city' => $request->shipping_city,
+                'shipping_state' => $request->shipping_state,
+                'shipping_zip' => $request->shipping_zip,
+                'shipping_country' => $request->shipping_country,
+            ]);
+
+            // Create order items and update stock
+            foreach ($cartItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product']->id,
+                    'product_variant_id' => $item['variant']?->id,
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price'],
+                    'total' => $item['total'],
+                ]);
+
+                // Update stock if variant exists
+                if ($item['variant']) {
+                    $item['variant']->decrement('stock', $item['quantity']);
+                }
+            }
+
+            // Clear cart
+            Session::forget('cart');
+
+            DB::commit();
+
+            return redirect()->route('home')
+                ->with('success', 'Order placed successfully! Order Number: ' . $order->order_number);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return redirect()->route('cart.checkout')
+                ->with('error', 'Failed to place order. Please try again.');
+        }
     }
 }

@@ -10,89 +10,139 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
                 <!-- Checkout Form -->
                 <div class="lg:col-span-2">
-                    <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-6 mb-6">
-                        <h2 class="text-xl font-bold mb-4">Shipping Information</h2>
-                        <form id="checkout-form">
+                    @if (session('error'))
+                        <div
+                            class="mb-6 p-4 bg-red-100 dark:bg-red-900/30 border border-red-400 dark:border-red-700 text-red-700 dark:text-red-300 rounded-lg">
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    <form method="POST" action="{{ route('cart.order.store') }}">
+                        @csrf
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-6 mb-6">
+                            <h2 class="text-xl font-bold mb-4">Shipping Information</h2>
                             <div class="space-y-4">
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Full Name
+                                        <label for="shipping_name"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Full Name <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="text" value="{{ $user->name }}" required
+                                        <input type="text" id="shipping_name" name="shipping_name"
+                                            value="{{ old('shipping_name', $user->name) }}" required
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                        @error('shipping_name')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Email
+                                        <label for="shipping_email"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Email <span class="text-red-500">*</span>
                                         </label>
-                                        <input type="email" value="{{ $user->email }}" required
+                                        <input type="email" id="shipping_email" name="shipping_email"
+                                            value="{{ old('shipping_email', $user->email) }}" required
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                        @error('shipping_email')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label for="shipping_phone"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Phone Number
                                     </label>
-                                    <input type="tel" value="{{ $user->phone ?? '' }}"
+                                    <input type="tel" id="shipping_phone" name="shipping_phone"
+                                        value="{{ old('shipping_phone', $user->phone ?? '') }}"
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                    @error('shipping_phone')
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label for="shipping_address"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Address
                                     </label>
-                                    <input type="text" value="{{ $user->address ?? '' }}"
+                                    <input type="text" id="shipping_address" name="shipping_address"
+                                        value="{{ old('shipping_address', $user->address ?? '') }}"
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                    @error('shipping_address')
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label for="shipping_city"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             City
                                         </label>
-                                        <input type="text" value="{{ $user->city ?? '' }}"
+                                        <input type="text" id="shipping_city" name="shipping_city"
+                                            value="{{ old('shipping_city', $user->city ?? '') }}"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                        @error('shipping_city')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label for="shipping_state"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             State
                                         </label>
-                                        <input type="text" value="{{ $user->state ?? '' }}"
+                                        <input type="text" id="shipping_state" name="shipping_state"
+                                            value="{{ old('shipping_state', $user->state ?? '') }}"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                        @error('shipping_state')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                     <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                        <label for="shipping_zip"
+                                            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             ZIP Code
                                         </label>
-                                        <input type="text" value="{{ $user->zip ?? '' }}"
+                                        <input type="text" id="shipping_zip" name="shipping_zip"
+                                            value="{{ old('shipping_zip', $user->zip ?? '') }}"
                                             class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                        @error('shipping_zip')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div>
-                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <label for="shipping_country"
+                                        class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                         Country
                                     </label>
-                                    <input type="text" value="{{ $user->country ?? '' }}"
+                                    <input type="text" id="shipping_country" name="shipping_country"
+                                        value="{{ old('shipping_country', $user->country ?? '') }}"
                                         class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
+                                    @error('shipping_country')
+                                        <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
-                        </form>
-                    </div>
-
-                    <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-6">
-                        <h2 class="text-xl font-bold mb-4">Payment Method</h2>
-                        <div class="space-y-3">
-                            <label
-                                class="flex items-center p-4 border border-gray-300 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                                <input type="radio" name="payment_method" value="cash" checked class="mr-3">
-                                <span class="text-brand-charcoal dark:text-white">Cash on Delivery</span>
-                            </label>
-                            <label
-                                class="flex items-center p-4 border border-gray-300 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
-                                <input type="radio" name="payment_method" value="card" class="mr-3">
-                                <span class="text-brand-charcoal dark:text-white">Credit/Debit Card</span>
-                            </label>
                         </div>
-                    </div>
+
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl shadow-sm p-6 mb-6">
+                            <h2 class="text-xl font-bold mb-4">Payment Method</h2>
+                            <div class="space-y-3">
+                                <label
+                                    class="flex items-center p-4 border border-gray-300 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <input type="radio" name="payment_method" value="cash" checked class="mr-3">
+                                    <span class="text-brand-charcoal dark:text-white">Cash on Delivery</span>
+                                </label>
+                                <label
+                                    class="flex items-center p-4 border border-gray-300 dark:border-gray-700 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800">
+                                    <input type="radio" name="payment_method" value="card" class="mr-3">
+                                    <span class="text-brand-charcoal dark:text-white">Credit/Debit Card</span>
+                                </label>
+                            </div>
+                            @error('payment_method')
+                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                            @enderror
+                        </div>
                 </div>
 
                 <!-- Order Summary -->
@@ -138,7 +188,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button type="button" id="place-order-btn"
+                        <button type="submit"
                             class="mt-6 w-full bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                             Place Order
                         </button>
@@ -149,15 +199,6 @@
                     </div>
                 </div>
             </div>
-        </div>
+            </form>
     </main>
-
-    @push('scripts')
-        <script>
-            document.getElementById('place-order-btn').addEventListener('click', function() {
-                // TODO: Implement order placement logic
-                alert('Order placement functionality will be implemented here.');
-            });
-        </script>
-    @endpush
 @endsection

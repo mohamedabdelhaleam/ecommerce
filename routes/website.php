@@ -23,6 +23,7 @@ Route::middleware('auth:web')->group(function () {
     Route::delete('/cart/remove/{key}', [\App\Http\Controllers\Website\CartController::class, 'remove'])->name('cart.remove');
     Route::delete('/cart/clear', [\App\Http\Controllers\Website\CartController::class, 'clear'])->name('cart.clear');
     Route::get('/cart/checkout', [\App\Http\Controllers\Website\CartController::class, 'checkout'])->name('cart.checkout');
+    Route::post('/cart/order', [\App\Http\Controllers\Website\CartController::class, 'storeOrder'])->name('cart.order.store');
 });
 
 // Authentication routes
@@ -38,4 +39,6 @@ Route::middleware('auth:web')->group(function () {
     Route::post('/logout', [\App\Http\Controllers\Website\AuthController::class, 'logout'])->name('logout');
     Route::get('/profile', [\App\Http\Controllers\Website\ProfileController::class, 'index'])->name('profile');
     Route::put('/profile', [\App\Http\Controllers\Website\ProfileController::class, 'update'])->name('profile.update');
+    Route::get('/profile/orders', [\App\Http\Controllers\Website\ProfileController::class, 'orders'])->name('profile.orders');
+    Route::get('/profile/orders/{order}', [\App\Http\Controllers\Website\ProfileController::class, 'showOrder'])->name('profile.orders.show');
 });

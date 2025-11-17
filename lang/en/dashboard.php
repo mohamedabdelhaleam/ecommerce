@@ -10,6 +10,7 @@ return [
     'admins' => 'Admins',
     'roles' => 'Roles',
     'coupons' => 'Coupons',
+    'orders' => 'Orders',
     'logout' => 'Logout',
     'change_password' => 'Change Password',
 

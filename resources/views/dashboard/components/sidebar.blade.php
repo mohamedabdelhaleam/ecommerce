@@ -74,6 +74,15 @@
                         </a>
                     </li>
                 @endcan
+                @can('view orders')
+                    <li class="{{ request()->routeIs('dashboard.orders.*') ? 'active' : '' }}">
+                        <a href="{{ route('dashboard.orders.index') }}" class="">
+                            <span class="nav-icon uil uil-shopping-cart"></span>
+                            <span class="menu-text">{{ __('dashboard.orders') }}</span>
+                            {{-- <span class="toggle-icon"></span> --}}
+                        </a>
+                    </li>
+                @endcan
 
 
             </ul>

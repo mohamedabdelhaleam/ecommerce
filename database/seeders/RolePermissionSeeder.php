@@ -71,6 +71,10 @@ class RolePermissionSeeder extends Seeder
             'edit coupons',
             'delete coupons',
             'toggle coupons status',
+
+            // Orders
+            'view orders',
+            'edit orders',
         ];
 
         foreach ($permissions as $permission) {
@@ -135,6 +139,8 @@ class RolePermissionSeeder extends Seeder
             'edit coupons',
             'delete coupons',
             'toggle coupons status',
+            'view orders',
+            'edit orders',
         ];
         $admin->syncPermissions($adminPermissions);
 
@@ -154,6 +160,8 @@ class RolePermissionSeeder extends Seeder
             'edit sizes',
             'toggle sizes status',
             'view admins',
+            'view orders',
+            'edit orders',
         ];
         $manager->syncPermissions($managerPermissions);
 

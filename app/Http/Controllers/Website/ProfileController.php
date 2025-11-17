@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -54,5 +55,36 @@ class ProfileController extends Controller
         $user->save();
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully!');
+    }
+
+    /**
+     * Show the user's orders.
+     */
+    public function orders()
+    {
+        $user = Auth::guard('web')->user();
+        $orders = Order::where('user_id', $user->id)
+            ->with(['items.product', 'items.variant.size', 'items.variant.color'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('website.profile.orders', compact('orders'));
+    }
+
+    /**
+     * Show a specific order.
+     */
+    public function showOrder(Order $order)
+    {
+        $user = Auth::guard('web')->user();
+
+        // Ensure the order belongs to the authenticated user
+        if ($order->user_id !== $user->id) {
+            abort(403, 'Unauthorized access.');
+        }
+
+        $order->load(['items.product', 'items.variant.size', 'items.variant.color']);
+
+        return view('website.profile.order-details', compact('order'));
     }
 }

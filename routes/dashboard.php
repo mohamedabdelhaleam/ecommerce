@@ -81,4 +81,10 @@ Route::middleware('auth:admin')->group(function () {
     Route::resource('coupons', CouponController::class);
     Route::patch('coupons/{coupon}/toggle-status', [CouponController::class, 'toggleStatus'])
         ->name('coupons.toggle-status');
+
+    // Orders routes
+    Route::get('orders', [\App\Http\Controllers\Dashboard\OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/{order}', [\App\Http\Controllers\Dashboard\OrderController::class, 'show'])->name('orders.show');
+    Route::patch('orders/{order}/toggle-paid', [\App\Http\Controllers\Dashboard\OrderController::class, 'togglePaidStatus'])
+        ->name('orders.toggle-paid');
 });

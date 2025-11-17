@@ -5,7 +5,14 @@
 @section('contents')
     <main class="px-4 sm:px-10 lg:px-20 py-12">
         <div class="layout-content-container mx-auto flex max-w-3xl flex-col flex-1">
-            <h1 class="text-3xl font-bold mb-8">My Profile</h1>
+            <div class="flex items-center justify-between mb-8">
+                <h1 class="text-3xl font-bold">My Profile</h1>
+                <a href="{{ route('profile.orders') }}"
+                    class="text-primary hover:opacity-80 transition-opacity flex items-center gap-2">
+                    <span class="material-symbols-outlined">shopping_bag</span>
+                    My Orders
+                </a>
+            </div>
 
             @if (session('success'))
                 <div
@@ -92,7 +99,8 @@
                             <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                 Country
                             </label>
-                            <input type="text" id="country" name="country" value="{{ old('country', $user->country) }}"
+                            <input type="text" id="country" name="country"
+                                value="{{ old('country', $user->country) }}"
                                 class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-2 focus:ring-primary focus:border-primary text-brand-charcoal dark:text-white">
                         </div>
 
@@ -140,15 +148,16 @@
                                 class="flex-1 bg-primary text-white py-3 rounded-lg font-semibold hover:opacity-90 transition-opacity">
                                 Update Profile
                             </button>
-                            <form method="POST" action="{{ route('logout') }}" class="flex-1">
-                                @csrf
-                                <button type="submit"
-                                    class="w-full border border-gray-300 dark:border-gray-700 text-brand-charcoal dark:text-white py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                                    Logout
-                                </button>
-                            </form>
                         </div>
                     </div>
+                </form>
+
+                <form method="POST" action="{{ route('logout') }}" class="mt-4">
+                    @csrf
+                    <button type="submit"
+                        class="w-full border border-gray-300 dark:border-gray-700 text-brand-charcoal dark:text-white py-3 rounded-lg font-semibold hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
+                        Logout
+                    </button>
                 </form>
             </div>
         </div>
