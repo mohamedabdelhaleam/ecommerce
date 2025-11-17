@@ -44,7 +44,7 @@
                                             $permissionGroups = [];
                                             foreach ($permissions as $permission) {
                                                 $parts = explode(' ', $permission->name);
-                                                $group = $parts[0] ?? 'other';
+                                                $group = end($parts) ?: 'other';
                                                 if (!isset($permissionGroups[$group])) {
                                                     $permissionGroups[$group] = [];
                                                 }
@@ -55,7 +55,7 @@
                                         @foreach ($permissionGroups as $group => $groupPermissions)
                                             <div class="col-md-6 mb-3">
                                                 <div class="card border-0 shadow-sm">
-                                                    <div class="card-header bg-light border-0">
+                                                    <div class="card-header bg-main-color text-white border-0">
                                                         <strong>{{ ucfirst($group) }}</strong>
                                                     </div>
                                                     <div class="card-body">
@@ -67,7 +67,7 @@
                                                                     {{ in_array($permission->id, old('permissions', [])) ? 'checked' : '' }}>
                                                                 <label class="form-check-label"
                                                                     for="permission_{{ $permission->id }}">
-                                                                    {{ str_replace($group . ' ', '', $permission->name) }}
+                                                                    {{ str_replace(' ' . $group, '', $permission->name) }}
                                                                 </label>
                                                             </div>
                                                         @endforeach

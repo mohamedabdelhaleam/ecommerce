@@ -57,23 +57,25 @@
             </div>
         </td>
         <td>
-            <ul class="orderDatatable_actions mb-0 d-flex flex-wrap align-items-center">
-                <li>
-                    <a href="{{ route('dashboard.admins.show', $admin) }}" class="view">
-                        <i class="uil uil-eye"></i>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('dashboard.admins.edit', $admin) }}" class="edit">
-                        <i class="uil uil-edit"></i>
-                    </a>
-                </li>
-                <li>
-                    <x-dashboard.delete-button route="{{ route('dashboard.admins.destroy', $admin) }}"
-                        item-id="{{ $admin->id }}" item-name="{{ $admin->name }}" item-type="admin"
-                        table-row-id="admin-row-{{ $admin->id }}" />
-                </li>
-            </ul>
+            @if ($admin->id != 1 || $admin->id != auth()->user()->id)
+                <ul class="orderDatatable_actions mb-0 d-flex flex-wrap align-items-center">
+                    <li>
+                        <a href="{{ route('dashboard.admins.show', $admin) }}" class="view">
+                            <i class="uil uil-eye"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ route('dashboard.admins.edit', $admin) }}" class="edit">
+                            <i class="uil uil-edit"></i>
+                        </a>
+                    </li>
+                    <li>
+                        <x-dashboard.delete-button route="{{ route('dashboard.admins.destroy', $admin) }}"
+                            item-id="{{ $admin->id }}" item-name="{{ $admin->name }}" item-type="admin"
+                            table-row-id="admin-row-{{ $admin->id }}" />
+                    </li>
+                </ul>
+            @endif
         </td>
     </tr>
 @empty

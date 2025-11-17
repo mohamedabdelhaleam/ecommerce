@@ -7,6 +7,7 @@ use App\Repositories\Interfaces\AdminRepositoryInterface;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class AdminRepository implements AdminRepositoryInterface
 {
@@ -85,13 +86,17 @@ class AdminRepository implements AdminRepositoryInterface
         }
 
         // Extract roles if provided
-        $roles = $data['roles'] ?? [];
+        $roleIds = $data['roles'] ?? [];
         unset($data['roles']);
 
         $admin = Admin::create($data);
 
         // Assign roles if provided
-        if (!empty($roles)) {
+        if (!empty($roleIds)) {
+            // Convert role IDs to Role models
+            $roles = Role::where('guard_name', 'admin')
+                ->whereIn('id', $roleIds)
+                ->get();
             $admin->syncRoles($roles);
         }
 
@@ -118,7 +123,7 @@ class AdminRepository implements AdminRepositoryInterface
         }
 
         // Extract roles if provided
-        $roles = $data['roles'] ?? null;
+        $roleIds = $data['roles'] ?? null;
         if (isset($data['roles'])) {
             unset($data['roles']);
         }
@@ -126,8 +131,17 @@ class AdminRepository implements AdminRepositoryInterface
         $admin->update($data);
 
         // Sync roles if provided
-        if ($roles !== null) {
-            $admin->syncRoles($roles);
+        if ($roleIds !== null) {
+            if (empty($roleIds)) {
+                // Remove all roles if empty array
+                $admin->syncRoles([]);
+            } else {
+                // Convert role IDs to Role models
+                $roles = Role::where('guard_name', 'admin')
+                    ->whereIn('id', $roleIds)
+                    ->get();
+                $admin->syncRoles($roles);
+            }
         }
 
         return $admin->fresh();
