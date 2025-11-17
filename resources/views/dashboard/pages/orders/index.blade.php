@@ -4,34 +4,43 @@
         <div class="col-lg-12 mb-30">
             <div class="card">
                 <div class="card-header color-dark fw-500 d-flex justify-content-between align-items-center">
-                    <span>Orders</span>
+                    <span>{{ __('dashboard.orders') }}</span>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
                         <div class="col-12">
-                            <form method="GET" action="{{ route('dashboard.orders.index') }}" class="row g-3">
-                                <div class="col-md-4">
-                                    <input type="text" class="form-control" name="search"
-                                        placeholder="Search by order number, name, or email"
+                            <div class="row g-3" id="orders-filter-form">
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control filter-input" name="search" id="search-input"
+                                        placeholder="{{ __('dashboard.search_by_order_number_name_email') }}"
                                         value="{{ request('search') }}">
                                 </div>
-                                <div class="col-md-3">
-                                    <select class="form-control" name="is_paid">
-                                        <option value="">All Payment Status</option>
-                                        <option value="1" {{ request('is_paid') === '1' ? 'selected' : '' }}>Paid
+                                <div class="col-md-2">
+                                    <select class="form-control filter-input" name="is_paid" id="is_paid-select">
+                                        <option value="">{{ __('dashboard.all_payment_status') }}</option>
+                                        <option value="1" {{ request('is_paid') === '1' ? 'selected' : '' }}>
+                                            {{ __('dashboard.paid') }}
                                         </option>
-                                        <option value="0" {{ request('is_paid') === '0' ? 'selected' : '' }}>Unpaid
+                                        <option value="0" {{ request('is_paid') === '0' ? 'selected' : '' }}>
+                                            {{ __('dashboard.unpaid') }}
                                         </option>
                                     </select>
                                 </div>
                                 <div class="col-md-2">
-                                    <button type="submit" class="btn btn-primary w-100">Search</button>
+                                    <input type="date" class="form-control filter-input" name="from_date"
+                                        id="from_date-input" value="{{ request('from_date') }}"
+                                        placeholder="{{ __('dashboard.from_date') }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <a href="{{ route('dashboard.orders.index') }}"
-                                        class="btn btn-secondary w-100">Reset</a>
+                                    <input type="date" class="form-control filter-input" name="to_date"
+                                        id="to_date-input" value="{{ request('to_date') }}"
+                                        placeholder="{{ __('dashboard.to_date') }}">
                                 </div>
-                            </form>
+                                <div class="col-md-2">
+                                    <button type="button" id="reset-filters"
+                                        class="btn btn-secondary w-100">{{ __('dashboard.reset') }}</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -44,85 +53,159 @@
                     @endif
 
                     <!-- Orders Table -->
-                    <div class="userDatatable global-shadow border-light-0 w-100">
-                        <div class="table-responsive">
-                            <table class="table mb-0 table-borderless">
-                                <thead>
-                                    <tr class="userDatatable-header">
-                                        <th>Order Number</th>
-                                        <th>Customer</th>
-                                        <th>Total</th>
-                                        <th>Payment Status</th>
-                                        <th>Payment Method</th>
-                                        <th>Date</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse ($orders as $order)
-                                        <tr>
-                                            <td>
-                                                <div class="d-flex">
-                                                    <div class="userDatatable-content">
-                                                        <strong>{{ $order->order_number }}</strong>
-                                                    </div>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $order->shipping_name }}<br>
-                                                    <small class="text-muted">{{ $order->shipping_email }}</small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    ${{ number_format($order->total, 2) }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <span class="badge {{ $order->is_paid ? 'bg-success' : 'bg-warning' }}">
-                                                    {{ $order->is_paid ? 'Paid' : 'Unpaid' }}
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ ucfirst($order->payment_method) }}
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content">
-                                                    {{ $order->created_at->format('M d, Y') }}<br>
-                                                    <small
-                                                        class="text-muted">{{ $order->created_at->format('h:i A') }}</small>
-                                                </div>
-                                            </td>
-                                            <td>
-                                                <div class="userDatatable-content d-flex align-items-center">
-                                                    <a href="{{ route('dashboard.orders.show', $order) }}"
-                                                        class="btn btn-sm btn-primary">
-                                                        <i class="uil uil-eye"></i> View
-                                                    </a>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="7" class="text-center py-4">
-                                                <p class="text-muted mb-0">No orders found.</p>
-                                            </td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                    <div id="orders-table-container">
+                        @include('dashboard.pages.orders.partials.table')
                     </div>
 
                     <!-- Pagination -->
-                    <div class="d-flex justify-content-center mt-4">
-                        {{ $orders->links() }}
+                    <div id="orders-pagination-container">
+                        @include('dashboard.pages.orders.partials.pagination')
                     </div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            let filterTimeout;
+            const filterInputs = $('.filter-input');
+            const ordersTableContainer = $('#orders-table-container');
+            const ordersPaginationContainer = $('#orders-pagination-container');
+
+            // Function to load orders via AJAX
+            function loadOrders() {
+                const formData = {
+                    search: $('#search-input').val(),
+                    is_paid: $('#is_paid-select').val(),
+                    from_date: $('#from_date-input').val(),
+                    to_date: $('#to_date-input').val(),
+                };
+
+                // Show loading indicator
+                ordersTableContainer.html(
+                    '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+                );
+                ordersPaginationContainer.html('');
+
+                $.ajax({
+                    url: '{{ route('dashboard.orders.index') }}',
+                    type: 'GET',
+                    data: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    },
+                    success: function(response) {
+                        ordersTableContainer.html(response.table);
+                        ordersPaginationContainer.html(response.pagination);
+                        // Update URL without reload
+                        const newUrl = new URL(window.location.href);
+                        Object.keys(formData).forEach(key => {
+                            if (formData[key]) {
+                                newUrl.searchParams.set(key, formData[key]);
+                            } else {
+                                newUrl.searchParams.delete(key);
+                            }
+                        });
+                        newUrl.searchParams.delete('page'); // Reset to page 1 when filtering
+                        window.history.pushState({}, '', newUrl);
+                    },
+                    error: function(xhr) {
+                        console.error('Error loading orders:', xhr);
+                        ordersTableContainer.html(
+                            '<div class="alert alert-danger">Error loading orders. Please try again.</div>'
+                        );
+                    }
+                });
+            }
+
+            // Debounced filter function (wait 500ms after user stops typing)
+            function debouncedLoadOrders() {
+                clearTimeout(filterTimeout);
+                filterTimeout = setTimeout(function() {
+                    loadOrders();
+                }, 500);
+            }
+
+            // Attach event listeners to filter inputs
+            filterInputs.on('input change', function() {
+                debouncedLoadOrders();
+            });
+
+            // Reset filters button
+            $('#reset-filters').on('click', function() {
+                $('#search-input').val('');
+                $('#is_paid-select').val('');
+                $('#from_date-input').val('');
+                $('#to_date-input').val('');
+                loadOrders();
+            });
+
+            // Handle pagination links (they will be dynamically added)
+            $(document).on('click', '#orders-pagination-container a', function(e) {
+                e.preventDefault();
+                const url = $(this).attr('href');
+                if (url) {
+                    // Extract page number from URL
+                    try {
+                        const urlObj = new URL(url);
+                        const page = urlObj.searchParams.get('page');
+
+                        const formData = {
+                            search: $('#search-input').val(),
+                            is_paid: $('#is_paid-select').val(),
+                            from_date: $('#from_date-input').val(),
+                            to_date: $('#to_date-input').val(),
+                        };
+
+                        if (page) {
+                            formData.page = page;
+                        }
+
+                        ordersTableContainer.html(
+                            '<div class="text-center py-4"><div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div></div>'
+                        );
+                        ordersPaginationContainer.html('');
+
+                        $.ajax({
+                            url: '{{ route('dashboard.orders.index') }}',
+                            type: 'GET',
+                            data: formData,
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            success: function(response) {
+                                ordersTableContainer.html(response.table);
+                                ordersPaginationContainer.html(response.pagination);
+                                // Update URL without reload
+                                const newUrl = new URL(window.location.href);
+                                Object.keys(formData).forEach(key => {
+                                    if (formData[key]) {
+                                        newUrl.searchParams.set(key, formData[key]);
+                                    } else {
+                                        newUrl.searchParams.delete(key);
+                                    }
+                                });
+                                window.history.pushState({}, '', newUrl);
+                                // Scroll to top of table
+                                $('html, body').animate({
+                                    scrollTop: ordersTableContainer.offset().top - 100
+                                }, 300);
+                            },
+                            error: function(xhr) {
+                                console.error('Error loading orders:', xhr);
+                                ordersTableContainer.html(
+                                    '<div class="alert alert-danger">Error loading orders. Please try again.</div>'
+                                );
+                            }
+                        });
+                    } catch (error) {
+                        console.error('Error parsing URL:', error);
+                    }
+                }
+            });
+        });
+    </script>
 @endsection

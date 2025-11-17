@@ -4,18 +4,18 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h6 class="mb-0">Order Details - {{ $order->order_number }}</h6>
+                    <h6 class="mb-0">{{ __('dashboard.order_details') }} - {{ $order->order_number }}</h6>
                     <div class="d-flex gap-2">
                         <form method="POST" action="{{ route('dashboard.orders.toggle-paid', $order) }}" class="d-inline">
                             @csrf
                             @method('PATCH')
                             <button type="submit" class="btn btn-{{ $order->is_paid ? 'warning' : 'success' }} btn-sm">
                                 <i class="uil uil-{{ $order->is_paid ? 'times' : 'check' }}"></i>
-                                Mark as {{ $order->is_paid ? 'Unpaid' : 'Paid' }}
+                                {{ $order->is_paid ? __('dashboard.mark_as_unpaid') : __('dashboard.mark_as_paid') }}
                             </button>
                         </form>
                         <a href="{{ route('dashboard.orders.index') }}" class="btn btn-secondary btn-sm">
-                            <i class="uil uil-arrow-left"></i> Back
+                            <i class="uil uil-arrow-left"></i> {{ __('dashboard.back') }}
                         </a>
                     </div>
                 </div>
@@ -31,19 +31,19 @@
                         <!-- Order Information -->
                         <div class="col-lg-8 mb-4">
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Order Items</h6>
+                                <div class="card-header bg-main-color">
+                                    <h6 class="mb-0 text-white">{{ __('dashboard.order_items') }}</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="table-responsive">
                                         <table class="table table-bordered">
                                             <thead>
                                                 <tr>
-                                                    <th>Product</th>
-                                                    <th>Variant</th>
-                                                    <th>Quantity</th>
-                                                    <th>Price</th>
-                                                    <th>Total</th>
+                                                    <th>{{ __('dashboard.product') }}</th>
+                                                    <th>{{ __('dashboard.variant') }}</th>
+                                                    <th>{{ __('dashboard.quantity') }}</th>
+                                                    <th>{{ __('dashboard.price') }}</th>
+                                                    <th>{{ __('dashboard.total') }}</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -54,10 +54,10 @@
                                                         </td>
                                                         <td>
                                                             @if ($item->variant)
-                                                                {{ $item->variant->size->name ?? 'N/A' }} /
-                                                                {{ $item->variant->color->name ?? 'N/A' }}
+                                                                {{ $item->variant->size->name ?? __('dashboard.na') }} /
+                                                                {{ $item->variant->color->name ?? __('dashboard.na') }}
                                                             @else
-                                                                <span class="text-muted">N/A</span>
+                                                                <span class="text-muted">{{ __('dashboard.na') }}</span>
                                                             @endif
                                                         </td>
                                                         <td>{{ $item->quantity }}</td>
@@ -68,7 +68,9 @@
                                             </tbody>
                                             <tfoot>
                                                 <tr>
-                                                    <td colspan="4" class="text-end"><strong>Order Total:</strong></td>
+                                                    <td colspan="4" class="text-end">
+                                                        <strong>{{ __('dashboard.order_total') }}:</strong>
+                                                    </td>
                                                     <td><strong>${{ number_format($order->total, 2) }}</strong></td>
                                                 </tr>
                                             </tfoot>
@@ -81,59 +83,66 @@
                         <!-- Order Details -->
                         <div class="col-lg-4">
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Order Information</h6>
+                                <div class="card-header bg-main-color">
+                                    <h6 class="mb-0 text-white">{{ __('dashboard.order_information') }}</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Order Number</label>
+                                        <label
+                                            class="form-label text-muted small mb-1">{{ __('dashboard.order_number') }}</label>
                                         <h6 class="mb-0 fw-600">{{ $order->order_number }}</h6>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Order Date</label>
+                                        <label
+                                            class="form-label text-muted small mb-1">{{ __('dashboard.order_date') }}</label>
                                         <h6 class="mb-0">{{ $order->created_at->format('M d, Y h:i A') }}</h6>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Payment Status</label>
+                                        <label
+                                            class="form-label text-muted small mb-1">{{ __('dashboard.payment_status') }}</label>
                                         <div>
                                             <span class="badge {{ $order->is_paid ? 'bg-success' : 'bg-warning' }}">
-                                                {{ $order->is_paid ? 'Paid' : 'Unpaid' }}
+                                                {{ $order->is_paid ? __('dashboard.paid') : __('dashboard.unpaid') }}
                                             </span>
                                         </div>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Payment Method</label>
+                                        <label
+                                            class="form-label text-muted small mb-1">{{ __('dashboard.payment_method') }}</label>
                                         <h6 class="mb-0">{{ ucfirst($order->payment_method) }}</h6>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Total Amount</label>
+                                        <label
+                                            class="form-label text-muted small mb-1">{{ __('dashboard.total_amount') }}</label>
                                         <h6 class="mb-0 fw-600">${{ number_format($order->total, 2) }}</h6>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="card border-0 shadow-sm mb-4">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Customer Information</h6>
+                                <div class="card-header bg-main-color text-white">
+                                    <h6 class="mb-0 text-white">{{ __('dashboard.customer_information') }}</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Name</label>
+                                        <label class="form-label text-muted small mb-1">{{ __('dashboard.name') }}</label>
                                         <h6 class="mb-0">{{ $order->shipping_name }}</h6>
                                     </div>
                                     <div class="mb-3">
-                                        <label class="form-label text-muted small mb-1">Email</label>
+                                        <label class="form-label text-muted small mb-1">{{ __('dashboard.email') }}</label>
                                         <h6 class="mb-0">{{ $order->shipping_email }}</h6>
                                     </div>
                                     @if ($order->shipping_phone)
                                         <div class="mb-3">
-                                            <label class="form-label text-muted small mb-1">Phone</label>
+                                            <label
+                                                class="form-label text-muted small mb-1">{{ __('dashboard.phone') }}</label>
                                             <h6 class="mb-0">{{ $order->shipping_phone }}</h6>
                                         </div>
                                     @endif
                                     @if ($order->user)
                                         <div class="mb-3">
-                                            <label class="form-label text-muted small mb-1">Registered User</label>
+                                            <label
+                                                class="form-label text-muted small mb-1">{{ __('dashboard.registered_user') }}</label>
                                             <h6 class="mb-0">{{ $order->user->name }} ({{ $order->user->email }})</h6>
                                         </div>
                                     @endif
@@ -141,8 +150,8 @@
                             </div>
 
                             <div class="card border-0 shadow-sm">
-                                <div class="card-header bg-light">
-                                    <h6 class="mb-0">Shipping Address</h6>
+                                <div class="card-header bg-main-color text-white">
+                                    <h6 class="mb-0 text-white">{{ __('dashboard.shipping_address') }}</h6>
                                 </div>
                                 <div class="card-body">
                                     @if (
@@ -173,7 +182,7 @@
                                             @endif
                                         </div>
                                     @else
-                                        <p class="text-muted mb-0">No shipping address provided.</p>
+                                        <p class="text-muted mb-0">{{ __('dashboard.no_shipping_address') }}</p>
                                     @endif
                                 </div>
                             </div>

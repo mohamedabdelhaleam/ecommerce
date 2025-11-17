@@ -11,49 +11,49 @@
     border: 1px solid var(--border-deep);
 }
 
-.b-normal-b{
+.b-normal-b {
     border-bottom: 1px solid var(--border-color);
 }
 
 /* center */
-.text-align{
-    @include lg{
-        &-lg-center{
+.text-align {
+    @include lg {
+        &-lg-center {
             text-align: center;
         }
-        &-lg-0{
+        &-lg-0 {
             text-align: left;
         }
     }
-    @include md{
-        &-md-center{
+    @include md {
+        &-md-center {
             text-align: center;
         }
-        &-md-0{
+        &-md-0 {
             text-align: left;
         }
     }
-    @include sm{
-        &-sm-center{
+    @include sm {
+        &-sm-center {
             text-align: center;
         }
-        &-sm-0{
+        &-sm-0 {
             text-align: left;
         }
     }
-    @include ssm{
-        &-ssm-center{
+    @include ssm {
+        &-ssm-center {
             text-align: center;
         }
-        &-ssm-0{
+        &-ssm-0 {
             text-align: left;
         }
     }
-    @include xs{
-        &-xs-center{
+    @include xs {
+        &-xs-center {
             text-align: center;
         }
-        &-xs-0{
+        &-xs-0 {
             text-align: left;
         }
     }
@@ -61,54 +61,52 @@
 
 //Box Shadow
 .shadow1 {
-    box-shadow:0 5px 10px var(--shadow3);
+    box-shadow: 0 5px 10px var(--shadow3);
 }
 
 .shadow2 {
-    box-shadow:0 3px 5px var(--shadow2);
+    box-shadow: 0 3px 5px var(--shadow2);
 }
 
 //Color
-.display{
+.display {
     &-1,
     &-2,
     &-3,
-    &-4{
+    &-4 {
         color: var(--color-dark);
     }
 }
 
-
 //color
-.text-light{
+.text-light {
     color: var(--color-light) !important;
 }
 
-.bg-none{
+.bg-none {
     background-color: transparent !important;
 }
 
 //Radius
 
-.radius{
+.radius {
     border-radius: $border-radius;
-    &-xl{
+    &-xl {
         border-radius: $border-radius-xl;
     }
-    &-lg{
+    &-lg {
         border-radius: $border-radius-lg;
     }
-    &-md{
+    &-md {
         border-radius: $border-radius-md;
     }
-    &-sm{
+    &-sm {
         border-radius: $border-radius-sm;
     }
-    &-xs{
+    &-xs {
         border-radius: $border-radius-xs;
     }
 }
-
 
 /* flex */
 .flex-1 {
@@ -219,13 +217,13 @@
 .w-90 {
     width: 90%;
 }
-.wh-100{
+.wh-100 {
     width: 100px;
     height: 100px;
 }
 
-.w-100px{
-    width:100px
+.w-100px {
+    width: 100px;
 }
 
 .wh-120 {
@@ -293,7 +291,7 @@
 }
 
 .fs-18 {
-   @include rfs(18px);
+    @include rfs(18px);
 }
 
 .fs-20 {
@@ -328,7 +326,11 @@
 //BG Color
 
 .cbg-light {
-    background-color:var(--bg-lighter);
+    background-color: var(--bg-lighter);
+}
+
+.bg-main-color {
+    background-color: var(--bg-main-color) !important;
 }
 
 .transparent {
@@ -338,7 +340,7 @@
 //Global Box Shadow
 
 .global-shadow {
-    box-shadow:0 5px 20px rgba(var(--light-gray-rgba), 0.03);
+    box-shadow: 0 5px 20px rgba(var(--light-gray-rgba), 0.03);
 }
 
 //Global Line Height
@@ -377,7 +379,7 @@
 .overflow-y-scroll {
     overflow-y: scroll;
 }
-.overflow-x-auto{
+.overflow-x-auto {
     overflow-x: auto;
 }
 
@@ -404,35 +406,33 @@ input.box-shadow-none {
     white-space: nowrap;
 }
 
-.cursor-true{
+.cursor-true {
     cursor: pointer;
 }
 
-.h-100vh{
+.h-100vh {
     height: 100vh;
 }
 
 //custom button
 .btn-outline-lighten {
     @extend .b-light;
-    color:var(--color-gray);
+    color: var(--color-gray);
 
     @include e(height) {
         height: 36px;
     }
 }
 
-
 //default link hover
 a:hover {
-
     h1,
     h2,
     h3,
     h4,
     h5,
     h6 {
-        color:var(--color-primary);
+        color: var(--color-primary);
         transition: var(--transition);
     }
 }

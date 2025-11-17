@@ -19,7 +19,7 @@ class OrderController extends Controller
     /**
      * Display a listing of the orders.
      */
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         $query = Order::with(['user', 'items.product', 'items.variant']);
 
@@ -42,7 +42,24 @@ class OrderController extends Controller
             });
         }
 
+        // Filter by date range
+        if ($request->has('from_date') && $request->from_date) {
+            $query->whereDate('created_at', '>=', $request->from_date);
+        }
+
+        if ($request->has('to_date') && $request->to_date) {
+            $query->whereDate('created_at', '<=', $request->to_date);
+        }
+
         $orders = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        // If AJAX request, return JSON with table HTML
+        if ($request->ajax()) {
+            return response()->json([
+                'table' => view('dashboard.pages.orders.partials.table', compact('orders'))->render(),
+                'pagination' => view('dashboard.pages.orders.partials.pagination', compact('orders'))->render(),
+            ]);
+        }
 
         return view('dashboard.pages.orders.index', compact('orders'));
     }

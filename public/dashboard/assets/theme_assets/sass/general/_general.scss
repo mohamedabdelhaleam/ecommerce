@@ -469,7 +469,7 @@ body.top-menu{
 .tooltip-title {
   font-size: 14px;
   font-weight: 500 !important;
-  font-family:'Jost', sans-serif;
+  font-family:'Inter', sans-serif;
   text-transform: capitalize;
   margin-bottom: 4px;
   color:var(--color-gray);
@@ -479,7 +479,7 @@ body.top-menu{
   color: #63b963;
   @include rfs(22px);
   font-weight: 600 !important;
-  font-family:'Jost', sans-serif;
+  font-family:'Inter', sans-serif;
 }
 
 .tooltip-value sup {
