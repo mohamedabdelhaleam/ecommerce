@@ -87,4 +87,8 @@ Route::middleware('auth:admin')->group(function () {
     Route::get('orders/{order}', [\App\Http\Controllers\Dashboard\OrderController::class, 'show'])->name('orders.show');
     Route::patch('orders/{order}/toggle-paid', [\App\Http\Controllers\Dashboard\OrderController::class, 'togglePaidStatus'])
         ->name('orders.toggle-paid');
+
+    // Users routes
+    Route::get('users', [\App\Http\Controllers\Dashboard\UserController::class, 'index'])->name('users.index');
+    Route::get('users/{user}', [\App\Http\Controllers\Dashboard\UserController::class, 'show'])->name('users.show');
 });

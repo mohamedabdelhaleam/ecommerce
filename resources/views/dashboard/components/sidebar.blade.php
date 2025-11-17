@@ -83,6 +83,13 @@
                         </a>
                     </li>
                 @endcan
+                <li class="{{ request()->routeIs('dashboard.users.*') ? 'active' : '' }}">
+                    <a href="{{ route('dashboard.users.index') }}" class="">
+                        <span class="nav-icon uil uil-user"></span>
+                        <span class="menu-text">{{ __('dashboard.users') }}</span>
+                        {{-- <span class="toggle-icon"></span> --}}
+                    </a>
+                </li>
 
 
             </ul>
