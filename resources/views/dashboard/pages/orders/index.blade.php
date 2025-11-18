@@ -37,7 +37,7 @@
                                         placeholder="{{ __('dashboard.search_by_order_number_name_email') }}"
                                         value="{{ request('search') }}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <select class="form-control filter-input" name="is_paid" id="is_paid-select">
                                         <option value="">{{ __('dashboard.all_payment_status') }}</option>
                                         <option value="1" {{ request('is_paid') === '1' ? 'selected' : '' }}>
@@ -48,19 +48,15 @@
                                         </option>
                                     </select>
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input type="date" class="form-control filter-input" name="from_date"
                                         id="from_date-input" value="{{ request('from_date') }}"
                                         placeholder="{{ __('dashboard.from_date') }}">
                                 </div>
-                                <div class="col-md-2">
+                                <div class="col-md-3">
                                     <input type="date" class="form-control filter-input" name="to_date"
                                         id="to_date-input" value="{{ request('to_date') }}"
                                         placeholder="{{ __('dashboard.to_date') }}">
-                                </div>
-                                <div class="col-md-2">
-                                    <button type="button" id="reset-filters"
-                                        class="btn btn-secondary w-100">{{ __('dashboard.reset') }}</button>
                                 </div>
                             </div>
                         </div>
