@@ -106,6 +106,7 @@ Route::middleware('auth:admin')->group(function () {
 
     // Orders routes
     Route::get('orders', [\App\Http\Controllers\Dashboard\OrderController::class, 'index'])->name('orders.index');
+    Route::get('orders/export', [\App\Http\Controllers\Dashboard\OrderController::class, 'export'])->name('orders.export');
     Route::get('orders/{order}', [\App\Http\Controllers\Dashboard\OrderController::class, 'show'])->name('orders.show');
     Route::get('orders/{order}/invoice', [\App\Http\Controllers\Dashboard\OrderController::class, 'invoice'])->name('orders.invoice');
     Route::get('orders/{order}/download-invoice', [\App\Http\Controllers\Dashboard\OrderController::class, 'downloadInvoice'])->name('orders.download-invoice');

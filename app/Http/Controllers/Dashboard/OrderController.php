@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Dashboard;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Exports\OrdersExport;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -20,6 +21,26 @@ class OrderController extends Controller
      * Display a listing of the orders.
      */
     public function index(Request $request)
+    {
+        $query = $this->buildOrderQuery($request);
+
+        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
+
+        // If AJAX request, return JSON with table HTML
+        if ($request->ajax()) {
+            return response()->json([
+                'table' => view('dashboard.pages.orders.partials.table', compact('orders'))->render(),
+                'pagination' => view('dashboard.pages.orders.partials.pagination', compact('orders'))->render(),
+            ]);
+        }
+
+        return view('dashboard.pages.orders.index', compact('orders'));
+    }
+
+    /**
+     * Build order query with filters
+     */
+    protected function buildOrderQuery(Request $request)
     {
         $query = Order::with(['user', 'items.product', 'items.variant']);
 
@@ -51,17 +72,7 @@ class OrderController extends Controller
             $query->whereDate('created_at', '<=', $request->to_date);
         }
 
-        $orders = $query->orderBy('created_at', 'desc')->paginate(15);
-
-        // If AJAX request, return JSON with table HTML
-        if ($request->ajax()) {
-            return response()->json([
-                'table' => view('dashboard.pages.orders.partials.table', compact('orders'))->render(),
-                'pagination' => view('dashboard.pages.orders.partials.pagination', compact('orders'))->render(),
-            ]);
-        }
-
-        return view('dashboard.pages.orders.index', compact('orders'));
+        return $query;
     }
 
     /**
@@ -114,5 +125,24 @@ class OrderController extends Controller
 
         // Fallback: return HTML view (user can print to PDF)
         return view('dashboard.pages.orders.invoice', compact('order'));
+    }
+
+    /**
+     * Export orders to Excel/CSV
+     */
+    public function export(Request $request)
+    {
+        $query = $this->buildOrderQuery($request);
+        $orders = $query->orderBy('created_at', 'desc')->get();
+
+        $exportType = $request->get('type', 'simple'); // 'simple' or 'with_items'
+
+        $export = new OrdersExport($orders);
+
+        if ($exportType === 'with_items') {
+            return $export->exportWithItemsToCsv();
+        }
+
+        return $export->exportToCsv();
     }
 }

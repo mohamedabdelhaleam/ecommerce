@@ -5,6 +5,28 @@
             <div class="card">
                 <div class="card-header color-dark fw-500 d-flex justify-content-between align-items-center">
                     <span>{{ __('dashboard.orders') }}</span>
+                    <div class="d-flex gap-2">
+                        <div class="btn-group">
+                            <button type="button" class="btn bg-main-color color-white btn-sm dropdown-toggle" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <i class="uil uil-file-export"></i> {{ __('dashboard.export_to_excel') }}
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('dashboard.orders.export', array_merge(request()->all(), ['type' => 'simple'])) }}">
+                                        <i class="uil uil-file"></i> {{ __('dashboard.export_orders') }}
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item"
+                                        href="{{ route('dashboard.orders.export', array_merge(request()->all(), ['type' => 'with_items'])) }}">
+                                        <i class="uil uil-list-ul"></i> {{ __('dashboard.export_orders_with_items') }}
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">

@@ -237,6 +237,16 @@ return [
     'print_invoice' => 'Print Invoice',
     'thank_you_for_your_order' => 'Thank you for your order!',
     'all_rights_reserved' => 'All rights reserved.',
+    'export_to_excel' => 'Export to Excel',
+    'export_orders' => 'Export Orders',
+    'export_orders_with_items' => 'Export Orders with Items',
+    'invoice_to' => 'Invoice To',
+    'price_per_unit' => 'Price Per Unit',
+    'subtotal' => 'Subtotal',
+    'discount' => 'Discount',
+    'shipping_charge' => 'Shipping Charge',
+    'print' => 'Print',
+    'download' => 'Download',
 
     // Users
     'users' => 'Users',
