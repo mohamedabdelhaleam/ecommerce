@@ -10,6 +10,7 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
 {
@@ -76,7 +77,7 @@ class AdminController extends Controller
      */
     public function create(): View
     {
-        $roles = \Spatie\Permission\Models\Role::where('guard_name', 'admin')->orderBy('name')->get();
+        $roles = Role::where('guard_name', 'admin')->orderBy('name')->get();
         return view('dashboard.pages.admins.create', compact('roles'));
     }
 
@@ -185,7 +186,17 @@ class AdminController extends Controller
     public function destroy(Admin $admin)
     {
         try {
+
+            if ($admin->hasRole('Super Admin')) {
+                if (request()->ajax() || request()->wantsJson()) {
+                    return response()->json([
+                        'success' => false,
+                        'message' => 'You cannot delete Super Admin account.'
+                    ], 403);
+                }
+            }
             // Prevent deleting yourself
+
             if ($admin->id === auth('admin')->id()) {
                 if (request()->ajax() || request()->wantsJson()) {
                     return response()->json([
