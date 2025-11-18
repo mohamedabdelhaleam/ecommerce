@@ -74,32 +74,119 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Image gallery functionality
     const mainImage = document.getElementById("main-product-image");
-    const thumbnailImages = document.querySelectorAll(".thumbnail-image");
+    const thumbnailContainer = document.querySelector(
+        ".grid.grid-cols-4.gap-4"
+    );
+    const colorImagesData = window.colorImagesData || {};
 
-    thumbnailImages.forEach((thumbnail) => {
-        thumbnail.addEventListener("click", function () {
-            const imageUrl = this.getAttribute("data-image");
-            if (mainImage && imageUrl) {
-                mainImage.style.backgroundImage = `url("${imageUrl}")`;
+    // Function to update images based on selected color
+    function updateImagesForColor(colorId) {
+        if (!mainImage) return;
 
-                // Update active thumbnail
-                thumbnailImages.forEach((t) => {
-                    t.classList.remove("border-2", "border-primary");
-                    t.classList.add(
+        // Get images for the selected color, or fallback to general images
+        let images =
+            colorImagesData[colorId] || colorImagesData["general"] || [];
+
+        // If no color-specific images, use general images
+        if (images.length === 0 && colorId !== null) {
+            images = colorImagesData["general"] || [];
+        }
+
+        if (images.length === 0) return;
+
+        // Sort images: primary first, then by order
+        images.sort((a, b) => {
+            if (a.is_primary && !b.is_primary) return -1;
+            if (!a.is_primary && b.is_primary) return 1;
+            return a.order - b.order;
+        });
+
+        // Update main image
+        const primaryImage = images.find((img) => img.is_primary) || images[0];
+        if (primaryImage && primaryImage.url) {
+            mainImage.style.backgroundImage = `url("${primaryImage.url}")`;
+        }
+
+        // Update thumbnails
+        if (thumbnailContainer) {
+            // Clear existing thumbnails
+            thumbnailContainer.innerHTML = "";
+
+            // Create new thumbnails (max 4)
+            const thumbnailsToShow = images.slice(0, 4);
+            thumbnailsToShow.forEach((image, index) => {
+                const thumbnail = document.createElement("div");
+                thumbnail.className = `thumbnail-image w-full bg-center bg-no-repeat aspect-square bg-cover rounded-lg cursor-pointer transition-all ${
+                    index === 0
+                        ? "border-2 border-primary"
+                        : "border border-gray-300 dark:border-gray-700"
+                }`;
+                thumbnail.setAttribute(
+                    "data-alt",
+                    `Product Image ${index + 1}`
+                );
+                thumbnail.setAttribute("data-image", image.url);
+                thumbnail.style.backgroundImage = `url("${image.url}")`;
+
+                // Add click handler
+                thumbnail.addEventListener("click", function () {
+                    mainImage.style.backgroundImage = `url("${image.url}")`;
+
+                    // Update active thumbnail
+                    thumbnailContainer
+                        .querySelectorAll(".thumbnail-image")
+                        .forEach((t) => {
+                            t.classList.remove("border-2", "border-primary");
+                            t.classList.add(
+                                "border",
+                                "border-gray-300",
+                                "dark:border-gray-700"
+                            );
+                        });
+                    this.classList.remove(
                         "border",
                         "border-gray-300",
                         "dark:border-gray-700"
                     );
+                    this.classList.add("border-2", "border-primary");
                 });
-                this.classList.remove(
-                    "border",
-                    "border-gray-300",
-                    "dark:border-gray-700"
-                );
-                this.classList.add("border-2", "border-primary");
-            }
+
+                thumbnailContainer.appendChild(thumbnail);
+            });
+        }
+    }
+
+    // Initialize thumbnails click handlers
+    function initializeThumbnails() {
+        const thumbnailImages = document.querySelectorAll(".thumbnail-image");
+        thumbnailImages.forEach((thumbnail) => {
+            thumbnail.addEventListener("click", function () {
+                const imageUrl = this.getAttribute("data-image");
+                if (mainImage && imageUrl) {
+                    mainImage.style.backgroundImage = `url("${imageUrl}")`;
+
+                    // Update active thumbnail
+                    thumbnailImages.forEach((t) => {
+                        t.classList.remove("border-2", "border-primary");
+                        t.classList.add(
+                            "border",
+                            "border-gray-300",
+                            "dark:border-gray-700"
+                        );
+                    });
+                    this.classList.remove(
+                        "border",
+                        "border-gray-300",
+                        "dark:border-gray-700"
+                    );
+                    this.classList.add("border-2", "border-primary");
+                }
+            });
         });
-    });
+    }
+
+    // Initialize thumbnails on page load
+    initializeThumbnails();
 
     // Quantity controls
     const quantityInput = document.getElementById("quantity-input");
@@ -189,6 +276,9 @@ document.addEventListener("DOMContentLoaded", function () {
             // Update selected color and price
             selectedColorId = parseInt(this.getAttribute("data-color-id"));
             updatePrice();
+
+            // Update images for selected color
+            updateImagesForColor(selectedColorId);
         });
     });
 
@@ -200,6 +290,8 @@ document.addEventListener("DOMContentLoaded", function () {
     if (colorOptions.length > 0) {
         const firstColor = colorOptions[0];
         selectedColorId = parseInt(firstColor.getAttribute("data-color-id"));
+        // Initialize images for first color
+        updateImagesForColor(selectedColorId);
     }
 
     // Update price on initial load if we have selections
@@ -374,7 +466,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (addToCartBtn && productId && addToCartUrl) {
         addToCartBtn.addEventListener("click", function () {
-            const quantity = parseInt(document.getElementById("quantity-input").value) || 1;
+            const quantity =
+                parseInt(document.getElementById("quantity-input").value) || 1;
             const variant = findVariant(selectedSizeId, selectedColorId);
             const variantId = variant ? variant.id : null;
 
@@ -397,9 +490,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 body: formData,
                 headers: {
                     "X-Requested-With": "XMLHttpRequest",
-                    "X-CSRF-TOKEN": document
-                        .querySelector('meta[name="csrf-token"]')
-                        ?.getAttribute("content") || "",
+                    "X-CSRF-TOKEN":
+                        document
+                            .querySelector('meta[name="csrf-token"]')
+                            ?.getAttribute("content") || "",
                 },
             })
                 .then((response) => response.json())
@@ -409,7 +503,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             Swal.fire({
                                 icon: "success",
                                 title: "Added to Cart!",
-                                text: data.message || "Product added to cart successfully.",
+                                text:
+                                    data.message ||
+                                    "Product added to cart successfully.",
                                 confirmButtonColor: primaryColor,
                                 timer: 2000,
                                 showConfirmButton: false,
@@ -422,7 +518,9 @@ document.addEventListener("DOMContentLoaded", function () {
                             Swal.fire({
                                 icon: "error",
                                 title: "Error",
-                                text: data.message || "Failed to add product to cart.",
+                                text:
+                                    data.message ||
+                                    "Failed to add product to cart.",
                                 confirmButtonColor: primaryColor,
                             });
                         }
@@ -459,9 +557,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const cartCountEl = document.getElementById("cart-count");
                 if (cartCountEl) {
                     cartCountEl.textContent = data.count || 0;
-                    cartCountEl.style.display = data.count > 0 ? "flex" : "none";
+                    cartCountEl.style.display =
+                        data.count > 0 ? "flex" : "none";
                 }
             })
-            .catch((error) => console.error("Error updating cart count:", error));
+            .catch((error) =>
+                console.error("Error updating cart count:", error)
+            );
     }
 });

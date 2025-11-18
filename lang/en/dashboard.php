@@ -231,6 +231,12 @@ return [
     'reset' => 'Reset',
     'phone' => 'Phone',
     'na' => 'N/A',
+    'invoice' => 'Invoice',
+    'view_invoice' => 'View Invoice',
+    'download_invoice' => 'Download Invoice',
+    'print_invoice' => 'Print Invoice',
+    'thank_you_for_your_order' => 'Thank you for your order!',
+    'all_rights_reserved' => 'All rights reserved.',
 
     // Users
     'users' => 'Users',

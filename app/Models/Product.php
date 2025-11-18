@@ -35,6 +35,30 @@ class Product extends Model
         return $this->hasOne(ProductImage::class)->where('is_primary', true);
     }
 
+    /**
+     * Get images for a specific color
+     *
+     * @param int|null $colorId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getImagesByColor(?int $colorId = null)
+    {
+        $query = $this->images();
+
+        if ($colorId) {
+            // Get color-specific images, or fallback to general images (color_id is null)
+            $query->where(function ($q) use ($colorId) {
+                $q->where('color_id', $colorId)
+                    ->orWhereNull('color_id');
+            });
+        } else {
+            // Get only general images (no color assigned)
+            $query->whereNull('color_id');
+        }
+
+        return $query->orderBy('is_primary', 'desc')->orderBy('order')->get();
+    }
+
     public function variants()
     {
         return $this->hasMany(ProductVariant::class);

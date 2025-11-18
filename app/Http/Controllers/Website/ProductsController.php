@@ -188,6 +188,31 @@ class ProductsController extends Controller
             ];
         })->toArray();
 
+        // Prepare color-specific images data for JavaScript
+        $colorImagesData = [];
+        foreach ($availableColors as $color) {
+            $colorImages = $product->getImagesByColor($color->id);
+            $colorImagesData[$color->id] = $colorImages->map(function ($image) {
+                $imagePath = $image->getRawOriginal('image');
+                return [
+                    'url' => $imagePath ? asset('storage/' . $imagePath) : 'https://placehold.co/400',
+                    'is_primary' => $image->is_primary,
+                    'order' => $image->order,
+                ];
+            })->toArray();
+        }
+
+        // Also get general images (no color assigned)
+        $generalImages = $product->getImagesByColor(null);
+        $colorImagesData['general'] = $generalImages->map(function ($image) {
+            $imagePath = $image->getRawOriginal('image');
+            return [
+                'url' => $imagePath ? asset('storage/' . $imagePath) : 'https://placehold.co/400',
+                'is_primary' => $image->is_primary,
+                'order' => $image->order,
+            ];
+        })->toArray();
+
         return view('website.products.details', [
             'product' => $product,
             'reviewStats' => $reviewStats,
@@ -196,6 +221,7 @@ class ProductsController extends Controller
             'availableSizes' => $availableSizes,
             'availableColors' => $availableColors,
             'variantsData' => $variantsData,
+            'colorImagesData' => $colorImagesData,
         ]);
     }
 

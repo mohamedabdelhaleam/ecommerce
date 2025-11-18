@@ -35,23 +35,32 @@ trait StatisticsTrait
         ?callable $queryCallback = null
     ): array {
         $now = now();
+        $thisMonthStart = $now->copy()->startOfMonth();
+        $lastMonthStart = $now->copy()->subMonth()->startOfMonth();
         $lastMonthEnd = $now->copy()->subMonth()->endOfMonth();
 
-        // Get current total
+        // Get current total (all records)
         $currentQuery = $modelClass::query();
         if ($queryCallback) {
             $queryCallback($currentQuery);
         }
         $total = $currentQuery->count();
 
-        // Get previous total (up to last month end)
-        $previousQuery = $modelClass::where($dateColumn, '<=', $lastMonthEnd);
+        // Get this month's count
+        $thisMonthQuery = $modelClass::where($dateColumn, '>=', $thisMonthStart);
         if ($queryCallback) {
-            $queryCallback($previousQuery);
+            $queryCallback($thisMonthQuery);
         }
-        $previous = $previousQuery->count();
+        $thisMonth = $thisMonthQuery->count();
 
-        $percentage = $this->calculatePercentage($total, $previous);
+        // Get last month's count
+        $lastMonthQuery = $modelClass::whereBetween($dateColumn, [$lastMonthStart, $lastMonthEnd]);
+        if ($queryCallback) {
+            $queryCallback($lastMonthQuery);
+        }
+        $lastMonth = $lastMonthQuery->count();
+
+        $percentage = $this->calculatePercentage($thisMonth, $lastMonth);
 
         return [
             'total' => $total,

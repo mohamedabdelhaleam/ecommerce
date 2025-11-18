@@ -6,6 +6,12 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h6 class="mb-0">{{ __('dashboard.order_details') }} - {{ $order->order_number }}</h6>
                     <div class="d-flex gap-2">
+                        <a href="{{ route('dashboard.orders.invoice', $order) }}" target="_blank" class="btn btn-info btn-sm">
+                            <i class="uil uil-file-alt"></i> {{ __('dashboard.view_invoice') }}
+                        </a>
+                        <a href="{{ route('dashboard.orders.download-invoice', $order) }}" class="btn btn-primary btn-sm">
+                            <i class="uil uil-download"></i> {{ __('dashboard.download_invoice') }}
+                        </a>
                         <form method="POST" action="{{ route('dashboard.orders.toggle-paid', $order) }}" class="d-inline">
                             @csrf
                             @method('PATCH')

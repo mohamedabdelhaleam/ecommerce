@@ -440,6 +440,7 @@
             window.productId = {{ $product->id }};
             window.primaryColor = '#42b6f0';
             window.currencySymbol = '$';
+            window.colorImagesData = @json($colorImagesData ?? []);
         </script>
         <script src="{{ asset('assets/js/product-details.js') }}"></script>
     @endpush

@@ -1,0 +1,35 @@
+/* Product Edit Page Styles */
+
+/* Step Navigation */
+.dm-steps__item {
+    cursor: pointer;
+}
+
+.step-content {
+    display: none;
+}
+
+.step-content.active {
+    display: block;
+}
+
+/* Image Preview */
+#imagePreview {
+    max-width: 200px;
+}
+
+/* Product Image Thumbnails */
+.product-image-thumbnail {
+    max-height: 100px;
+}
+
+/* Step Content Hidden State */
+#step2,
+#step3 {
+    display: none;
+}
+
+/* No Colors Message */
+#noColorsMessage {
+    display: none;
+}

@@ -19,7 +19,7 @@
                         <div class="col-lg-4 mb-4 mb-lg-0">
                             <div class="mb-3">
                                 <img src="{{ $product->image }}" alt="{{ $product->name }}" class="img-fluid rounded"
-                                    style="width: 100%; height: auto; max-height: 300px;">
+                                    style="width: 500px; height: 280px; object-fit: cover; border-radius: 6px;  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.1);">
                             </div>
                         </div>
                         <div class="col-lg-8">
@@ -91,11 +91,11 @@
                         <div class="row mt-4">
                             <div class="col-12">
                                 <h6 class="mb-3">{{ __('dashboard.additional_images') }}</h6>
-                                <div class="row">
+                                <div class="d-flex gap-2">
                                     @foreach ($product->images as $image)
-                                        <div class="col-md-2 mb-3">
+                                        <div class="mb-3">
                                             <img src="{{ asset('storage/' . $image->image) }}" alt="Product Image"
-                                                class="img-thumbnail" style="width: 100%; height: auto;">
+                                                class="img-thumbnail" style="width: 100px; height: 100px;object-fit: cover; border-radius: 6px;">
                                         </div>
                                     @endforeach
                                 </div>
@@ -104,7 +104,7 @@
                     @endif
 
                     @if ($product->variants && $product->variants->count() > 0)
-                        <div class="row mt-4">
+                        <div id="variants" class="row mt-4">
                             <div class="col-12">
                                 <h6 class="mb-3">{{ __('dashboard.product_variants') }}</h6>
                                 <div class="userDatatable global-shadow border-light-0 w-100">
@@ -113,12 +113,17 @@
                                             <thead>
                                                 <tr class="userDatatable-header">
                                                     <th>
+                                                        <span class="userDatatable-title">{{ __('dashboard.image') }}
+                                                        </span>
+                                                    </th>
+                                                    <th>
                                                         <span class="userDatatable-title">{{ __('dashboard.size') }}</span>
                                                     </th>
                                                     <th>
                                                         <span
                                                             class="userDatatable-title">{{ __('dashboard.color') }}</span>
                                                     </th>
+
                                                     <th>
                                                         <span
                                                             class="userDatatable-title">{{ __('dashboard.price') }}</span>
@@ -131,6 +136,10 @@
                                                         <span
                                                             class="userDatatable-title">{{ __('dashboard.status') }}</span>
                                                     </th>
+                                                    <th>
+                                                        <span
+                                                            class="userDatatable-title">{{ __('dashboard.actions') }}</span>
+                                                    </th>
                                                 </tr>
                                             </thead>
                                             <tbody id="variants-table-body">
@@ -141,6 +150,80 @@
                                 </div>
                             </div>
                         </div>
+                        <!-- Variant Image Modals -->
+                        @php
+                            $variantModals = [];
+                            foreach ($product->variants as $variant) {
+                                $variantImages = $variant->color_id
+                                    ? $product
+                                        ->images()
+                                        ->where('color_id', $variant->color_id)
+                                        ->orderBy('is_primary', 'desc')
+                                        ->orderBy('order')
+                                        ->get()
+                                    : $product
+                                        ->images()
+                                        ->whereNull('color_id')
+                                        ->orderBy('is_primary', 'desc')
+                                        ->orderBy('order')
+                                        ->get();
+
+                                if ($variantImages->isEmpty() && $variant->color_id) {
+                                    $variantImages = $product
+                                        ->images()
+                                        ->whereNull('color_id')
+                                        ->orderBy('is_primary', 'desc')
+                                        ->orderBy('order')
+                                        ->get();
+                                }
+
+                                if ($variantImages->count() > 1) {
+                                    $variantModals[] = [
+                                        'variant' => $variant,
+                                        'images' => $variantImages,
+                                    ];
+                                }
+                            }
+                        @endphp
+                        @foreach ($variantModals as $modalData)
+                            <div class="modal fade" id="imageModal{{ $modalData['variant']->id }}" tabindex="-1"
+                                aria-hidden="true">
+                                <div class="modal-dialog modal-lg">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title">Images for
+                                                {{ $modalData['variant']->size->name ?? 'N/A' }} -
+                                                {{ $modalData['variant']->color->name ?? 'N/A' }}</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <div class="row">
+                                                @foreach ($modalData['images'] as $img)
+                                                    @php
+                                                        $imgPath =
+                                                            $img->getRawOriginal('image') ?? ($img->image ?? null);
+                                                        $imgUrl = $imgPath
+                                                            ? asset('storage/' . $imgPath)
+                                                            : 'https://placehold.co/400';
+                                                    @endphp
+                                                    <div class="col-md-3 mb-3 position-relative">
+                                                        <div class="position-relative">
+                                                            <img src="{{ $imgUrl }}" alt="Product Image"
+                                                                class="img-thumbnail w-100"
+                                                                style="height: 150px; object-fit: cover;">
+                                                            @if (isset($img->is_primary) && $img->is_primary)
+                                                                <small class="badge bg-primary mt-1">Primary</small>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
                     @endif
                 </div>
             </div>
@@ -272,5 +355,89 @@
                 input.setAttribute('data-original-value', input.value);
             });
         })();
+
+        // Handle variant deletion
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.delete-variant-btn')) {
+                const btn = e.target.closest('.delete-variant-btn');
+                const variantId = btn.getAttribute('data-variant-id');
+                const variantInfo = btn.getAttribute('data-variant-info');
+
+                if (!variantId) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Variant ID not found.',
+                    });
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Are you sure?',
+                    text: `Do you want to delete variant: ${variantInfo}? This action cannot be undone!`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Yes, delete it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute(
+                                'content') ||
+                            document.querySelector('input[name="_token"]')?.value;
+
+                        btn.disabled = true;
+                        btn.innerHTML = '<i class="uil uil-spinner uil-spin"></i>';
+
+                        fetch(`/dashboard/products/variants/${variantId}`, {
+                                method: 'DELETE',
+                                headers: {
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'X-Requested-With': 'XMLHttpRequest',
+                                    'Accept': 'application/json',
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    // Remove the variant row from the table
+                                    const variantRow = document.getElementById(
+                                        `variant-row-${variantId}`);
+                                    if (variantRow) {
+                                        variantRow.remove();
+                                    }
+
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: 'Deleted!',
+                                        text: data.message || 'Variant deleted successfully.',
+                                        timer: 1500,
+                                        showConfirmButton: false,
+                                    });
+
+                                    // Reload the page after a short delay to update everything
+                                    setTimeout(() => {
+                                        window.location.reload();
+                                    }, 1500);
+                                } else {
+                                    throw new Error(data.message || 'Failed to delete variant');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                btn.disabled = false;
+                                btn.innerHTML = '<i class="uil uil-trash"></i>';
+
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Delete Failed',
+                                    text: error.message ||
+                                        'Failed to delete variant. Please try again.',
+                                });
+                            });
+                    }
+                });
+            }
+        });
     </script>
 @endsection

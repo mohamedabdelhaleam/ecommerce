@@ -87,4 +87,32 @@ class OrderController extends Controller
         return redirect()->route('dashboard.orders.show', $order)
             ->with('success', "Order {$order->order_number} has been {$status}.");
     }
+
+    /**
+     * Generate and download invoice for an order.
+     */
+    public function invoice(Order $order)
+    {
+        $order->load(['user', 'items.product', 'items.variant.size', 'items.variant.color']);
+
+        return view('dashboard.pages.orders.invoice', compact('order'));
+    }
+
+    /**
+     * Download invoice as PDF (if PDF library is installed).
+     */
+    public function downloadInvoice(Order $order)
+    {
+        $order->load(['user', 'items.product', 'items.variant.size', 'items.variant.color']);
+
+        // Check if dompdf is available
+        $pdfClass = 'Barryvdh\DomPDF\Facade\Pdf';
+        if (class_exists($pdfClass)) {
+            $pdf = app($pdfClass)::loadView('dashboard.pages.orders.invoice', compact('order'));
+            return $pdf->download('invoice-' . $order->order_number . '.pdf');
+        }
+
+        // Fallback: return HTML view (user can print to PDF)
+        return view('dashboard.pages.orders.invoice', compact('order'));
+    }
 }

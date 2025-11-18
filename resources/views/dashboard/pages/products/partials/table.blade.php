@@ -1,5 +1,5 @@
 @forelse ($products as $product)
-    <tr id="product-row-{{ $product->id }}">
+    <tr id="product-row-{{ $product->id }}" class="border-bottom">
         <td>
             <div class="d-flex">
                 <div class="userDatatable__imgWrapper d-flex align-items-center">

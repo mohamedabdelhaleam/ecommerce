@@ -30,6 +30,16 @@ Route::middleware('auth:admin')->group(function () {
     // Products CRUD routes
     Route::resource('products', ProductController::class);
 
+    // Multi-step product creation routes
+    Route::get('products/{product}/create/variants', [ProductController::class, 'createVariants'])
+        ->name('products.create.variants');
+    Route::post('products/{product}/store/variants', [ProductController::class, 'storeVariants'])
+        ->name('products.store.variants');
+    Route::get('products/{product}/create/images', [ProductController::class, 'createImages'])
+        ->name('products.create.images');
+    Route::get('products/{product}/complete', [ProductController::class, 'completeCreation'])
+        ->name('products.complete');
+
     // Product status toggle route
     Route::patch('products/{product}/toggle-status', [ProductController::class, 'toggleStatus'])
         ->name('products.toggle-status');
@@ -45,6 +55,18 @@ Route::middleware('auth:admin')->group(function () {
     // Product variant stock update route
     Route::patch('products/variants/{variant}/update-stock', [ProductController::class, 'updateVariantStock'])
         ->name('products.variants.update-stock');
+
+    // Product variant delete route
+    Route::delete('products/variants/{variant}', [ProductController::class, 'deleteVariant'])
+        ->name('products.variants.delete');
+
+    // Product images management routes
+    Route::post('products/{product}/images', [ProductController::class, 'storeImage'])
+        ->name('products.images.store');
+    Route::patch('products/images/{image}', [ProductController::class, 'updateImage'])
+        ->name('products.images.update');
+    Route::delete('products/images/{image}', [ProductController::class, 'deleteImage'])
+        ->name('products.images.delete');
 
     // Categories CRUD routes
     Route::resource('categories', CategoryController::class);
@@ -85,6 +107,8 @@ Route::middleware('auth:admin')->group(function () {
     // Orders routes
     Route::get('orders', [\App\Http\Controllers\Dashboard\OrderController::class, 'index'])->name('orders.index');
     Route::get('orders/{order}', [\App\Http\Controllers\Dashboard\OrderController::class, 'show'])->name('orders.show');
+    Route::get('orders/{order}/invoice', [\App\Http\Controllers\Dashboard\OrderController::class, 'invoice'])->name('orders.invoice');
+    Route::get('orders/{order}/download-invoice', [\App\Http\Controllers\Dashboard\OrderController::class, 'downloadInvoice'])->name('orders.download-invoice');
     Route::patch('orders/{order}/toggle-paid', [\App\Http\Controllers\Dashboard\OrderController::class, 'togglePaidStatus'])
         ->name('orders.toggle-paid');
 

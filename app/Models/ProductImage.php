@@ -13,6 +13,11 @@ class ProductImage extends Model
         return $this->belongsTo(Product::class);
     }
 
+    public function color()
+    {
+        return $this->belongsTo(Color::class);
+    }
+
     public function getImageAttribute($value)
     {
         return $value ? $value : 'https://placehold.co/400';
