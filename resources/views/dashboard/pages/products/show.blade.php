@@ -95,7 +95,8 @@
                                     @foreach ($product->images as $image)
                                         <div class="mb-3">
                                             <img src="{{ asset('storage/' . $image->image) }}" alt="Product Image"
-                                                class="img-thumbnail" style="width: 100px; height: 100px;object-fit: cover; border-radius: 6px;">
+                                                class="img-thumbnail"
+                                                style="width: 100px; height: 100px;object-fit: cover; border-radius: 6px;">
                                         </div>
                                     @endforeach
                                 </div>
@@ -224,6 +225,94 @@
                                 </div>
                             </div>
                         @endforeach
+                    @endif
+
+                    @if ($product->comments && $product->comments->count() > 0)
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <h6 class="mb-3">{{ __('dashboard.comments') }}</h6>
+                                <div class="card border-0 shadow-sm">
+                                    <div class="card-body pb-10">
+                                        @foreach ($product->comments as $comment)
+                                            <div class="dm-comment-box media mb-4">
+                                                <div class="dm-comment-box__author">
+                                                    <figure>
+                                                        <img src="http://45.33.34.15:8002/assets/img/author/1.jpg"
+                                                            class="bg-opacity-primary d-flex rounded-circle"
+                                                            alt="{{ $comment->user->name ?? ($comment->name ?? 'User') }}"
+                                                            style="width: 50px; height: 50px; object-fit: cover;">
+                                                    </figure>
+                                                </div>
+                                                <div class="dm-comment-box__content media-body ms-3">
+                                                    <div class="comment-content-inner cci">
+                                                        <span class="cci__author-info fw-bold">
+                                                            {{ $comment->user->name ?? ($comment->name ?? 'Anonymous') }}
+                                                            @if ($comment->rating)
+                                                                <span class="badge bg-warning text-dark ms-2">
+                                                                    {{ $comment->rating }} ⭐
+                                                                </span>
+                                                            @endif
+                                                            @if (!$comment->is_approved)
+                                                                <span class="badge bg-secondary ms-2">Pending
+                                                                    Approval</span>
+                                                            @endif
+                                                        </span>
+                                                        @if ($comment->email)
+                                                            <small
+                                                                class="text-muted d-block mb-1">{{ $comment->email }}</small>
+                                                        @endif
+                                                        <p class="cci__comment-text mt-2 mb-2">{{ $comment->comment }}</p>
+                                                        <small class="text-muted d-block mb-2">
+                                                            {{ $comment->created_at->format('Y-m-d H:i:s') }}
+                                                        </small>
+                                                        <div class="cci__comment-actions d-flex gap-2">
+                                                            <a href="#" class="btn-like text-decoration-none">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="svg replaced-svg">
+                                                                    <path
+                                                                        d="M14 9V5a3 3 0 0 0-3-3l-4 9v11h11.28a2 2 0 0 0 2-1.7l1.38-9a2 2 0 0 0-2-2.3zM7 22H4a2 2 0 0 1-2-2v-7a2 2 0 0 1 2-2h3">
+                                                                    </path>
+                                                                </svg>
+                                                                <span class="line-count">0</span>
+                                                            </a>
+                                                            <a href="#" class="btn-dislike text-decoration-none">
+                                                                <svg xmlns="http://www.w3.org/2000/svg" width="24"
+                                                                    height="24" viewBox="0 0 24 24" fill="none"
+                                                                    stroke="currentColor" stroke-width="2"
+                                                                    stroke-linecap="round" stroke-linejoin="round"
+                                                                    class="svg replaced-svg">
+                                                                    <path
+                                                                        d="M10 15v4a3 3 0 0 0 3 3l4-9V2H5.72a2 2 0 0 0-2 1.7l-1.38 9a2 2 0 0 0 2 2.3zm7-13h2.67A2.31 2.31 0 0 1 22 4v7a2.31 2.31 0 0 1-2.33 2H17">
+                                                                    </path>
+                                                                </svg>
+                                                                <span class="line-count">0</span>
+                                                            </a>
+                                                            <a href="#" class="btn-reply text-decoration-none">
+                                                                <span>Reply</span>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if (!$loop->last)
+                                                <hr>
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="alert alert-info">
+                                    <i class="uil uil-comment-alt"></i> {{ __('dashboard.no_comments_found') }}
+                                </div>
+                            </div>
+                        </div>
                     @endif
                 </div>
             </div>

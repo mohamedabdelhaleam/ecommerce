@@ -98,6 +98,8 @@ return [
     'auto_generated_if_empty' => 'Auto-generated if left empty',
     'additional_images' => 'Additional Images',
     'product_variants' => 'Product Variants',
+    'comments' => 'Comments',
+    'no_comments_found' => 'No comments found for this product.',
 
     // Categories
     'category_list' => 'Categories',

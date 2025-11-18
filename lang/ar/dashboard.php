@@ -98,6 +98,8 @@ return [
     'auto_generated_if_empty' => 'يتم إنشاؤه تلقائياً إذا تركت فارغاً',
     'additional_images' => 'الصور الإضافية',
     'product_variants' => 'متغيرات المنتج',
+    'comments' => 'التعليقات',
+    'no_comments_found' => 'لا توجد تعليقات لهذا المنتج.',
 
     // Categories
     'category_list' => 'الفئات',

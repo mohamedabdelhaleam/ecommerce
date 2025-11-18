@@ -253,6 +253,15 @@ class ProductController extends Controller
     public function show(Product $product): View
     {
         $product = $this->productRepository->findOrFail($product->id);
+        $product->load([
+            'category',
+            'images',
+            'variants.color',
+            'variants.size',
+            'comments' => function ($query) {
+                $query->with('user')->orderBy('created_at', 'desc');
+            }
+        ]);
         return view('dashboard.pages.products.show', compact('product'));
     }
 
