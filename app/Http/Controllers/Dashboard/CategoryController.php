@@ -98,7 +98,6 @@ class CategoryController extends Controller
      */
     public function edit(Category $category): View
     {
-        $category = $this->categoryRepository->findOrFail($category->id);
         return view('dashboard.pages.categories.edit', compact('category'));
     }
 
@@ -111,7 +110,6 @@ class CategoryController extends Controller
      */
     public function update(UpdateCategoryRequest $request, Category $category): RedirectResponse
     {
-        $category = $this->categoryRepository->findOrFail($category->id);
 
         $this->categoryRepository->update($category->id, $request->validated());
 
