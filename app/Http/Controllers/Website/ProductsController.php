@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Website;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreReviewRequest;
 use App\Http\Resources\ProductResource;
 use App\Models\Comment;
 use App\Repositories\CategoryRepository;
@@ -225,7 +226,7 @@ class ProductsController extends Controller
         ]);
     }
 
-    public function storeReview($id, \App\Http\Requests\StoreReviewRequest $request)
+    public function storeReview($id, StoreReviewRequest $request)
     {
         $product = $this->productRepository->findOrFail($id);
 
@@ -238,23 +239,70 @@ class ProductsController extends Controller
         }
 
         // Get authenticated user if available
-        $userId = Auth::check() ? Auth::id() : null;
+        $user = Auth::check() ? Auth::user() : null;
 
         // Create comment/review
         $comment = Comment::create([
             'product_id' => $product->id,
-            'user_id' => $userId,
-            'name' => $request->name,
-            'email' => $request->email,
+            'user_id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
             'comment' => $request->comment,
             'rating' => $request->rating,
-            'is_approved' => false, // Reviews need approval before being displayed
+            'is_approved' => true, // Reviews need approval before being displayed
         ]);
+
+        // Load user relationship
+        $comment->load('user');
+
+        // Recalculate review statistics
+        $product->load([
+            'approvedComments' => function ($query) {
+                $query->with('user')->orderBy('created_at', 'desc');
+            }
+        ]);
+
+        $approvedComments = $product->approvedComments;
+        $reviewsWithRating = $approvedComments->whereNotNull('rating');
+
+        $reviewStats = [
+            'average' => $reviewsWithRating->avg('rating') ?? 0,
+            'total' => $reviewsWithRating->count(),
+            'distribution' => [
+                5 => $reviewsWithRating->where('rating', 5)->count(),
+                4 => $reviewsWithRating->where('rating', 4)->count(),
+                3 => $reviewsWithRating->where('rating', 3)->count(),
+                2 => $reviewsWithRating->where('rating', 2)->count(),
+                1 => $reviewsWithRating->where('rating', 1)->count(),
+            ]
+        ];
+
+        // Calculate percentage for each rating
+        foreach ($reviewStats['distribution'] as $rating => $count) {
+            $reviewStats['percentages'][$rating] = $reviewStats['total'] > 0
+                ? round(($count / $reviewStats['total']) * 100, 0)
+                : 0;
+        }
+
+        // Generate review HTML
+        $reviewHtml = view('website.products.partials.review-item', [
+            'review' => $comment
+        ])->render();
 
         return response()->json([
             'success' => true,
-            'message' => 'Your review has been submitted successfully. It will be reviewed before being published.',
-            'comment' => $comment
+            'message' => 'Your review has been submitted successfully.',
+            'review' => [
+                'id' => $comment->id,
+                'name' => $comment->name ?? ($comment->user->name ?? 'Anonymous'),
+                'user_name' => $comment->user->name ?? null,
+                'comment' => $comment->comment,
+                'rating' => $comment->rating,
+                'created_at' => $comment->created_at->diffForHumans(),
+                'created_at_raw' => $comment->created_at->toIso8601String(),
+            ],
+            'reviewHtml' => $reviewHtml,
+            'reviewStats' => $reviewStats
         ]);
     }
 }

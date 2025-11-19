@@ -368,6 +368,149 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
+    // Character counter for review comment
+    const reviewComment = document.getElementById("review-comment");
+    const reviewCharCount = document.getElementById("review-char-count");
+    const maxLength = 150;
+
+    if (reviewComment && reviewCharCount) {
+        // Update counter on input
+        reviewComment.addEventListener("input", function () {
+            const currentLength = this.value.length;
+            reviewCharCount.textContent = currentLength;
+
+            // Change color when approaching limit
+            if (currentLength >= maxLength * 0.9) {
+                reviewCharCount.classList.add("text-red-500");
+                reviewCharCount.classList.remove(
+                    "text-gray-500",
+                    "dark:text-gray-400"
+                );
+            } else {
+                reviewCharCount.classList.remove("text-red-500");
+                reviewCharCount.classList.add(
+                    "text-gray-500",
+                    "dark:text-gray-400"
+                );
+            }
+        });
+
+        // Initialize counter
+        reviewCharCount.textContent = reviewComment.value.length;
+    }
+
+    // Function to update review statistics
+    function updateReviewStatistics(stats) {
+        const statsContainer = document.getElementById(
+            "review-stats-container"
+        );
+        const reviewAverage = document.getElementById("review-average");
+        const reviewStars = document.getElementById("review-stars");
+        const reviewTotalText = document.getElementById("review-total-text");
+        const reviewDistribution = document.getElementById(
+            "review-distribution"
+        );
+        const productRatingDisplay = document.getElementById(
+            "product-rating-display"
+        );
+        const productRatingStars = document.getElementById(
+            "product-rating-stars"
+        );
+        const productRatingText = document.getElementById(
+            "product-rating-text"
+        );
+
+        if (!stats || !stats.total) return;
+
+        // Show stats container if hidden
+        if (statsContainer) {
+            statsContainer.classList.remove("hidden");
+        }
+
+        // Update product rating display at the top
+        if (productRatingDisplay) {
+            productRatingDisplay.classList.remove("hidden");
+        }
+
+        if (productRatingStars) {
+            productRatingStars.innerHTML = "";
+            const average = parseFloat(stats.average);
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement("span");
+                star.className = "material-symbols-outlined";
+                if (i <= Math.floor(average)) {
+                    star.textContent = "star";
+                } else if (i - 0.5 <= average) {
+                    star.textContent = "star_half";
+                } else {
+                    star.textContent = "star_outline";
+                }
+                productRatingStars.appendChild(star);
+            }
+        }
+
+        if (productRatingText) {
+            const total = stats.total;
+            productRatingText.textContent = `${parseFloat(
+                stats.average
+            ).toFixed(1)} (${total} ${total === 1 ? "Review" : "Reviews"})`;
+        }
+
+        // Update average rating
+        if (reviewAverage) {
+            reviewAverage.textContent = parseFloat(stats.average).toFixed(1);
+        }
+
+        // Update stars display
+        if (reviewStars) {
+            reviewStars.innerHTML = "";
+            const average = parseFloat(stats.average);
+            for (let i = 1; i <= 5; i++) {
+                const star = document.createElement("span");
+                star.className = "material-symbols-outlined";
+                if (i <= Math.floor(average)) {
+                    star.textContent = "star";
+                } else if (i - 0.5 <= average) {
+                    star.textContent = "star_half";
+                } else {
+                    star.textContent = "star_outline";
+                }
+                reviewStars.appendChild(star);
+            }
+        }
+
+        // Update total text
+        if (reviewTotalText) {
+            const total = stats.total;
+            reviewTotalText.textContent = `Based on ${total} ${
+                total === 1 ? "review" : "reviews"
+            }`;
+        }
+
+        // Update distribution bars
+        if (reviewDistribution && stats.distribution) {
+            const distributionBars =
+                reviewDistribution.querySelectorAll("[data-rating]");
+            distributionBars.forEach((bar) => {
+                const rating = parseInt(bar.getAttribute("data-rating"));
+                const count = stats.distribution[rating] || 0;
+                const percentage = stats.percentages[rating] || 0;
+
+                // Update count
+                const countElement = bar.querySelector(".rating-count");
+                if (countElement) {
+                    countElement.textContent = count;
+                }
+
+                // Update progress bar
+                const progressBar = bar.querySelector(".bg-primary");
+                if (progressBar) {
+                    progressBar.style.width = percentage + "%";
+                }
+            });
+        }
+    }
+
     // Form submission
     if (reviewForm && reviewStoreUrl) {
         reviewForm.addEventListener("submit", function (e) {
@@ -406,8 +549,59 @@ document.addEventListener("DOMContentLoaded", function () {
                             title: "Thank You!",
                             text:
                                 data.message ||
-                                "Your review has been submitted successfully. It will be reviewed before being published.",
+                                "Your review has been submitted successfully.",
                         });
+
+                        // Add new review to the reviews list
+                        const reviewsList =
+                            document.getElementById("reviews-list");
+                        if (reviewsList && data.reviewHtml) {
+                            // Show reviews list if hidden
+                            reviewsList.classList.remove("hidden");
+
+                            // Create a temporary container to parse the HTML
+                            const tempDiv = document.createElement("div");
+                            tempDiv.innerHTML = data.reviewHtml.trim();
+                            const newReviewElement = tempDiv.firstElementChild;
+
+                            // Add animation class for smooth appearance
+                            newReviewElement.style.opacity = "0";
+                            newReviewElement.style.transform =
+                                "translateY(-10px)";
+
+                            // Insert at the top of the reviews list
+                            if (reviewsList.firstChild) {
+                                reviewsList.insertBefore(
+                                    newReviewElement,
+                                    reviewsList.firstChild
+                                );
+                            } else {
+                                reviewsList.appendChild(newReviewElement);
+                            }
+
+                            // Animate in
+                            setTimeout(() => {
+                                newReviewElement.style.transition =
+                                    "opacity 0.3s ease, transform 0.3s ease";
+                                newReviewElement.style.opacity = "1";
+                                newReviewElement.style.transform =
+                                    "translateY(0)";
+                            }, 10);
+
+                            // Scroll to the new review
+                            setTimeout(() => {
+                                newReviewElement.scrollIntoView({
+                                    behavior: "smooth",
+                                    block: "nearest",
+                                });
+                            }, 100);
+                        }
+
+                        // Update review statistics
+                        if (data.reviewStats) {
+                            updateReviewStatistics(data.reviewStats);
+                        }
+
                         // Reset form
                         reviewForm.reset();
                         selectedRating = 0;
@@ -421,6 +615,15 @@ document.addEventListener("DOMContentLoaded", function () {
                                 "dark:text-gray-600"
                             );
                         });
+                        // Reset character counter
+                        if (reviewCharCount) {
+                            reviewCharCount.textContent = "0";
+                            reviewCharCount.classList.remove("text-red-500");
+                            reviewCharCount.classList.add(
+                                "text-gray-500",
+                                "dark:text-gray-400"
+                            );
+                        }
                     } else {
                         showToast({
                             icon: "error",

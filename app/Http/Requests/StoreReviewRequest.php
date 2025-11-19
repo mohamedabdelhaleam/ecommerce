@@ -22,8 +22,6 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
             'rating' => 'required|integer|min:1|max:5',
             'comment' => 'required|string|min:10',
         ];
@@ -37,11 +35,6 @@ class StoreReviewRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'name.required' => 'Please enter your name.',
-            'name.max' => 'Your name cannot exceed 255 characters.',
-            'email.required' => 'Please enter your email address.',
-            'email.email' => 'Please enter a valid email address.',
-            'email.max' => 'Your email cannot exceed 255 characters.',
             'rating.required' => 'Please select a rating.',
             'rating.integer' => 'Rating must be a number.',
             'rating.min' => 'Rating must be at least 1 star.',

@@ -86,25 +86,27 @@
                             class="text-text-light dark:text-text-dark text-4xl font-black leading-tight tracking-[-0.033em]">
                             {{ $product->name }}
                         </h1>
-                        @if ($reviewStats['total'] > 0)
-                            <div class="flex items-center gap-2 mt-2">
-                                <div class="flex text-primary">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($reviewStats['average']))
-                                            <span class="material-symbols-outlined">star</span>
-                                        @elseif($i - 0.5 <= $reviewStats['average'])
-                                            <span class="material-symbols-outlined">star_half</span>
-                                        @else
-                                            <span class="material-symbols-outlined">star_outline</span>
-                                        @endif
-                                    @endfor
+                        @auth('web')
+                            <div id="product-rating-display" class="{{ $reviewStats['total'] > 0 ? '' : 'hidden' }}">
+                                <div class="flex items-center gap-2 mt-2">
+                                    <div id="product-rating-stars" class="flex text-primary">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= floor($reviewStats['average']))
+                                                <span class="material-symbols-outlined">star</span>
+                                            @elseif($i - 0.5 <= $reviewStats['average'])
+                                                <span class="material-symbols-outlined">star_half</span>
+                                            @else
+                                                <span class="material-symbols-outlined">star_outline</span>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <p id="product-rating-text" class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ number_format($reviewStats['average'], 1) }} ({{ $reviewStats['total'] }}
+                                        {{ $reviewStats['total'] == 1 ? 'Review' : 'Reviews' }})
+                                    </p>
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">
-                                    {{ number_format($reviewStats['average'], 1) }} ({{ $reviewStats['total'] }}
-                                    {{ $reviewStats['total'] == 1 ? 'Review' : 'Reviews' }})
-                                </p>
                             </div>
-                        @endif
+                        @endauth
                     </div>
                     <!-- Price -->
                     <p class="text-4xl font-bold text-text-light dark:text-text-dark" id="product-price">
@@ -240,92 +242,91 @@
                 </details>
             </div>
             <!-- Customer Reviews Section -->
+            @auth('web')
+                <div class="mt-16">
 
-            <div class="mt-16">
-
-                <h2 class="text-3xl font-bold mb-6">Customer Reviews</h2>
+                    <h2 class="text-3xl font-bold mb-6">Customer Reviews</h2>
 
 
 
-                @if ($reviewStats['total'] > 0)
-                    <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div
-                                class="flex flex-col items-center justify-center gap-2 border-r border-border-light dark:border-border-dark pr-8">
-                                <p class="text-5xl font-black text-primary">
-                                    {{ number_format($reviewStats['average'], 1) }}
-                                </p>
-                                <div class="flex text-primary">
-                                    @for ($i = 1; $i <= 5; $i++)
-                                        @if ($i <= floor($reviewStats['average']))
-                                            <span class="material-symbols-outlined">star</span>
-                                        @elseif($i - 0.5 <= $reviewStats['average'])
-                                            <span class="material-symbols-outlined">star_half</span>
-                                        @else
-                                            <span class="material-symbols-outlined">star_outline</span>
-                                        @endif
+                    <div id="review-stats-container" class="{{ $reviewStats['total'] > 0 ? '' : 'hidden' }}">
+                        <div class="bg-white dark:bg-background-dark/50 rounded-xl p-8 shadow-sm">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                                <div
+                                    class="flex flex-col items-center justify-center gap-2 border-r border-border-light dark:border-border-dark pr-8">
+                                    <p id="review-average" class="text-5xl font-black text-primary">
+                                        {{ number_format($reviewStats['average'], 1) }}
+                                    </p>
+                                    <div id="review-stars" class="flex text-primary">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            @if ($i <= floor($reviewStats['average']))
+                                                <span class="material-symbols-outlined">star</span>
+                                            @elseif($i - 0.5 <= $reviewStats['average'])
+                                                <span class="material-symbols-outlined">star_half</span>
+                                            @else
+                                                <span class="material-symbols-outlined">star_outline</span>
+                                            @endif
+                                        @endfor
+                                    </div>
+                                    <p id="review-total-text" class="text-sm text-gray-500 dark:text-gray-400">Based on
+                                        {{ $reviewStats['total'] }}
+                                        {{ $reviewStats['total'] == 1 ? 'review' : 'reviews' }}</p>
+                                </div>
+                                <div id="review-distribution" class="col-span-2 flex flex-col gap-2 text-sm">
+                                    <!-- Rating bars -->
+                                    @for ($rating = 5; $rating >= 1; $rating--)
+                                        @php
+                                            $count = $reviewStats['distribution'][$rating] ?? 0;
+                                            $percentage = $reviewStats['percentages'][$rating] ?? 0;
+                                        @endphp
+                                        <div class="flex items-center gap-2" data-rating="{{ $rating }}">
+                                            <span class="w-12">{{ $rating }} star</span>
+                                            <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                                                <div class="bg-primary h-2.5 rounded-full"
+                                                    style="width: {{ $percentage }}%">
+                                                </div>
+                                            </div>
+                                            <span class="rating-count">{{ $count }}</span>
+                                        </div>
                                     @endfor
                                 </div>
-                                <p class="text-sm text-gray-500 dark:text-gray-400">Based on {{ $reviewStats['total'] }}
-                                    {{ $reviewStats['total'] == 1 ? 'review' : 'reviews' }}</p>
-                            </div>
-                            <div class="col-span-2 flex flex-col gap-2 text-sm">
-                                <!-- Rating bars -->
-                                @for ($rating = 5; $rating >= 1; $rating--)
-                                    @php
-                                        $count = $reviewStats['distribution'][$rating] ?? 0;
-                                        $percentage = $reviewStats['percentages'][$rating] ?? 0;
-                                    @endphp
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-12">{{ $rating }} star</span>
-                                        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                                            <div class="bg-primary h-2.5 rounded-full"
-                                                style="width: {{ $percentage }}%">
-                                            </div>
-                                        </div>
-                                        <span>{{ $count }}</span>
-                                    </div>
-                                @endfor
                             </div>
                         </div>
                     </div>
                     <!-- Individual Reviews -->
-                    @if ($reviews->count() > 0)
-                        <div class="mt-8 space-y-6">
-                            @foreach ($reviews as $review)
-                                <div class="flex gap-4 border-b border-border-light dark:border-border-dark pb-6">
-                                    <div
-                                        class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
-                                        {{ strtoupper(substr($review->name ?? ($review->user->name ?? 'U'), 0, 1)) }}
-                                    </div>
-                                    <div class="flex-1">
-                                        <div class="flex items-center justify-between">
-                                            <p class="font-bold">
-                                                {{ $review->name ?? ($review->user->name ?? 'Anonymous') }}
-                                            </p>
-                                            <p class="text-sm text-gray-500 dark:text-gray-400">
-                                                {{ $review->created_at->diffForHumans() }}</p>
-                                        </div>
-                                        @if ($review->rating)
-                                            <div class="flex text-primary my-1">
-                                                @for ($i = 1; $i <= 5; $i++)
-                                                    @if ($i <= $review->rating)
-                                                        <span class="material-symbols-outlined text-base">star</span>
-                                                    @else
-                                                        <span
-                                                            class="material-symbols-outlined text-base">star_outline</span>
-                                                    @endif
-                                                @endfor
-                                            </div>
-                                        @endif
-                                        <p class="text-gray-600 dark:text-gray-300">{{ $review->comment }}</p>
-                                    </div>
+                    <div id="reviews-list" class="mt-8 space-y-6 {{ $reviews->count() > 0 ? '' : 'hidden' }}">
+                        @foreach ($reviews as $review)
+                            <div class="review-item flex gap-4 border-b border-border-light dark:border-border-dark pb-6">
+                                <div
+                                    class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold text-lg">
+                                    {{ strtoupper(substr($review->name ?? ($review->user->name ?? 'U'), 0, 1)) }}
                                 </div>
-                            @endforeach
-                        </div>
-                    @endif
-            </div>
-            @endif
+                                <div class="flex-1">
+                                    <div class="flex items-center justify-between">
+                                        <p class="font-bold">
+                                            {{ $review->name ?? ($review->user->name ?? 'Anonymous') }}
+                                        </p>
+                                        <p class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ $review->created_at->diffForHumans() }}</p>
+                                    </div>
+                                    @if ($review->rating)
+                                        <div class="flex text-primary my-1">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= $review->rating)
+                                                    <span class="material-symbols-outlined text-base">star</span>
+                                                @else
+                                                    <span class="material-symbols-outlined text-base">star_outline</span>
+                                                @endif
+                                            @endfor
+                                        </div>
+                                    @endif
+                                    <p class="text-gray-600 dark:text-gray-300">{{ $review->comment }}</p>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endauth
             <!-- Write a Review Form -->
             @auth('web')
                 <div class="dark:bg-background-dark/50 shadow-lg rounded-xl mt-4 p-8 mb-8">
@@ -333,26 +334,6 @@
                     <form id="review-form" class="space-y-4">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-
-                        <!-- Name and Email -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label for="review-name"
-                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Name
-                                    *</label>
-                                <input type="text" id="review-name" name="name" required
-                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
-                                    placeholder="Your name">
-                            </div>
-                            <div>
-                                <label for="review-email"
-                                    class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Email
-                                    *</label>
-                                <input type="email" id="review-email" name="email" required
-                                    class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary"
-                                    placeholder="your.email@example.com">
-                            </div>
-                        </div>
 
                         <!-- Rating -->
                         <div>
@@ -375,9 +356,12 @@
                             <label for="review-comment"
                                 class="block text-sm font-medium text-text-light dark:text-text-dark mb-2">Your Review
                                 *</label>
-                            <textarea id="review-comment" name="comment" rows="5" required
+                            <textarea id="review-comment" name="comment" rows="5" required maxlength="150"
                                 class="w-full px-4 py-2 border border-border-light dark:border-border-dark rounded-lg bg-white dark:bg-background-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-primary resize-none"
                                 placeholder="Share your thoughts about this product..."></textarea>
+                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 text-right">
+                                <span id="review-char-count">0</span>/150 characters
+                            </p>
                         </div>
 
                         <!-- Submit Button -->
