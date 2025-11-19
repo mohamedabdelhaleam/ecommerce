@@ -134,4 +134,12 @@ class Product extends Model
 
         return '$' . number_format($min, 2) . ' - $' . number_format($max, 2);
     }
+
+
+    public function getTotalStockAttribute()
+    {
+        return $this->variants()
+            ->where('is_active', true)
+            ->sum('stock');
+    }
 }

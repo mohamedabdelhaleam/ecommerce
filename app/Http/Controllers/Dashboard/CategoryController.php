@@ -66,7 +66,7 @@ class CategoryController extends Controller
      */
     public function store(StoreCategoryRequest $request): RedirectResponse
     {
-        $category = $this->categoryRepository->create($request->validated());
+        $this->categoryRepository->create($request->validated());
 
         return redirect()
             ->route('dashboard.categories.index')
@@ -81,8 +81,13 @@ class CategoryController extends Controller
      */
     public function show(Category $category): View
     {
-        $category = $this->categoryRepository->findOrFail($category->id);
-        return view('dashboard.pages.categories.show', compact('category'));
+        $products = $category->products()
+            ->with(['images'])
+            ->withSum('variants as total_stock', 'stock')
+            ->latest()
+            ->paginate(10);
+
+        return view('dashboard.pages.categories.show', compact('category', 'products'));
     }
 
     /**

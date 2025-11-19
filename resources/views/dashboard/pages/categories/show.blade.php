@@ -18,8 +18,7 @@
                     <div class="row">
                         <div class="col-lg-4 mb-4 mb-lg-0">
                             <div class="mb-3">
-                                <img src="{{ $category->image }}" alt="{{ $category->name }}"
-                                    class="img-fluid rounded"
+                                <img src="{{ $category->image }}" alt="{{ $category->name }}" class="img-fluid rounded"
                                     style="width: 100%; height: auto; max-height: 300px;">
                             </div>
                         </div>
@@ -88,7 +87,7 @@
                         </div>
                     </div>
 
-                    @if ($category->products && $category->products->count() > 0)
+                    @if ($products && $products->count() > 0)
                         <div class="row mt-4">
                             <div class="col-12">
                                 <h6 class="mb-3">{{ __('dashboard.products_in_category') }}</h6>
@@ -116,7 +115,7 @@
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($category->products as $product)
+                                                @foreach ($products as $product)
                                                     <tr id="product-row-{{ $product->id }}">
                                                         <td>
                                                             <div class="d-flex">
@@ -139,7 +138,7 @@
                                                         </td>
                                                         <td>
                                                             <div class="userDatatable-content">
-                                                                {{ $product->variants->sum('stock') }}
+                                                                {{ $product->total_stock ?? 0 }}
                                                             </div>
                                                         </td>
                                                         <td class="status-cell">
@@ -181,6 +180,7 @@
                                             </tbody>
                                         </table>
                                     </div>
+                                    {!! $products->links('pagination::bootstrap-4') !!}
                                 </div>
                             </div>
                         </div>
