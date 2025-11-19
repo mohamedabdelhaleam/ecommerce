@@ -27,10 +27,17 @@ if ($variantImages->isEmpty()) {
 
 $primaryImage = $variantImages->first();
 if ($primaryImage) {
-    $imagePath = $primaryImage->getRawOriginal('image') ?? ($primaryImage->image ?? null);
-    $imageUrl = $imagePath ? asset('storage/' . $imagePath) : 'https://placehold.co/100';
-} else {
-    $imageUrl = 'https://placehold.co/100';
+    // Check if it's an Eloquent model or a plain object
+            if ($primaryImage instanceof \App\Models\ProductImage) {
+                $imagePath = $primaryImage->getRawOriginal('image') ?? ($primaryImage->image ?? null);
+            } elseif (is_object($primaryImage) && isset($primaryImage->image)) {
+                $imagePath = $primaryImage->image;
+            } else {
+                $imagePath = null;
+            }
+            $imageUrl = $imagePath ? asset('storage/' . $imagePath) : 'https://placehold.co/100';
+        } else {
+            $imageUrl = 'https://placehold.co/100';
         }
 
     @endphp
