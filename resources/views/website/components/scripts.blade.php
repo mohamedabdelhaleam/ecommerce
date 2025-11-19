@@ -289,4 +289,209 @@
         setTimeout(hideLoader, 3000);
     })();
 </script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Toast Notification System -->
+<style>
+    .toast-container {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        z-index: 9999;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        pointer-events: none;
+    }
+
+    .toast {
+        background: white;
+        border-radius: 8px;
+        padding: 16px 20px;
+        min-width: 300px;
+        max-width: 400px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        pointer-events: auto;
+        animation: slideInRight 0.3s ease-out;
+        border-left: 4px solid;
+    }
+
+    .toast.dark {
+        background: #1f2937;
+        color: #f3f4f6;
+    }
+
+    .toast.success {
+        border-left-color: #10b981;
+    }
+
+    .toast.error {
+        border-left-color: #ef4444;
+    }
+
+    .toast.info {
+        border-left-color: #3b82f6;
+    }
+
+    .toast.warning {
+        border-left-color: #f59e0b;
+    }
+
+    .toast-icon {
+        font-size: 24px;
+        flex-shrink: 0;
+    }
+
+    .toast.success .toast-icon {
+        color: #10b981;
+    }
+
+    .toast.error .toast-icon {
+        color: #ef4444;
+    }
+
+    .toast.info .toast-icon {
+        color: #3b82f6;
+    }
+
+    .toast.warning .toast-icon {
+        color: #f59e0b;
+    }
+
+    .toast-content {
+        flex: 1;
+    }
+
+    .toast-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin-bottom: 4px;
+    }
+
+    .toast-message {
+        font-size: 13px;
+        color: #6b7280;
+    }
+
+    .toast.dark .toast-message {
+        color: #9ca3af;
+    }
+
+    .toast-close {
+        background: none;
+        border: none;
+        font-size: 20px;
+        cursor: pointer;
+        color: #9ca3af;
+        padding: 0;
+        width: 24px;
+        height: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .toast-close:hover {
+        color: #374151;
+    }
+
+    .toast.dark .toast-close {
+        color: #6b7280;
+    }
+
+    .toast.dark .toast-close:hover {
+        color: #d1d5db;
+    }
+
+    @keyframes slideInRight {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    @keyframes slideOutRight {
+        from {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        to {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+    }
+
+    .toast.hiding {
+        animation: slideOutRight 0.3s ease-out forwards;
+    }
+</style>
+<div id="toast-container" class="toast-container"></div>
+<script>
+    // Toast Notification System
+    function showToast(options) {
+        const {
+            icon = 'success',
+                title = '',
+                text = '',
+                timer = 3000,
+                showConfirmButton = false
+        } = options;
+
+        const container = document.getElementById('toast-container');
+        if (!container) {
+            // Create container if it doesn't exist
+            const newContainer = document.createElement('div');
+            newContainer.id = 'toast-container';
+            newContainer.className = 'toast-container';
+            document.body.appendChild(newContainer);
+        }
+
+        const toast = document.createElement('div');
+        const isDark = document.documentElement.classList.contains('dark') ||
+            document.body.classList.contains('dark');
+
+        toast.className = `toast ${icon} ${isDark ? 'dark' : ''}`;
+
+        const iconMap = {
+            success: 'check_circle',
+            error: 'error',
+            info: 'info',
+            warning: 'warning'
+        };
+
+        const iconName = iconMap[icon] || 'info';
+
+        toast.innerHTML = `
+            <span class="material-symbols-outlined toast-icon">${iconName}</span>
+            <div class="toast-content">
+                ${title ? `<div class="toast-title">${title}</div>` : ''}
+                ${text ? `<div class="toast-message">${text}</div>` : ''}
+            </div>
+            <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+        `;
+
+        container.appendChild(toast);
+
+        // Auto remove after timer
+        if (timer > 0) {
+            setTimeout(() => {
+                toast.classList.add('hiding');
+                setTimeout(() => {
+                    if (toast.parentNode) {
+                        toast.remove();
+                    }
+                }, 300);
+            }, timer);
+        }
+
+        return toast;
+    }
+</script>

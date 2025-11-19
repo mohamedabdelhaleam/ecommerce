@@ -56,9 +56,10 @@ document.addEventListener("DOMContentLoaded", function () {
             headers: {
                 "Content-Type": "application/json",
                 "X-Requested-With": "XMLHttpRequest",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    ?.getAttribute("content") || "",
+                "X-CSRF-TOKEN":
+                    document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute("content") || "",
             },
             body: JSON.stringify({ quantity: quantity }),
         })
@@ -77,28 +78,22 @@ document.addEventListener("DOMContentLoaded", function () {
                     if (subtotalEl) subtotalEl.textContent = data.subtotal;
                     if (totalEl) totalEl.textContent = data.total;
                 } else {
-                    if (typeof Swal !== "undefined") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: data.message || "Failed to update cart item.",
-                            confirmButtonColor: primaryColor,
-                        });
-                    }
+                    showToast({
+                        icon: "error",
+                        title: "Error",
+                        text: data.message || "Failed to update cart item.",
+                    });
                     // Revert input value
                     input.value = input.getAttribute("data-old-value") || 1;
                 }
             })
             .catch((error) => {
                 console.error("Error:", error);
-                if (typeof Swal !== "undefined") {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "There was an error updating the cart item.",
-                        confirmButtonColor: primaryColor,
-                    });
-                }
+                showToast({
+                    icon: "error",
+                    title: "Error",
+                    text: "There was an error updating the cart item.",
+                });
                 // Revert input value
                 input.value = input.getAttribute("data-old-value") || 1;
             })
@@ -109,26 +104,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Function to remove cart item
     function removeCartItem(key) {
-        if (typeof Swal === "undefined") {
-            if (confirm("Are you sure you want to remove this item from your cart?")) {
-                performRemove(key);
-            }
-            return;
+        if (
+            confirm("Are you sure you want to remove this item from your cart?")
+        ) {
+            performRemove(key);
         }
-
-        Swal.fire({
-            title: "Remove Item?",
-            text: "Are you sure you want to remove this item from your cart?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: primaryColor,
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, remove it!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                performRemove(key);
-            }
-        });
     }
 
     function performRemove(key) {
@@ -136,23 +116,27 @@ document.addEventListener("DOMContentLoaded", function () {
             method: "DELETE",
             headers: {
                 "X-Requested-With": "XMLHttpRequest",
-                "X-CSRF-TOKEN": document
-                    .querySelector('meta[name="csrf-token"]')
-                    ?.getAttribute("content") || "",
+                "X-CSRF-TOKEN":
+                    document
+                        .querySelector('meta[name="csrf-token"]')
+                        ?.getAttribute("content") || "",
             },
         })
             .then((response) => response.json())
             .then((data) => {
                 if (data.success) {
                     // Remove item from DOM
-                    const cartItem = document.querySelector(`.cart-item[data-key="${key}"]`);
+                    const cartItem = document.querySelector(
+                        `.cart-item[data-key="${key}"]`
+                    );
                     if (cartItem) {
                         cartItem.style.transition = "opacity 0.3s";
                         cartItem.style.opacity = "0";
                         setTimeout(() => {
                             cartItem.remove();
                             // Check if cart is empty
-                            const remainingItems = document.querySelectorAll(".cart-item");
+                            const remainingItems =
+                                document.querySelectorAll(".cart-item");
                             if (remainingItems.length === 0) {
                                 location.reload();
                             }
@@ -162,37 +146,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     // Update cart count in header
                     updateCartCount();
 
-                    if (typeof Swal !== "undefined") {
-                        Swal.fire({
-                            icon: "success",
-                            title: "Removed!",
-                            text: data.message || "Item removed from cart.",
-                            confirmButtonColor: primaryColor,
-                            timer: 1500,
-                            showConfirmButton: false,
-                        });
-                    }
+                    showToast({
+                        icon: "success",
+                        title: "Removed!",
+                        text: data.message || "Item removed from cart.",
+                        timer: 1500,
+                    });
                 } else {
-                    if (typeof Swal !== "undefined") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: data.message || "Failed to remove item from cart.",
-                            confirmButtonColor: primaryColor,
-                        });
-                    }
+                    showToast({
+                        icon: "error",
+                        title: "Error",
+                        text:
+                            data.message || "Failed to remove item from cart.",
+                    });
                 }
             })
             .catch((error) => {
                 console.error("Error:", error);
-                if (typeof Swal !== "undefined") {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: "There was an error removing the item from cart.",
-                        confirmButtonColor: primaryColor,
-                    });
-                }
+                showToast({
+                    icon: "error",
+                    title: "Error",
+                    text: "There was an error removing the item from cart.",
+                });
             });
     }
 
@@ -209,10 +184,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 const cartCountEl = document.getElementById("cart-count");
                 if (cartCountEl) {
                     cartCountEl.textContent = data.count || 0;
-                    cartCountEl.style.display = data.count > 0 ? "flex" : "none";
+                    cartCountEl.style.display =
+                        data.count > 0 ? "flex" : "none";
                 }
             })
-            .catch((error) => console.error("Error updating cart count:", error));
+            .catch((error) =>
+                console.error("Error updating cart count:", error)
+            );
     }
 });
-

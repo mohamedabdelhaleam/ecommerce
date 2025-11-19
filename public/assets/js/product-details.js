@@ -378,14 +378,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Validate rating
             if (!ratingInput.value || ratingInput.value === "0") {
-                if (typeof Swal !== "undefined") {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Rating Required",
-                        text: "Please select a rating before submitting your review.",
-                        confirmButtonColor: primaryColor,
-                    });
-                }
+                showToast({
+                    icon: "error",
+                    title: "Rating Required",
+                    text: "Please select a rating before submitting your review.",
+                });
                 return;
             }
 
@@ -404,53 +401,43 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        if (typeof Swal !== "undefined") {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Thank You!",
-                                text:
-                                    data.message ||
-                                    "Your review has been submitted successfully. It will be reviewed before being published.",
-                                confirmButtonColor: primaryColor,
-                            }).then(() => {
-                                // Reset form
-                                reviewForm.reset();
-                                selectedRating = 0;
-                                ratingInput.value = "";
-                                ratingStars.forEach((s) => {
-                                    const icon = s.querySelector("span");
-                                    icon.textContent = "star_outline";
-                                    s.classList.remove("text-primary");
-                                    s.classList.add(
-                                        "text-gray-300",
-                                        "dark:text-gray-600"
-                                    );
-                                });
-                            });
-                        }
+                        showToast({
+                            icon: "success",
+                            title: "Thank You!",
+                            text:
+                                data.message ||
+                                "Your review has been submitted successfully. It will be reviewed before being published.",
+                        });
+                        // Reset form
+                        reviewForm.reset();
+                        selectedRating = 0;
+                        ratingInput.value = "";
+                        ratingStars.forEach((s) => {
+                            const icon = s.querySelector("span");
+                            icon.textContent = "star_outline";
+                            s.classList.remove("text-primary");
+                            s.classList.add(
+                                "text-gray-300",
+                                "dark:text-gray-600"
+                            );
+                        });
                     } else {
-                        if (typeof Swal !== "undefined") {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text:
-                                    data.message ||
-                                    "There was an error submitting your review. Please try again.",
-                                confirmButtonColor: primaryColor,
-                            });
-                        }
+                        showToast({
+                            icon: "error",
+                            title: "Error",
+                            text:
+                                data.message ||
+                                "There was an error submitting your review. Please try again.",
+                        });
                     }
                 })
                 .catch((error) => {
                     console.error("Error:", error);
-                    if (typeof Swal !== "undefined") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: "There was an error submitting your review. Please try again.",
-                            confirmButtonColor: primaryColor,
-                        });
-                    }
+                    showToast({
+                        icon: "error",
+                        title: "Error",
+                        text: "There was an error submitting your review. Please try again.",
+                    });
                 })
                 .finally(() => {
                     submitBtn.disabled = false;
@@ -499,43 +486,33 @@ document.addEventListener("DOMContentLoaded", function () {
                 .then((response) => response.json())
                 .then((data) => {
                     if (data.success) {
-                        if (typeof Swal !== "undefined") {
-                            Swal.fire({
-                                icon: "success",
-                                title: "Added to Cart!",
-                                text:
-                                    data.message ||
-                                    "Product added to cart successfully.",
-                                confirmButtonColor: primaryColor,
-                                timer: 2000,
-                                showConfirmButton: false,
-                            });
-                        }
+                        showToast({
+                            icon: "success",
+                            title: "Added to Cart!",
+                            text:
+                                data.message ||
+                                "Product added to cart successfully.",
+                            timer: 2000,
+                        });
                         // Update cart count in header
                         updateCartCount();
                     } else {
-                        if (typeof Swal !== "undefined") {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text:
-                                    data.message ||
-                                    "Failed to add product to cart.",
-                                confirmButtonColor: primaryColor,
-                            });
-                        }
+                        showToast({
+                            icon: "error",
+                            title: "Error",
+                            text:
+                                data.message ||
+                                "Failed to add product to cart.",
+                        });
                     }
                 })
                 .catch((error) => {
                     console.error("Error:", error);
-                    if (typeof Swal !== "undefined") {
-                        Swal.fire({
-                            icon: "error",
-                            title: "Error",
-                            text: "There was an error adding the product to cart.",
-                            confirmButtonColor: primaryColor,
-                        });
-                    }
+                    showToast({
+                        icon: "error",
+                        title: "Error",
+                        text: "There was an error adding the product to cart.",
+                    });
                 })
                 .finally(() => {
                     addToCartBtn.disabled = false;
@@ -565,4 +542,112 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.error("Error updating cart count:", error)
             );
     }
+
+    // Initialize Add to Cart functionality for product cards (related products)
+    function initProductCardAddToCart() {
+        const addToCartButtons = document.querySelectorAll(".add-to-cart-btn");
+        const addToCartUrl = window.addToCartUrl || "/cart/add";
+        const cartCountUrl = window.cartCountUrl || "/cart/count";
+
+        addToCartButtons.forEach((btn) => {
+            // Skip if already has listener (check by data attribute)
+            if (btn.hasAttribute("data-listener-attached")) {
+                return;
+            }
+            btn.setAttribute("data-listener-attached", "true");
+
+            btn.addEventListener("click", function (e) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const productId = this.getAttribute("data-product-id");
+                const productUrl = this.getAttribute("data-product-url");
+                const variantId = this.getAttribute("data-variant-id");
+
+                if (!productId) {
+                    console.error("Product ID not found");
+                    return;
+                }
+
+                // Disable button
+                const originalText = this.textContent;
+                this.disabled = true;
+                this.textContent = "Adding...";
+
+                // Prepare form data
+                const formData = new FormData();
+                formData.append("product_id", productId);
+                formData.append("quantity", 1);
+                if (variantId) {
+                    formData.append("variant_id", variantId);
+                }
+
+                // Submit via AJAX
+                fetch(addToCartUrl, {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        "X-Requested-With": "XMLHttpRequest",
+                        "X-CSRF-TOKEN":
+                            document
+                                .querySelector('meta[name="csrf-token"]')
+                                ?.getAttribute("content") || "",
+                    },
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data.success) {
+                            showToast({
+                                icon: "success",
+                                title: "Added to Cart!",
+                                text:
+                                    data.message ||
+                                    "Product added to cart successfully.",
+                                timer: 2000,
+                            });
+                            // Update cart count in header
+                            updateCartCount();
+                        } else {
+                            showToast({
+                                icon: "error",
+                                title: "Error",
+                                text:
+                                    data.message ||
+                                    "Failed to add product to cart.",
+                            });
+                        }
+                    })
+                    .catch((error) => {
+                        console.error("Error:", error);
+                        showToast({
+                            icon: "error",
+                            title: "Error",
+                            text: "There was an error adding the product to cart.",
+                        });
+                    })
+                    .finally(() => {
+                        this.disabled = false;
+                        this.textContent = originalText;
+                    });
+            });
+        });
+    }
+
+    // Initialize product card add to cart on page load
+    initProductCardAddToCart();
+
+    // Re-initialize when new product cards are added (e.g., after color change)
+    const observer = new MutationObserver(function (mutations) {
+        mutations.forEach(function (mutation) {
+            if (mutation.addedNodes.length) {
+                initProductCardAddToCart();
+            }
+        });
+    });
+
+    // Observe the document body for changes
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
 });

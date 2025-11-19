@@ -24,14 +24,18 @@ class ProductResource extends JsonResource
         $minPrice = $this->min_price;
         $maxPrice = $this->max_price;
 
-        // Format price display
+        // Get variant with minimum price from loaded variants
+        $minPriceVariant = $this->variants
+            ->where('is_active', true)
+            ->whereNotNull('price')
+            ->sortBy('price')
+            ->first();
+        $minPriceVariantId = $minPriceVariant ? $minPriceVariant->id : null;
+
+        // Format price display - always show minimum price
         $priceDisplay = 'N/A';
-        if ($minPrice && $maxPrice) {
-            if ($minPrice == $maxPrice) {
-                $priceDisplay = '$' . number_format($minPrice, 2);
-            } else {
-                $priceDisplay = '$' . number_format($minPrice, 2) . ' - $' . number_format($maxPrice, 2);
-            }
+        if ($minPrice) {
+            $priceDisplay = '$' . number_format($minPrice, 2);
         }
 
         // Check if product is new (less than 30 days old)
@@ -51,6 +55,7 @@ class ProductResource extends JsonResource
                 'max' => $maxPrice,
                 'display' => $priceDisplay,
             ],
+            'min_price_variant_id' => $minPriceVariantId,
             'is_new' => $isNew,
             'url' => route('products.show', $this->id),
             'created_at' => $this->created_at,

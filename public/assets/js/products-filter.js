@@ -339,43 +339,33 @@ document.addEventListener("DOMContentLoaded", function () {
                     .then((response) => response.json())
                     .then((data) => {
                         if (data.success) {
-                            if (typeof Swal !== "undefined") {
-                                Swal.fire({
-                                    icon: "success",
-                                    title: "Added to Cart!",
-                                    text:
-                                        data.message ||
-                                        "Product added to cart successfully.",
-                                    confirmButtonColor: primaryColor,
-                                    timer: 2000,
-                                    showConfirmButton: false,
-                                });
-                            }
+                            showToast({
+                                icon: "success",
+                                title: "Added to Cart!",
+                                text:
+                                    data.message ||
+                                    "Product added to cart successfully.",
+                                timer: 2000,
+                            });
                             // Update cart count in header
                             updateCartCount();
                         } else {
-                            if (typeof Swal !== "undefined") {
-                                Swal.fire({
-                                    icon: "error",
-                                    title: "Error",
-                                    text:
-                                        data.message ||
-                                        "Failed to add product to cart.",
-                                    confirmButtonColor: primaryColor,
-                                });
-                            }
+                            showToast({
+                                icon: "error",
+                                title: "Error",
+                                text:
+                                    data.message ||
+                                    "Failed to add product to cart.",
+                            });
                         }
                     })
                     .catch((error) => {
                         console.error("Error:", error);
-                        if (typeof Swal !== "undefined") {
-                            Swal.fire({
-                                icon: "error",
-                                title: "Error",
-                                text: "There was an error adding the product to cart.",
-                                confirmButtonColor: primaryColor,
-                            });
-                        }
+                        showToast({
+                            icon: "error",
+                            title: "Error",
+                            text: "There was an error adding the product to cart.",
+                        });
                     })
                     .finally(() => {
                         this.disabled = false;

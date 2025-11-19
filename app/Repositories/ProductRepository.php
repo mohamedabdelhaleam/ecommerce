@@ -26,7 +26,8 @@ class ProductRepository implements ProductRepositoryInterface
                 $query->select('id', 'name_ar', 'name_en');
             },
             'variants' => function ($query) {
-                $query->select('id', 'product_id', 'price', 'stock', 'is_active');
+                $query->select('id', 'product_id', 'price', 'stock', 'is_active')
+                    ->where('is_active', true);
             },
             'images' => function ($query) {
                 $query->select('id', 'product_id', 'image', 'is_primary', 'order')

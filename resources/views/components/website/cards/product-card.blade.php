@@ -11,6 +11,24 @@
             $product->price = (object) $product->price;
         }
     }
+
+    // Format price - always show minimum price
+    $priceDisplay = 'N/A';
+    if (isset($product->price)) {
+        if (is_object($product->price)) {
+            if (isset($product->price->min)) {
+                $priceDisplay = '$' . number_format($product->price->min, 2);
+            } elseif (isset($product->price->display)) {
+                // Extract min price from display if needed
+                $priceDisplay = $product->price->display;
+            }
+        } elseif (is_numeric($product->price)) {
+            $priceDisplay = '$' . number_format($product->price, 2);
+        }
+    }
+
+    // Get minimum price variant ID
+    $minPriceVariantId = $product->min_price_variant_id ?? null;
 @endphp
 <div
     class="group relative overflow-hidden rounded-xl bg-white dark:bg-background-dark/50 shadow-sm hover:shadow-xl transition-all duration-300 border border-stone-200 dark:border-stone-800">
@@ -30,14 +48,15 @@
             <a href="{{ $product->url ?? '#' }}">{{ $product->name ?? 'Product Name' }}</a>
         </h3>
         <p class="font-bold text-primary mt-2">
-            {{ $product->price->display ?? 'N/A' }}
+            {{ $priceDisplay }}
         </p>
     </div>
     <div
         class="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-white dark:from-background-dark/80 to-transparent opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300">
         <button type="button"
             class="add-to-cart-btn w-full bg-primary text-white font-bold py-2.5 rounded-lg text-sm transition-transform hover:scale-105"
-            data-product-id="{{ $product->id ?? '' }}" data-product-url="{{ $product->url ?? '#' }}">
+            data-product-id="{{ $product->id ?? '' }}" data-product-url="{{ $product->url ?? '#' }}"
+            data-variant-id="{{ $minPriceVariantId ?? '' }}">
             Add to Cart
         </button>
     </div>
