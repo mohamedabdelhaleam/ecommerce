@@ -12,11 +12,15 @@ class HomeController extends Controller
     public function __invoke()
     {
         $categories = Category::active()->get();
-        $products = Product::active()->latest()->take(4)->get();
+        $products = Product::active()
+            ->with(['category', 'variants', 'images'])
+            ->latest()
+            ->take(4)
+            ->get();
         $reviews = Comment::approved()
             ->withRating()
             ->latest()
-            ->take(3)
+            ->take(6)
             ->get();
         return view('website.home.index', compact('categories', 'products', 'reviews'));
     }

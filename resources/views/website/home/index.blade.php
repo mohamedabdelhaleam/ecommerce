@@ -84,13 +84,13 @@
                 <h2
                     class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5">
                     Featured Products</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                    {{-- <x-website.cards.product
-                        image="https://lh3.googleusercontent.com/aida-public/AB6AXuC3XNpSQQDRk_p0dm0URGo7-6SR8BSD10AX0mRWVTY0mjcUmvkB0ina_fXUPzBSIfwWf2K7uThYOzZYhYlD3Sy7GVcxzBwIVMq1xZn9KYnx4_Z2HmRWEK_WeP40e8rCnDbVXSiWY0cR4lj8e0FrM3doraAWNR4eSnGr7CYy619v3s4JcJtfGTS8-GSplV8TvVKiX6-896zUm-Z1dHtXcELXRgi-AoEtdTVzBomi8lgXsykMpJ2KVLcpYvT75mXvAnNqEmsPiBlPjPU"
-                        title="Plush Teddy Bear" price="19.99" rating="5" data-stagger-item /> --}}
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 px-4">
                     @foreach ($products as $product)
-                        <x-website.cards.product image="{{ $product->image }}" title="{{ $product->name_en }}"
-                            price="19.99" rating="{{ rand(1, 5) }}" data-stagger-item />
+                        @php
+                            $productData = new \App\Http\Resources\ProductResource($product);
+                            $productArray = $productData->toArray(request());
+                        @endphp
+                        <x-website.cards.product-card :product="$productArray" />
                     @endforeach
                 </div>
             </section>
@@ -120,26 +120,45 @@
         </section>
         {{-- End Our Story Section --}}
         {{-- Start Customer Reviews Section --}}
-        <section data-animate="fade-in">
+        <section data-animate="fade-in" class="relative">
             <h2
                 class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5 text-center">
                 What Our Customers Say</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
-                @forelse ($reviews as $review)
-                    @php
-                        // Generate avatar URL based on name
-                        $avatarUrl =
-                            'https://ui-avatars.com/api/?name=' .
-                            urlencode($review->name) .
-                            '&background=random&color=fff&size=128';
-                    @endphp
-                    <x-website.cards.review image="{{ $avatarUrl }}" name="{{ $review->name }}"
-                        rating="{{ $review->rating }}" review="{{ $review->comment }}" data-stagger-item />
-                @empty
-                    <div class="col-span-full text-center text-brand-charcoal/60 dark:text-gray-400 py-8">
-                        <p>No reviews yet. Be the first to review!</p>
+            <div class="relative overflow-hidden">
+                <div class="reviews-slider-container px-4" id="reviews-slider-container">
+                    <div class="reviews-slider flex gap-8 transition-transform duration-500 ease-in-out" id="reviews-slider"
+                        style="will-change: transform;">
+                        @forelse ($reviews as $review)
+                            @php
+                                // Generate avatar URL based on name
+                                $avatarUrl =
+                                    'https://ui-avatars.com/api/?name=' .
+                                    urlencode($review->name) .
+                                    '&background=random&color=fff&size=128';
+                            @endphp
+                            <div class="review-slide flex-shrink-0" style="width: calc((100% - 48px) / 1);">
+                                <x-website.cards.review image="{{ $avatarUrl }}" name="{{ $review->name }}"
+                                    rating="{{ $review->rating }}" review="{{ $review->comment }}" />
+                            </div>
+                        @empty
+                            <div class="w-full text-center text-brand-charcoal/60 dark:text-gray-400 py-8">
+                                <p>No reviews yet. Be the first to review!</p>
+                            </div>
+                        @endforelse
                     </div>
-                @endforelse
+                </div>
+                @if ($reviews->count() > 3)
+                    <button
+                        class="reviews-slider-btn reviews-slider-prev absolute left-4 top-1/2 -translate-y-1/2 bg-white dark:bg-background-dark/80 rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow z-10 opacity-50 pointer-events-none"
+                        id="reviews-prev">
+                        <span class="material-symbols-outlined text-brand-charcoal dark:text-white">chevron_left</span>
+                    </button>
+                    <button
+                        class="reviews-slider-btn reviews-slider-next absolute right-4 top-1/2 -translate-y-1/2 bg-white dark:bg-background-dark/80 rounded-full p-3 shadow-lg hover:shadow-xl transition-shadow z-10"
+                        id="reviews-next">
+                        <span class="material-symbols-outlined text-brand-charcoal dark:text-white">chevron_right</span>
+                    </button>
+                @endif
             </div>
         </section>
         {{-- End Customer Reviews Section --}}
@@ -163,3 +182,254 @@
         {{-- End Newsletter Section --}}
     </main>
 @endsection
+
+@push('scripts')
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Reviews Slider
+            const reviewsSlider = document.getElementById('reviews-slider');
+            const reviewsSliderContainer = document.getElementById('reviews-slider-container');
+            const reviewsPrev = document.getElementById('reviews-prev');
+            const reviewsNext = document.getElementById('reviews-next');
+
+            if (reviewsSlider && reviewsSliderContainer) {
+                let currentSlide = 0;
+                const slides = reviewsSlider.querySelectorAll('.review-slide');
+                const totalSlides = slides.length;
+                let slidesPerView = 1;
+                let autoSlideInterval = null;
+
+                // Determine slides per view based on screen size
+                function updateSlidesPerView() {
+                    const width = window.innerWidth;
+                    if (width >= 1024) {
+                        slidesPerView = 3;
+                    } else if (width >= 768) {
+                        slidesPerView = 2;
+                    } else {
+                        slidesPerView = 1;
+                    }
+
+                    // Update slide widths
+                    const containerWidth = reviewsSliderContainer.offsetWidth;
+                    const gap = 32; // gap-8 = 2rem = 32px
+                    const slideWidth = (containerWidth - (gap * (slidesPerView - 1))) / slidesPerView;
+
+                    slides.forEach(slide => {
+                        slide.style.width = `${slideWidth}px`;
+                    });
+                }
+
+                function updateSlider() {
+                    if (slides.length === 0) return;
+
+                    const maxSlide = Math.max(0, totalSlides - slidesPerView);
+                    currentSlide = Math.min(currentSlide, maxSlide);
+                    currentSlide = Math.max(0, currentSlide);
+
+                    // Calculate translateX based on slide width and gap
+                    const containerWidth = reviewsSliderContainer.offsetWidth;
+                    const gap = 32;
+                    const slideWidth = (containerWidth - (gap * (slidesPerView - 1))) / slidesPerView;
+                    const translateX = -(currentSlide * (slideWidth + gap));
+
+                    reviewsSlider.style.transform = `translateX(${translateX}px)`;
+
+                    // Update button states
+                    if (reviewsPrev) {
+                        const isDisabled = currentSlide === 0;
+                        reviewsPrev.style.opacity = isDisabled ? '0.5' : '1';
+                        reviewsPrev.style.pointerEvents = isDisabled ? 'none' : 'auto';
+                        reviewsPrev.disabled = isDisabled;
+                    }
+                    if (reviewsNext) {
+                        const isDisabled = currentSlide >= maxSlide;
+                        reviewsNext.style.opacity = isDisabled ? '0.5' : '1';
+                        reviewsNext.style.pointerEvents = isDisabled ? 'none' : 'auto';
+                        reviewsNext.disabled = isDisabled;
+                    }
+                }
+
+                function startAutoSlide() {
+                    if (autoSlideInterval) {
+                        clearInterval(autoSlideInterval);
+                    }
+                    autoSlideInterval = setInterval(function() {
+                        const maxSlide = Math.max(0, totalSlides - slidesPerView);
+                        if (currentSlide < maxSlide) {
+                            currentSlide++;
+                        } else {
+                            currentSlide = 0;
+                        }
+                        updateSlider();
+                    }, 5000);
+                }
+
+                // Initialize
+                updateSlidesPerView();
+                updateSlider();
+                startAutoSlide();
+
+                // Handle resize
+                let resizeTimeout;
+                window.addEventListener('resize', function() {
+                    clearTimeout(resizeTimeout);
+                    resizeTimeout = setTimeout(function() {
+                        updateSlidesPerView();
+                        updateSlider();
+                    }, 250);
+                });
+
+                // Navigation buttons
+                if (reviewsPrev) {
+                    reviewsPrev.addEventListener('click', function() {
+                        if (currentSlide > 0) {
+                            currentSlide--;
+                            updateSlider();
+                            startAutoSlide();
+                        }
+                    });
+                }
+
+                if (reviewsNext) {
+                    reviewsNext.addEventListener('click', function() {
+                        const maxSlide = Math.max(0, totalSlides - slidesPerView);
+                        if (currentSlide < maxSlide) {
+                            currentSlide++;
+                            updateSlider();
+                            startAutoSlide();
+                        }
+                    });
+                }
+
+                // Pause on hover
+                if (reviewsSliderContainer) {
+                    reviewsSliderContainer.addEventListener('mouseenter', function() {
+                        if (autoSlideInterval) {
+                            clearInterval(autoSlideInterval);
+                        }
+                    });
+                    reviewsSliderContainer.addEventListener('mouseleave', function() {
+                        startAutoSlide();
+                    });
+                }
+            }
+
+            // Add to Cart functionality for home page products
+            function initHomeAddToCart() {
+                const addToCartButtons = document.querySelectorAll('.add-to-cart-btn');
+                const addToCartUrl = '{{ route('cart.add') }}';
+                const cartCountUrl = '{{ route('cart.count') }}';
+
+                addToCartButtons.forEach((btn) => {
+                    if (btn.hasAttribute("data-listener-attached")) {
+                        return;
+                    }
+                    btn.setAttribute("data-listener-attached", "true");
+
+                    btn.addEventListener("click", function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        const productId = this.getAttribute("data-product-id");
+                        const variantId = this.getAttribute("data-variant-id");
+
+                        if (!productId) {
+                            console.error("Product ID not found");
+                            return;
+                        }
+
+                        const originalText = this.textContent;
+                        this.disabled = true;
+                        this.textContent = "Adding...";
+
+                        const formData = new FormData();
+                        formData.append("product_id", productId);
+                        formData.append("quantity", 1);
+                        if (variantId) {
+                            formData.append("variant_id", variantId);
+                        }
+
+                        fetch(addToCartUrl, {
+                                method: "POST",
+                                body: formData,
+                                headers: {
+                                    "X-Requested-With": "XMLHttpRequest",
+                                    "X-CSRF-TOKEN": document
+                                        .querySelector('meta[name="csrf-token"]')
+                                        ?.getAttribute("content") || "",
+                                },
+                            })
+                            .then((response) => response.json())
+                            .then((data) => {
+                                if (data.success) {
+                                    showToast({
+                                        icon: "success",
+                                        title: "Added to Cart!",
+                                        text: data.message ||
+                                            "Product added to cart successfully.",
+                                        timer: 2000,
+                                    });
+                                    updateCartCount();
+                                } else {
+                                    showToast({
+                                        icon: "error",
+                                        title: "Error",
+                                        text: data.message ||
+                                            "Failed to add product to cart.",
+                                    });
+                                }
+                            })
+                            .catch((error) => {
+                                console.error("Error:", error);
+                                showToast({
+                                    icon: "error",
+                                    title: "Error",
+                                    text: "There was an error adding the product to cart.",
+                                });
+                            })
+                            .finally(() => {
+                                this.disabled = false;
+                                this.textContent = originalText;
+                            });
+                    });
+                });
+            }
+
+            function updateCartCount() {
+                fetch('{{ route('cart.count') }}', {
+                        method: "GET",
+                        headers: {
+                            "X-Requested-With": "XMLHttpRequest",
+                        },
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        const cartCountEl = document.getElementById("cart-count");
+                        if (cartCountEl) {
+                            cartCountEl.textContent = data.count || 0;
+                            cartCountEl.style.display = data.count > 0 ? "flex" : "none";
+                        }
+                    })
+                    .catch((error) => console.error("Error updating cart count:", error));
+            }
+
+            // Initialize add to cart
+            initHomeAddToCart();
+
+            // Re-initialize when new product cards are added
+            const observer = new MutationObserver(function(mutations) {
+                mutations.forEach(function(mutation) {
+                    if (mutation.addedNodes.length) {
+                        initHomeAddToCart();
+                    }
+                });
+            });
+
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+            });
+        });
+    </script>
+@endpush
