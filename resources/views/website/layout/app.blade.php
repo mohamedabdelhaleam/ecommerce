@@ -10,7 +10,7 @@
     @include('website.components.styles')
 </head>
 
-<body class="font-display bg-brand-offwhite dark:bg-background-dark text-brand-charcoal dark:text-gray-200">
+<body class="font-display bg-white dark:bg-background-dark text-brand-charcoal dark:text-gray-200">
     <!-- Page Loader -->
     <div id="page-loader">
         <div class="loader-content">

@@ -1,7 +1,7 @@
 @props(['image', 'name', 'rating', 'review'])
 <div class="bg-white dark:bg-background-dark/50 rounded-xl p-6 shadow-sm border border-gray-200 dark:border-gray-800">
     <div class="flex items-center gap-4 mb-4">
-        <div class="w-12 h-12 rounded-full bg-cover bg-center" data-alt="Avatar of a smiling young girl with pigtails."
+        <div class="w-12 h-12 rounded-full bg-cover bg-center" data-alt="Customer avatar"
             style="background-image: url('{{ e($image) }}');">
         </div>
         <div>
@@ -14,5 +14,5 @@
             </div>
         </div>
     </div>
-    <p class="text-brand-charcoal/80 dark:text-gray-300 text-sm">"{{ $review }}"</p>
+    <p class="text-brand-charcoal/80 dark:text-gray-300 text-sm">"{{ Str::limit($review, 200) }}"</p>
 </div>

@@ -11,8 +11,8 @@
                 </div>
                 <h2 class="text-lg font-bold">LittleJoy</h2>
             </div>
-            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Bringing smiles to little faces, one joyful product
-                at a time.</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mt-2">Your trusted source for quality products and
+                exceptional service.</p>
         </div>
         <div>
             <h4 class="font-bold text-brand-charcoal dark:text-white mb-3">Shop</h4>

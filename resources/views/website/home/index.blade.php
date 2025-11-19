@@ -8,15 +8,15 @@
         <div class="@container mt-8">
             <div class="@[480px]:p-4">
                 <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-4"
-                    data-alt="Happy children playing with colorful toys in a bright, sunlit room."
+                    data-alt="Modern ecommerce store showcasing quality products."
                     style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.3) 100%), url("https://placehold.co/1920x900?text=Hello+World");'>
                     <div class="flex flex-col gap-3 text-center">
                         <h1
                             class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em] text-shadow-lg">
-                            Where Every Little Smile Begins
+                            Your One-Stop Shop for Quality Products
                         </h1>
                         <h2 class="text-white text-base font-normal leading-normal @[480px]:text-lg max-w-2xl mx-auto">
-                            Discover thoughtfully curated toys, clothes, and books that inspire joy and wonder.
+                            Discover our carefully selected collection of premium products at unbeatable prices.
                         </h2>
                     </div>
                     <div class="flex-wrap gap-4 flex justify-center">
@@ -64,20 +64,6 @@
                             <span
                                 class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none">expand_more</span>
                         </div>
-                        <div class="flex items-center gap-2">
-                            <button
-                                class="px-4 py-2 text-sm font-medium bg-brand-blue/50 text-brand-charcoal rounded-lg">0-1
-                                yrs</button>
-                            <button
-                                class="px-4 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 text-brand-charcoal dark:text-gray-300 rounded-lg">2-4
-                                yrs</button>
-                            <button
-                                class="px-4 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 text-brand-charcoal dark:text-gray-300 rounded-lg">5-7
-                                yrs</button>
-                            <button
-                                class="px-4 py-2 text-sm font-medium bg-gray-200 dark:bg-gray-700 text-brand-charcoal dark:text-gray-300 rounded-lg">8+
-                                yrs</button>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -116,26 +102,28 @@
             data-animate="scale">
             <div class="w-full md:w-1/2">
                 <img class="rounded-xl w-full h-auto object-cover aspect-video"
-                    data-alt="A charming illustration of children playing under a large, leafy tree."
+                    data-alt="Quality products displayed in a modern setting."
                     src="https://placehold.co/600x400?text=Hello+World" />
             </div>
             <div class="w-full md:w-1/2 text-center md:text-left">
-                <h2 class="text-3xl font-bold text-brand-charcoal dark:text-white mb-4">Crafted with Love, Designed for Joy
+                <h2 class="text-3xl font-bold text-brand-charcoal dark:text-white mb-4">Quality Products, Exceptional
+                    Service
                 </h2>
-                <p class="text-brand-charcoal/80 dark:text-gray-300 mb-6">Our mission is simple: to bring joy to families.
-                    We carefully select every item for its quality, safety, and ability to spark imagination. From the
-                    softest fabrics to the most engaging toys, we believe in products that create lasting memories.</p>
+                <p class="text-brand-charcoal/80 dark:text-gray-300 mb-6">Our mission is to provide you with the best
+                    products at competitive prices. We carefully curate our collection, ensuring every item meets our high
+                    standards for quality and value. From premium materials to exceptional customer service, we're committed
+                    to your satisfaction.</p>
                 <button
-                    class="bg-white dark:bg-background-dark/80 text-brand-charcoal dark:text-white font-bold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">Discover
-                    Our Story</button>
+                    class="bg-white dark:bg-background-dark/80 text-brand-charcoal dark:text-white font-bold py-3 px-6 rounded-xl shadow-md hover:shadow-lg transition-shadow">Learn
+                    More</button>
             </div>
         </section>
         {{-- End Our Story Section --}}
-        {{-- Start Loved by Parents & Kids Alike Section --}}
+        {{-- Start Customer Reviews Section --}}
         <section data-animate="fade-in">
             <h2
                 class="text-brand-charcoal dark:text-white text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5 text-center">
-                Loved by Parents &amp; Kids Alike</h2>
+                What Our Customers Say</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4">
                 @forelse ($reviews as $review)
                     @php
@@ -154,12 +142,12 @@
                 @endforelse
             </div>
         </section>
-        {{-- End Loved by Parents & Kids Alike Section --}}
-        {{-- Start Join the LittleJoy Family Section --}}
+        {{-- End Customer Reviews Section --}}
+        {{-- Start Newsletter Section --}}
         <section class="bg-brand-blue/30 dark:bg-primary/10 rounded-xl p-8 sm:p-12 text-center" data-animate="fade-in">
-            <h2 class="text-3xl font-bold text-brand-charcoal dark:text-white mb-2">Join the LittleJoy Family!</h2>
-            <p class="text-brand-charcoal/80 dark:text-gray-300 mb-6 max-w-lg mx-auto">Get exclusive offers, parenting
-                tips, and a sprinkle of fun delivered to your inbox.</p>
+            <h2 class="text-3xl font-bold text-brand-charcoal dark:text-white mb-2">Subscribe to Our Newsletter</h2>
+            <p class="text-brand-charcoal/80 dark:text-gray-300 mb-6 max-w-lg mx-auto">Get exclusive offers, new product
+                updates, and special promotions delivered to your inbox.</p>
             <form class="flex flex-col sm:flex-row items-center justify-center max-w-md mx-auto gap-3">
                 <input
                     class="form-input w-full px-4 py-3 rounded-xl border-gray-300 dark:border-gray-700 dark:bg-background-dark focus:ring-primary focus:border-primary"
@@ -172,6 +160,6 @@
                 </button>
             </form>
         </section>
-        {{-- End Join the LittleJoy Family Section --}}
+        {{-- End Newsletter Section --}}
     </main>
 @endsection

@@ -14,7 +14,7 @@
             </div>
             <!-- PageHeading -->
             <div class="flex flex-wrap justify-between gap-3 mb-8">
-                <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tighter">All Our Magical Toys</h1>
+                <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tighter">All Products</h1>
             </div>
             <div class="flex flex-col lg:flex-row gap-8 lg:gap-12">
                 <!-- Sticky Filter & Sort Sidebar -->
@@ -22,7 +22,7 @@
                     <div class="flex flex-col">
                         <div class="flex flex-col mb-6">
                             <h2 class="text-xl font-bold">Filter &amp; Sort</h2>
-                            <p class="text-sm text-text-light/70 dark:text-text-dark/70">Find the perfect gift</p>
+                            <p class="text-sm text-text-light/70 dark:text-text-dark/70">Find what you're looking for</p>
                         </div>
                         <div class="flex flex-col space-y-4">
                             <!-- Sort Dropdown -->

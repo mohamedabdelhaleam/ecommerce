@@ -8,17 +8,17 @@
             {{-- Start Hero Section --}}
             <div class="@container px-0 sm:px-4">
                 <div class="flex min-h-[480px] flex-col gap-6 bg-cover bg-center bg-no-repeat @[480px]:gap-8 @[480px]:rounded-xl items-center justify-center p-6 text-center"
-                    data-alt="Happy children playing with wooden toys in a sunlit room"
+                    data-alt="Modern ecommerce platform showcasing quality products"
                     style='background-image: linear-gradient(rgba(0, 0, 0, 0.1) 0%, rgba(0, 0, 0, 0.4) 100%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuA1w4iGa2zzCjhCUPzZ1PWj0__7d8l4NpqfcsiENSKthMs78YJqgtNxwD2FWbYQaUmiJf_L7drj3bAmRmq03L1M7ZHPEk0o_9DbuAPbS-ML4g2oyfzDWSJI8X7xU_a_ZfOBC0DJgf27PgWIPUN3bT0KPOjiGu30rVgGCwjTe0tkXLoi8jdmTf-bdXsTcsqCWpg7ocFGHT4fcdSGnHA4PvHFeplbPdfFnPy58DF_d7REA3aXbQxi6mnHm6tik0opLjZAXJD0Wf0nyLI");'>
                     <div class="flex flex-col gap-2">
                         <h1
                             class="text-white text-4xl font-black leading-tight tracking-[-0.033em] @[480px]:text-5xl @[480px]:font-black @[480px]:leading-tight @[480px]:tracking-[-0.033em]">
-                            Our Story: Crafted with Love for Little Ones
+                            Our Story
                         </h1>
                         <h2
                             class="text-white/90 text-sm font-normal leading-normal @[480px]:text-base @[480px]:font-normal @[480px]:leading-normal max-w-2xl mx-auto">
-                            We believe in creating magical moments for children with safe, sustainable, and beautifully
-                            designed products.
+                            We are committed to providing high-quality products with exceptional customer service and
+                            sustainable business practices.
                         </h2>
                     </div>
                     <button
@@ -32,12 +32,12 @@
             <div class="mt-12 sm:mt-20">
                 <h2
                     class="text-[#181411] dark:text-background-light text-2xl sm:text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-3 pt-5 text-center">
-                    From Our Family to Yours</h2>
+                    About Us</h2>
                 <div class="p-4">
                     <div
                         class="flex flex-col md:flex-row items-center justify-between gap-8 rounded-xl bg-white/50 dark:bg-black/20 p-6 md:p-8">
                         <div class="w-full md:w-1/3 bg-center bg-no-repeat aspect-square md:aspect-[4/5] bg-cover rounded-xl"
-                            data-alt="Portrait of the founder, a smiling woman, holding a handmade toy"
+                            data-alt="Professional business portrait"
                             style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCZk0lUkcI3HnvCaqDiq_WnQWqgmCkGPDpTh6hUncU6Xy-3voiQn9IERqpQShorc0EnBoGd1PhKnNqpe6mvZ0BbhUXrh2HFDFZo3aUoyXWyeT1Bk4oXw9E2BvocLOQG_TlNvsSU7xS-mWU4y2oAF5TbXlgYgoLfmtRP6a9KAD7G-zTxYKATBTuoL21Q2x8c9-eoGR7-y4OVW1UvRzFDgr7J8umP8MCWlmrXN0QRbDR5e_awxOxmxPvDstsOEgq9ZZsmqSA9MtCHXnI");'>
                         </div>
                         <div class="flex flex-1 flex-col gap-4 text-center md:text-left">
@@ -45,10 +45,10 @@
                                 <p class="text-[#181411] dark:text-background-light text-xl font-bold leading-tight">Our
                                     Founder's Story</p>
                                 <p class="text-[#897561] dark:text-gray-400 text-base font-normal leading-relaxed">
-                                    It all started with a simple idea: to create toys that were not only fun but also safe
-                                    for our little ones and kind to the planet. As parents, we wanted the best for our
-                                    children, and that's how our journey began. We pour our hearts into every product,
-                                    ensuring it brings joy and sparks imagination.
+                                    It all started with a simple idea: to create a platform that offers high-quality
+                                    products at competitive prices. We wanted to build a business that prioritizes customer
+                                    satisfaction and sustainable practices. We carefully select every product in our
+                                    catalog, ensuring it meets our standards for quality, value, and reliability.
                                 </p>
                             </div>
                             <button
@@ -71,9 +71,9 @@
                         <div class="flex items-center justify-center size-16 bg-primary/20 rounded-full text-primary mb-2">
                             <span class="material-symbols-outlined text-4xl">health_and_safety</span>
                         </div>
-                        <h3 class="text-lg font-bold">Safety First</h3>
-                        <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed">Every product is rigorously
-                            tested to meet the highest safety standards because your child's well-being is our top priority.
+                        <h3 class="text-lg font-bold">Quality Assurance</h3>
+                        <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed">Every product is carefully
+                            selected and tested to meet our high quality standards. Your satisfaction is our top priority.
                         </p>
                     </div>
                     <div
@@ -81,28 +81,28 @@
                         <div class="flex items-center justify-center size-16 bg-primary/20 rounded-full text-primary mb-2">
                             <span class="material-symbols-outlined text-4xl">eco</span>
                         </div>
-                        <h3 class="text-lg font-bold">Eco-Friendly Play</h3>
+                        <h3 class="text-lg font-bold">Sustainability</h3>
                         <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed">We are committed to
-                            sustainability, using natural materials and eco-friendly packaging to protect our planet for
-                            future generations.</p>
+                            sustainability, using eco-friendly materials and packaging whenever possible to minimize our
+                            environmental impact.</p>
                     </div>
                     <div
                         class="flex flex-col items-center text-center p-6 bg-white/50 dark:bg-black/20 rounded-xl gap-3 transition-transform hover:-translate-y-2">
                         <div class="flex items-center justify-center size-16 bg-primary/20 rounded-full text-primary mb-2">
                             <span class="material-symbols-outlined text-4xl">emoji_objects</span>
                         </div>
-                        <h3 class="text-lg font-bold">Sparking Creativity</h3>
-                        <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed">Our designs encourage
-                            imaginative play, helping children develop crucial skills while having endless fun.</p>
+                        <h3 class="text-lg font-bold">Innovation</h3>
+                        <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed">We continuously seek out
+                            innovative products and solutions to meet the evolving needs of our customers.</p>
                     </div>
                 </div>
             </div>
             {{-- End Our Core Values Section --}}
-            {{-- Start Our Whimsical Journey Section --}}
+            {{-- Start Our Journey Section --}}
             <div class="mt-12 sm:mt-20">
                 <h2
                     class="text-[#181411] dark:text-background-light text-2xl sm:text-[22px] font-bold leading-tight tracking-[-0.015em] px-4 pb-5 pt-5 text-center">
-                    Our Whimsical Journey</h2>
+                    Our Journey</h2>
                 <div class="relative p-4 md:p-10">
                     <div class="absolute left-1/2 top-0 h-full w-1 -translate-x-1/2 bg-primary/20 rounded-full"></div>
                     <div class="relative flex flex-col gap-12">
@@ -110,9 +110,10 @@
                             <div class="md:w-1/2 md:pr-8">
                                 <div class="bg-white/50 dark:bg-black/20 p-6 rounded-xl shadow-md">
                                     <p class="text-sm font-semibold text-primary">January 2021</p>
-                                    <h3 class="text-lg font-bold mt-1">A Tiny Idea Sprouts</h3>
-                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">KiddoWorld was born from a
-                                        sketch in a notebook, with the dream of creating magical toys for little ones.</p>
+                                    <h3 class="text-lg font-bold mt-1">The Beginning</h3>
+                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">Our company was founded with a
+                                        vision to provide quality products and exceptional service to customers worldwide.
+                                    </p>
                                 </div>
                             </div>
                             <div
@@ -128,9 +129,9 @@
                             <div class="md:w-1/2 md:pl-8">
                                 <div class="bg-white/50 dark:bg-black/20 p-6 rounded-xl shadow-md">
                                     <p class="text-sm font-semibold text-[#72c4b0]">August 2021</p>
-                                    <h3 class="text-lg font-bold mt-1">First Toy Crafted</h3>
-                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">Our very first product, a
-                                        handcrafted wooden puzzle, came to life, ready to spark joy and imagination.</p>
+                                    <h3 class="text-lg font-bold mt-1">First Product Launch</h3>
+                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">We launched our first product
+                                        line, carefully curated to meet the highest standards of quality and value.</p>
                                 </div>
                             </div>
                             <div
@@ -146,9 +147,10 @@
                             <div class="md:w-1/2 md:pr-8">
                                 <div class="bg-white/50 dark:bg-black/20 p-6 rounded-xl shadow-md">
                                     <p class="text-sm font-semibold text-[#8eb8f2]">May 2022</p>
-                                    <h3 class="text-lg font-bold mt-1">Our Online Store Opens!</h3>
-                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">We opened our digital doors,
-                                        ready to share our creations with families all around the world.</p>
+                                    <h3 class="text-lg font-bold mt-1">Online Store Launch</h3>
+                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">We launched our online store,
+                                        making our products accessible to customers worldwide with fast and reliable
+                                        shipping.</p>
                                 </div>
                             </div>
                             <div
@@ -164,9 +166,9 @@
                             <div class="md:w-1/2 md:pl-8">
                                 <div class="bg-white/50 dark:bg-black/20 p-6 rounded-xl shadow-md">
                                     <p class="text-sm font-semibold text-primary">March 2024</p>
-                                    <h3 class="text-lg font-bold mt-1">50,000 Happy Families</h3>
-                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">We celebrated a huge
-                                        milestone, having brought smiles to over 50,000 families and counting!</p>
+                                    <h3 class="text-lg font-bold mt-1">50,000+ Customers</h3>
+                                    <p class="text-sm text-[#897561] dark:text-gray-400 mt-2">We reached a significant
+                                        milestone, having served over 50,000 satisfied customers and counting!</p>
                                 </div>
                             </div>
                             <div
@@ -181,7 +183,7 @@
                     </div>
                 </div>
             </div>
-            {{-- End Our Whimsical Journey Section --}}
+            {{-- End Our Journey Section --}}
             {{-- Start Our Journey & Impact Section --}}
             <div class="mt-12 sm:mt-20">
                 <h2
@@ -191,7 +193,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div
                             class="flex flex-col items-center text-center p-6 bg-white/50 dark:bg-black/20 rounded-xl gap-4">
-                            <h3 class="text-lg font-bold">Happy Families Served</h3>
+                            <h3 class="text-lg font-bold">Customers Served</h3>
                             <div
                                 class="flex items-center justify-center w-full max-w-xs aspect-square rounded-full bg-[#fce9d3] dark:bg-primary/20 p-4">
                                 <div
@@ -203,7 +205,7 @@
                                 </div>
                             </div>
                             <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed max-w-sm">We're honored to
-                                be a part of so many childhoods, bringing smiles and laughter to homes across the globe.</p>
+                                serve customers worldwide, providing quality products and exceptional service.</p>
                         </div>
                         <div class="flex flex-col items-start p-6 bg-white/50 dark:bg-black/20 rounded-xl gap-6">
                             <h3 class="text-lg font-bold text-center w-full">Our Growth Story</h3>
@@ -234,8 +236,8 @@
                                 </div>
                             </div>
                             <p class="text-sm text-[#897561] dark:text-gray-400 leading-relaxed text-center w-full">Each
-                                bar represents a year of new friends, new ideas, and more happy kids. Thank you for growing
-                                with us!</p>
+                                bar represents a year of growth, innovation, and expanding our product catalog. Thank you
+                                for being part of our journey!</p>
                         </div>
                     </div>
                 </div>
@@ -283,11 +285,10 @@
                 <div class="p-4">
                     <div
                         class="flex flex-col items-center justify-center text-center gap-6 p-10 bg-primary/20 dark:bg-primary/30 rounded-xl">
-                        <h2 class="text-2xl sm:text-3xl font-bold text-[#181411] dark:text-background-light">Join Our
-                            Community</h2>
+                        <h2 class="text-2xl sm:text-3xl font-bold text-[#181411] dark:text-background-light">Join Us</h2>
                         <p class="text-[#897561] dark:text-background-light/80 max-w-lg">
-                            Become a part of the KiddoWorld family! Explore our latest collections and find the perfect
-                            treasures for your little ones.
+                            Explore our latest collections and discover quality products that meet your needs. Start
+                            shopping today!
                         </p>
                         <button
                             class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-xl h-12 px-5 bg-primary text-[#181411] text-base font-bold leading-normal tracking-[0.015em] hover:brightness-110 transition-all">

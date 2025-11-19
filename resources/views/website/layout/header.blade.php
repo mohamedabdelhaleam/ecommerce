@@ -1,5 +1,5 @@
 <header
-    class="sticky top-0 z-50 flex items-center justify-between whitessspace-nowrap border-b border-solid border-b-gray-200/80 dark:border-b-gray-700/80 px-4 sm:px-6 py-3 bg-brand-offwhite/80 dark:bg-background-dark/80 backdrop-blur-sm rounded-xl">
+    class="sticky top-0 z-50 flex items-center justify-between whitessspace-nowrap border-b border-solid border-b-gray-200/80 dark:border-b-gray-700/80 px-4 sm:px-6 py-3 bg-white/80 dark:bg-background-dark/80 backdrop-blur-sm rounded-xl">
     <div class="flex items-center gap-8">
         <div class="flex items-center gap-4 text-brand-charcoal dark:text-white">
             <div class="size-6 text-primary">
@@ -29,7 +29,7 @@
                 </div>
                 <input
                     class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-brand-charcoal dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border-none bg-background-light dark:bg-background-dark h-full placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal"
-                    placeholder="Search for joyful things..." value="" />
+                    placeholder="Search for products..." value="" />
             </div>
         </label>
     </div>
